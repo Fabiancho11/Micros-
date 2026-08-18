@@ -3,29 +3,21 @@ import sys
 import uselect
 import time
 
-# ==========================================
 # LEDS
-# ==========================================
 
 rojo = Pin(26, Pin.OUT)
 verde = Pin(27, Pin.OUT)
 
-# ==========================================
 # PULSADORES
-# ==========================================
 
 pulsador_verde = Pin(12, Pin.IN, Pin.PULL_UP)
 pulsador_rojo = Pin(14, Pin.IN, Pin.PULL_UP)
 
-# ==========================================
 # ESTADO YOLO
-# ==========================================
 
 deteccion_yolo = ""
 
-# ==========================================
 # SERIAL
-# ==========================================
 
 poll = uselect.poll()
 poll.register(sys.stdin, uselect.POLLIN)
@@ -39,15 +31,11 @@ print("GPIO 26 -> LED ROJO")
 print("Esperando YOLO...")
 print("================================")
 
-# ==========================================
 # BUCLE PRINCIPAL
-# ==========================================
 
 while True:
 
-    # --------------------------------------
     # RECIBIR YOLO
-    # --------------------------------------
 
     eventos = poll.poll(10)
 
@@ -69,16 +57,12 @@ while True:
 
             deteccion_yolo = ""
 
-    # --------------------------------------
     # LEER PULSADORES
-    # --------------------------------------
 
     boton_verde = pulsador_verde.value() == 0
     boton_rojo = pulsador_rojo.value() == 0
 
-    # --------------------------------------
     # PRIORIDAD PULSADORES
-    # --------------------------------------
 
     if boton_rojo:
 
@@ -90,9 +74,7 @@ while True:
         rojo.value(0)
         verde.value(1)
 
-    # --------------------------------------
     # YOLO
-    # --------------------------------------
 
     elif deteccion_yolo == "CARRO":
 
@@ -103,10 +85,6 @@ while True:
 
         rojo.value(0)
         verde.value(1)
-
-    # --------------------------------------
-    # NADA
-    # --------------------------------------
 
     else:
 
