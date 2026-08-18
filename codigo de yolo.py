@@ -3,9 +3,7 @@ import cv2
 import serial
 import time
 
-# ==========================================
 # CONFIGURACIÓN SERIAL
-# ==========================================
 
 PUERTO = "COM3"
 BAUDRATE = 115200
@@ -16,27 +14,19 @@ time.sleep(2)
 
 print("ESP32 conectado en", PUERTO)
 
-# ==========================================
 # CARGAR YOLO
-# ==========================================
 
 model = YOLO("yolo11n.pt")
 
-# ==========================================
 # CÁMARA
-# ==========================================
 
 cap = cv2.VideoCapture(0)
 
-# ==========================================
 # VARIABLES
-# ==========================================
 
 ultima_deteccion = ""
 
-# ==========================================
 # PROGRAMA PRINCIPAL
-# ==========================================
 
 while True:
 
@@ -46,9 +36,7 @@ while True:
         print("No se pudo abrir la cámara")
         break
 
-    # --------------------------------------
     # YOLO
-    # --------------------------------------
 
     results = model(
         frame,
@@ -58,9 +46,7 @@ while True:
 
     deteccion_actual = ""
 
-    # --------------------------------------
     # REVISAR OBJETOS
-    # --------------------------------------
 
     for result in results:
 
@@ -78,26 +64,20 @@ while True:
                 "Confianza:",
                 round(confianza, 2)
             )
-
-            # ==================================
+            
             # CARRO
-            # ==================================
 
             if nombre == "car":
 
                 deteccion_actual = "CARRO"
 
-            # ==================================
             # MOTO
-            # ==================================
 
             elif nombre == "motorcycle":
 
                 deteccion_actual = "MOTO"
 
-    # --------------------------------------
     # ENVIAR AL ESP32
-    # --------------------------------------
 
     if deteccion_actual != ultima_deteccion:
 
@@ -118,9 +98,7 @@ while True:
 
         ultima_deteccion = deteccion_actual
 
-    # --------------------------------------
     # MOSTRAR CÁMARA
-    # --------------------------------------
 
     imagen = results[0].plot()
 
@@ -129,17 +107,12 @@ while True:
         imagen
     )
 
-    # --------------------------------------
     # SALIR
-    # --------------------------------------
 
     if cv2.waitKey(1) & 0xFF == ord("q"):
         break
 
-
-# ==========================================
 # CERRAR
-# ==========================================
 
 cap.release()
 cv2.destroyAllWindows()
