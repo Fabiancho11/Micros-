@@ -10,10 +10,7 @@ import wave
 import tempfile
 import os
 
-
-# ============================================================
 # CONFIGURACIÓN
-# ============================================================
 
 API_KEY = "sk-b4357f4022f444a98d2ae4b60a7c6e5a"
 
@@ -21,14 +18,12 @@ PUERTO = "COM3"
 BAUDRATE = 115200
 
 # Configuración del micrófono
+
 SAMPLE_RATE = 16000
 CANALES = 1
 DURACION = 5
 
-
-# ============================================================
 # CONECTAR CON ESP32
-# ============================================================
 
 try:
 
@@ -50,17 +45,11 @@ except Exception as e:
     print("ERROR conectando con la ESP32:")
     print(e)
 
-
-# ============================================================
 # RECONOCEDOR
-# ============================================================
 
 reconocedor = sr.Recognizer()
 
-
-# ============================================================
 # ENVIAR COMANDO A ESP32
-# ============================================================
 
 def enviar_comando(comando):
 
@@ -84,16 +73,14 @@ def enviar_comando(comando):
 
         return "Error de comunicación: " + str(e)
 
-
-# ============================================================
 # INTERPRETAR ORDEN DE LED
-# ============================================================
 
 def controlar_led(mensaje):
 
     texto = mensaje.lower().strip()
 
     # Palabras que significan ENCENDER
+    
     encender = (
         "enciende" in texto
         or "encender" in texto
@@ -104,6 +91,7 @@ def controlar_led(mensaje):
     )
 
     # Palabras que significan APAGAR
+    
     apagar = (
         "apaga" in texto
         or "apagar" in texto
@@ -111,9 +99,7 @@ def controlar_led(mensaje):
         or "desactivar" in texto
     )
 
-    # ========================================================
     # TODOS
-    # ========================================================
 
     if (
         "todos" in texto
@@ -129,10 +115,7 @@ def controlar_led(mensaje):
         if apagar:
             return enviar_comando("TODOS_OFF"), "TODOS_OFF"
 
-
-    # ========================================================
     # ROJO
-    # ========================================================
 
     if (
         "rojo" in texto
@@ -145,10 +128,7 @@ def controlar_led(mensaje):
         if apagar:
             return enviar_comando("ROJO_OFF"), "ROJO_OFF"
 
-
-    # ========================================================
     # VERDE
-    # ========================================================
 
     if (
         "verde" in texto
@@ -164,10 +144,7 @@ def controlar_led(mensaje):
 
     return None, None
 
-
-# ============================================================
 # DEEPSEEK
-# ============================================================
 
 def hablar_con_deepseek(mensaje):
 
@@ -223,10 +200,7 @@ def hablar_con_deepseek(mensaje):
 
         return f"Error inesperado: {e}"
 
-
-# ============================================================
 # MOSTRAR EN EL CHAT
-# ============================================================
 
 def mostrar(mensaje):
 
@@ -241,10 +215,7 @@ def mostrar(mensaje):
 
     chat.config(state=tk.DISABLED)
 
-
-# ============================================================
 # ACTUALIZAR ESTADO DE LOS LEDS
-# ============================================================
 
 def actualizar_estado(comando):
 
@@ -292,10 +263,7 @@ def actualizar_estado(comando):
             text="● VERDE: APAGADO"
         )
 
-
-# ============================================================
 # PROCESAR MENSAJE
-# ============================================================
 
 def procesar_mensaje(mensaje):
 
@@ -304,9 +272,7 @@ def procesar_mensaje(mensaje):
 
     mostrar("Tú: " + mensaje)
 
-    # --------------------------------------------------------
     # COMPROBAR SI ES UNA ORDEN PARA LOS LEDS
-    # --------------------------------------------------------
 
     respuesta, comando = controlar_led(mensaje)
 
@@ -319,9 +285,7 @@ def procesar_mensaje(mensaje):
         return
 
 
-    # --------------------------------------------------------
     # SI NO ES LED -> DEEPSEEK
-    # --------------------------------------------------------
 
     mostrar("DeepSeek: procesando...")
 
@@ -329,10 +293,7 @@ def procesar_mensaje(mensaje):
 
     mostrar("DeepSeek: " + respuesta)
 
-
-# ============================================================
 # GRABAR AUDIO CON SOUNDDEVICE
-# ============================================================
 
 def grabar_audio():
 
@@ -447,10 +408,7 @@ def grabar_audio():
         state=tk.NORMAL
     )
 
-
-# ============================================================
 # INICIAR ESCUCHA
-# ============================================================
 
 def iniciar_escucha():
 
@@ -466,10 +424,7 @@ def iniciar_escucha():
 
     hilo.start()
 
-
-# ============================================================
 # ENVIAR TEXTO ESCRITO
-# ============================================================
 
 def enviar_texto():
 
@@ -491,10 +446,7 @@ def enviar_texto():
 
     hilo.start()
 
-
-# ============================================================
 # BOTONES DIRECTOS
-# ============================================================
 
 def comando_directo(comando, texto):
 
@@ -510,10 +462,7 @@ def comando_directo(comando, texto):
 
     actualizar_estado(comando)
 
-
-# ============================================================
 # VENTANA PRINCIPAL
-# ============================================================
 
 ventana = tk.Tk()
 
@@ -530,10 +479,7 @@ ventana.resizable(
     False
 )
 
-
-# ============================================================
 # TÍTULO
-# ============================================================
 
 titulo = tk.Label(
     ventana,
@@ -545,10 +491,7 @@ titulo.pack(
     pady=15
 )
 
-
-# ============================================================
 # ESTADO ESP32
-# ============================================================
 
 if conexion:
 
@@ -567,10 +510,7 @@ estado_esp32 = tk.Label(
 
 estado_esp32.pack()
 
-
-# ============================================================
 # ESTADO LEDS
-# ============================================================
 
 marco_estados = tk.Frame(
     ventana
@@ -606,10 +546,7 @@ estado_verde.grid(
     padx=40
 )
 
-
-# ============================================================
 # BOTONES DE CONTROL
-# ============================================================
 
 marco_botones = tk.Frame(
     ventana
@@ -721,10 +658,7 @@ tk.Button(
     pady=5
 )
 
-
-# ============================================================
 # CHAT
-# ============================================================
 
 chat = scrolledtext.ScrolledText(
     ventana,
@@ -738,10 +672,7 @@ chat.pack(
     pady=10
 )
 
-
-# ============================================================
 # ENTRADA DE TEXTO
-# ============================================================
 
 marco_entrada = tk.Frame(
     ventana
@@ -775,10 +706,7 @@ tk.Button(
     column=1
 )
 
-
-# ============================================================
 # BOTÓN HABLAR
-# ============================================================
 
 boton_hablar = tk.Button(
     ventana,
@@ -794,9 +722,7 @@ boton_hablar.pack(
 )
 
 
-# ============================================================
 # ESTADO DEL MICRÓFONO
-# ============================================================
 
 estado_voz = tk.Label(
     ventana,
@@ -806,10 +732,7 @@ estado_voz = tk.Label(
 
 estado_voz.pack()
 
-
-# ============================================================
 # MENSAJE INICIAL
-# ============================================================
 
 mostrar(
     "Sistema iniciado.\n"
@@ -822,17 +745,11 @@ mostrar(
     "• Apaga las dos luces"
 )
 
-
-# ============================================================
 # INICIAR INTERFAZ
-# ============================================================
 
 ventana.mainloop()
 
-
-# ============================================================
 # CERRAR ESP32
-# ============================================================
 
 if esp32 is not None:
 
