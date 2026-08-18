@@ -1,8 +1,6 @@
 from machine import Pin
 
-# =========================
 # CONFIGURACIÓN DE LEDS
-# =========================
 
 rojo = Pin(26, Pin.OUT)
 verde = Pin(27, Pin.OUT)
@@ -14,10 +12,7 @@ verde.value(0)
 print("ESP32 LISTA")
 print("Esperando comandos...")
 
-
-# =========================
 # RECIBIR COMANDOS
-# =========================
 
 while True:
 
