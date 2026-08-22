@@ -2,7 +2,7 @@
 
 Bienvenido a esta guía detallada sobre la **ESP32**, una potente familia de microcontroladores de bajo costo y bajo consumo de energía con Wi-Fi y Bluetooth de modo dual integrados. Desarrollado por Espressif Systems, es el sucesor del popular ESP8266 y se ha convertido en la base de innumerables proyectos de Internet de las Cosas (IoT).
 
-![Vista general de una placa de desarrollo ESP32](./Imagenes/ESP32.jpg)
+![Vista general de una placa de desarrollo ESP32](../Imagenes/ESP32.jpg)
 *Imagen: Una placa de desarrollo ESP32 estándar.*
 
 ## ¿Qué es y Para Qué Sirve?
