@@ -1,4 +1,4 @@
-<h1 align="center"><b>Control de LEDs mediante Pulsadores en ESP32</b></h1>
+<h1 align="center"><b>YOLO</b></h1>
 
 <h2 align="center"><b>Desarrollo del esquema en Wokwi</b></h2>
 
