@@ -62,35 +62,10 @@
   <li>GPIO 26.</li>
 </ul>
 
-<h2>Programación en C/C++</h2>
-
-<h3>Ventajas</h3>
-<ul>
-  <li>Mayor velocidad de ejecución.</li>
-  <li>Mayor control sobre el hardware.</li>
-  <li>Amplio soporte de librerías.</li>
-  <li>Adecuado para proyectos complejos.</li>
-</ul>
-
-<h3>Desventajas</h3>
-<ul>
-  <li>Mayor dificultad de aprendizaje.</li>
-  <li>Código más extenso.</li>
-  <li>Requiere mayor conocimiento de programación.</li>
-</ul>
-
-<h2>Programación en MicroPython</h2>
-
-<h3>Ventajas</h3>
-<ul>
-  <li>Sintaxis sencilla y fácil de aprender.</li>
-  <li>Desarrollo rápido de programas.</li>
-  <li>Ideal para proyectos educativos y prototipos.</li>
-  <li>Permite realizar pruebas de forma rápida.</li>
-</ul>
-
-<h3>Desventajas</h3>
-<ul>
+| Tecnología | Ventajas | Desventajas |
+|---|---|---|
+| **MicroPython** | - Prototipado rápido.<br>- Sintaxis sencilla.<br>- Pruebas en tiempo real mediante REPL. | - Menor velocidad de ejecución.<br>- Menor control del hardware a bajo nivel. |
+| **C/C++** | - Mayor velocidad de ejecución.<br>- Mayor control del hardware.<br>- Adecuado para proyectos complejos. | - Mayor complejidad de aprendizaje.<br>- Mayor tiempo de desarrollo. |
   <li>Menor velocidad de ejecución que C/C++.</li>
   <li>Mayor consumo de memoria.</li>
   <li>Algunas librerías y funciones pueden tener soporte limitado.</li>
