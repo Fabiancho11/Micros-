@@ -1,81 +1,97 @@
+<h1 align="center">ESP-WROOM-32</h1>
+
+<p>La <strong>ESP-WROOM-32</strong> es un módulo basado en el microcontrolador <strong>ESP32</strong>, desarrollado para aplicaciones de electrónica, automatización, robótica e Internet de las Cosas (IoT). Se caracteriza por integrar conectividad <strong>Wi-Fi y Bluetooth</strong>, además de diferentes periféricos para la conexión de sensores y actuadores.</p>
+
+<h2>Estructura y arquitectura</h2>
+
+<p>La ESP-WROOM-32 posee una arquitectura basada en un microprocesador <strong>Xtensa Dual-Core de 32 bits LX6</strong>, memoria interna, conectividad inalámbrica y múltiples periféricos. Su estructura está compuesta principalmente por el procesador, memoria Flash (típicamente de 4 MB), memoria SRAM (520 KB), memoria ROM (448 KB), módulos Wi-Fi y Bluetooth, pines GPIO y sistemas de comunicación.</p>
+
+<p>A continuación, se detalla el diagrama de bloques de sus funciones:</p>
+
 <div align="center">
-  <strong>ESP-WROOM-32</strong>
+  <img src="../Imagenes/diagrama.jpg" alt="Diagrama de bloques funcionales de la ESP32">
 </div>
 
-La **ESP-WROOM-32** es un módulo basado en el microcontrolador **ESP32**, desarrollado para aplicaciones de electrónica, automatización, robótica e Internet de las Cosas (IoT). Se caracteriza por integrar conectividad **Wi-Fi y Bluetooth**, además de diferentes periféricos para la conexión de sensores y actuadores.
+<h2>Características de la ESP32</h2>
 
-<strong>Estructura y arquitectura</strong>
+<p>Entre sus principales características se encuentran:</p>
 
-La ESP-WROOM-32 posee una arquitectura basada en un microprocesador **Xtensa Dual-Core de 32 bits LX6**, memoria interna, conectividad inalámbrica y múltiples periféricos. Su estructura está compuesta principalmente por el procesador, memoria Flash (típicamente de 4 MB), memoria SRAM (520 KB), memoria ROM (448 KB), módulos Wi-Fi y Bluetooth, pines GPIO y sistemas de comunicación.
+<ul>
+  <li><strong>Procesador:</strong> Microprocesador Xtensa Dual-Core 32-bit LX6 (frecuencia hasta 240 MHz).</li>
+  <li><strong>Memoria:</strong> 
+    <ul>
+      <li><strong>SRAM:</strong> 520 KB (para datos e instrucciones).</li>
+      <li><strong>ROM:</strong> 448 KB (para el arranque y funciones del núcleo).</li>
+      <li><strong>Flash SPI:</strong> Típicamente de 4 MB (utilizada para almacenar el código y datos).</li>
+    </ul>
+  </li>
+  <li><strong>Conectividad:</strong> Wi-Fi (802.11 b/g/n) y Bluetooth (v4.2 BR/EDR y BLE).</li>
+  <li><strong>Periféricos y E/S:</strong>
+    <ul>
+      <li>Múltiples pines GPIO.</li>
+      <li>Entradas analógicas ADC y Conversores DAC.</li>
+      <li>Salidas PWM.</li>
+      <li>Interfaces de comunicación: UART, SPI, I2C, I2S, CAN y SDIO.</li>
+    </ul>
+  </li>
+  <li><strong>Eficiencia:</strong> Bajo consumo de energía con soporte de coprocesador ULP (Ultra-Low Power) para el modo de suspensión.</li>
+</ul>
 
-A continuación, se detalla el diagrama de bloques de sus funciones:
+<h2>Conexiones y pines</h2>
 
-![Diagrama de bloques funcionales de la ESP32](../Imagenes/diagrama.jpg)
+<p>Los pines GPIO de la ESP32 permiten conectar diferentes dispositivos electrónicos, como sensores, LEDs, motores y pantallas. Dependiendo de su configuración, pueden funcionar como entradas, salidas o cumplir funciones específicas.</p>
 
-<strong>Características de la ESP32</strong>
+<div align="center">
+  <img src="../Imagenes/ESP32.jpg" alt="Diagrama de pines de la ESP32">
+</div>
 
-Entre sus principales características se encuentran:
+<h2>ADC</h2>
 
-- **Procesador:** Microprocesador Xtensa Dual-Core 32-bit LX6 (frecuencia hasta 240 MHz).
-- **Memoria:** 
-  - **SRAM:** 520 KB (para datos e instrucciones).
-  - **ROM:** 448 KB (para el arranque y funciones del núcleo).
-  - **Flash SPI:** Típicamente de 4 MB (utilizada para almacenar el código y datos).
-- **Conectividad:** Wi-Fi (802.11 b/g/n) y Bluetooth (v4.2 BR/EDR y BLE).
-- **Periféricos y E/S:**
-  - Múltiples pines GPIO.
-  - Entradas analógicas ADC y Conversores DAC.
-  - Salidas PWM.
-  - Interfaces de comunicación: UART, SPI, I2C, I2S, CAN y SDIO.
-- **Eficiencia:** Bajo consumo de energía con soporte de coprocesador ULP (Ultra-Low Power) para el modo de suspensión.
+<p>El <strong>ADC (Conversor Analógico-Digital)</strong> permite convertir señales analógicas en valores digitales. Esta función es utilizada para la lectura de sensores como potenciómetros, LDR y sensores analógicos de temperatura.</p>
 
-## Conexiones y pines
+<h2>PWM</h2>
 
-Los pines GPIO de la ESP32 permiten conectar diferentes dispositivos electrónicos, como sensores, LEDs, motores y pantallas. Dependiendo de su configuración, pueden funcionar como entradas, salidas o cumplir funciones específicas.
+<p>La <strong>PWM (Modulación por Ancho de Pulso)</strong> permite generar señales con un ciclo de trabajo variable. Se utiliza principalmente para controlar el brillo de LEDs, la velocidad de motores y la posición de servomotores.</p>
 
-![](../Imagenes/ESP32.jpg)
+<h2>DAC</h2>
 
-## ADC
+<p>El <strong>DAC (Conversor Digital-Analógico)</strong> permite generar una señal analógica a partir de un valor digital. En la ESP32 clásica, las salidas DAC se encuentran principalmente en:</p>
 
-El **ADC (Conversor Analógico-Digital)** permite convertir señales analógicas en valores digitales. Esta función es utilizada para la lectura de sensores como potenciómetros, LDR y sensores analógicos de temperatura.
+<ul>
+  <li>GPIO 25.</li>
+  <li>GPIO 26.</li>
+</ul>
 
-## PWM
+<h2>Programación en C/C++</h2>
 
-La **PWM (Modulación por Ancho de Pulso)** permite generar señales con un ciclo de trabajo variable. Se utiliza principalmente para controlar el brillo de LEDs, la velocidad de motores y la posición de servomotores.
+<h3>Ventajas</h3>
+<ul>
+  <li>Mayor velocidad de ejecución.</li>
+  <li>Mayor control sobre el hardware.</li>
+  <li>Amplio soporte de librerías.</li>
+  <li>Adecuado para proyectos complejos.</li>
+</ul>
 
-## DAC
+<h3>Desventajas</h3>
+<ul>
+  <li>Mayor dificultad de aprendizaje.</li>
+  <li>Código más extenso.</li>
+  <li>Requiere mayor conocimiento de programación.</li>
+</ul>
 
-El **DAC (Conversor Digital-Analógico)** permite generar una señal analógica a partir de un valor digital. En la ESP32 clásica, las salidas DAC se encuentran principalmente en:
+<h2>Programación en MicroPython</h2>
 
-- GPIO 25.
-- GPIO 26.
+<h3>Ventajas</h3>
+<ul>
+  <li>Sintaxis sencilla y fácil de aprender.</li>
+  <li>Desarrollo rápido de programas.</li>
+  <li>Ideal para proyectos educativos y prototipos.</li>
+  <li>Permite realizar pruebas de forma rápida.</li>
+</ul>
 
-## Programación en C/C++
-
-### Ventajas
-
-- Mayor velocidad de ejecución.
-- Mayor control sobre el hardware.
-- Amplio soporte de librerías.
-- Adecuado para proyectos complejos.
-
-### Desventajas
-
-- Mayor dificultad de aprendizaje.
-- Código más extenso.
-- Requiere mayor conocimiento de programación.
-
-## Programación en MicroPython
-
-### Ventajas
-
-- Sintaxis sencilla y fácil de aprender.
-- Desarrollo rápido de programas.
-- Ideal para proyectos educativos y prototipos.
-- Permite realizar pruebas de forma rápida.
-
-### Desventajas
-
-- Menor velocidad de ejecución que C/C++.
-- Mayor consumo de memoria.
-- Algunas librerías y funciones pueden tener soporte limitado.
+<h3>Desventajas</h3>
+<ul>
+  <li>Menor velocidad de ejecución que C/C++.</li>
+  <li>Mayor consumo de memoria.</li>
+  <li>Algunas librerías y funciones pueden tener soporte limitado.</li>
+</ul>
