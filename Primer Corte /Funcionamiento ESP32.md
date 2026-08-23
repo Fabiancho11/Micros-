@@ -23,7 +23,9 @@ Entre sus principales características se encuentran:
 
 Los pines GPIO de la ESP32 permiten conectar diferentes dispositivos electrónicos, como sensores, LEDs, motores y pantallas. Dependiendo de su configuración, pueden funcionar como entradas, salidas o cumplir funciones específicas.
 
-**![Pinout ESP32](../Imagenes/ESP32.jpg)**
+<center>
+  <img src="../Imagenes/ESP32.jpg" alt="Pinout ESP32">
+</center>
 
 ## ADC
 
