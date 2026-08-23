@@ -66,7 +66,3 @@
 |---|---|---|
 | **MicroPython** | - Prototipado rápido.<br>- Sintaxis sencilla.<br>- Pruebas en tiempo real mediante REPL. | - Menor velocidad de ejecución.<br>- Menor control del hardware a bajo nivel. |
 | **C/C++** | - Mayor velocidad de ejecución.<br>- Mayor control del hardware.<br>- Adecuado para proyectos complejos. | - Mayor complejidad de aprendizaje.<br>- Mayor tiempo de desarrollo. |
-  <li>Menor velocidad de ejecución que C/C++.</li>
-  <li>Mayor consumo de memoria.</li>
-  <li>Algunas librerías y funciones pueden tener soporte limitado.</li>
-</ul>
