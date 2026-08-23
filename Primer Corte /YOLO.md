@@ -1,6 +1,5 @@
-<h1 align="center"><b>YOLO</b></h1>
 
-<h2 align="center"><b>Desarrollo del esquema en Wokwi</b></h2>
+<h2 align="left"><b>Desarrollo del esquema en Wokwi</b></h2>
 
 <p>
 Primero se desarrolló el siguiente esquema en Wokwi, utilizando una ESP32, dos LEDs y dos pulsadores. Cada pulsador está asociado a un LED, permitiendo controlar su encendido y apagado.
