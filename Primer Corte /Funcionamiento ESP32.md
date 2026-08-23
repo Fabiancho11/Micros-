@@ -2,22 +2,30 @@
 
 La **ESP-WROOM-32** es un módulo basado en el microcontrolador **ESP32**, desarrollado para aplicaciones de electrónica, automatización, robótica e Internet de las Cosas (IoT). Se caracteriza por integrar conectividad **Wi-Fi y Bluetooth**, además de diferentes periféricos para la conexión de sensores y actuadores.
 
-## Definición, estructura y arquitectura
+## Estructura y arquitectura
 
-La ESP-WROOM-32 posee una arquitectura basada en un procesador de **32 bits**, memoria interna, conectividad inalámbrica y múltiples periféricos. Su estructura está compuesta principalmente por el procesador, memoria Flash, memoria RAM, módulos Wi-Fi y Bluetooth, pines GPIO y sistemas de comunicación.
+La ESP-WROOM-32 posee una arquitectura basada en un microprocesador **Xtensa Dual-Core de 32 bits LX6**, memoria interna, conectividad inalámbrica y múltiples periféricos. Su estructura está compuesta principalmente por el procesador, memoria Flash (típicamente de 4 MB), memoria SRAM (520 KB), memoria ROM (448 KB), módulos Wi-Fi y Bluetooth, pines GPIO y sistemas de comunicación.
+
+A continuación, se detalla el diagrama de bloques de sus funciones:
+
+![Diagrama de bloques funcionales de la ESP32](image_b7b29f.png)
 
 ## Características de la ESP32
 
 Entre sus principales características se encuentran:
 
-- Procesador de 32 bits.
-- Conectividad Wi-Fi y Bluetooth.
-- Múltiples pines GPIO.
-- Entradas analógicas ADC.
-- Salidas PWM.
-- Conversores DAC.
-- Comunicación UART, SPI e I2C.
-- Bajo consumo de energía.
+- **Procesador:** Microprocesador Xtensa Dual-Core 32-bit LX6 (frecuencia hasta 240 MHz).
+- **Memoria:** 
+  - **SRAM:** 520 KB (para datos e instrucciones).
+  - **ROM:** 448 KB (para el arranque y funciones del núcleo).
+  - **Flash SPI:** Típicamente de 4 MB (utilizada para almacenar el código y datos).
+- **Conectividad:** Wi-Fi (802.11 b/g/n) y Bluetooth (v4.2 BR/EDR y BLE).
+- **Periféricos y E/S:**
+  - Múltiples pines GPIO.
+  - Entradas analógicas ADC y Conversores DAC.
+  - Salidas PWM.
+  - Interfaces de comunicación: UART, SPI, I2C, I2S, CAN y SDIO.
+- **Eficiencia:** Bajo consumo de energía con soporte de coprocesador ULP (Ultra-Low Power) para el modo de suspensión.
 
 ## Conexiones y pines
 
