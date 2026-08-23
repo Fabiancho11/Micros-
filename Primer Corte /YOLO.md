@@ -431,3 +431,7 @@ A continuación se encuentra el enlace al video donde se puede observar el funci
   </a>
 </p>
 
+<p>
+La camara tiene un pequeño retraso por eso el led rojo al final encendió después.
+</p>
+
