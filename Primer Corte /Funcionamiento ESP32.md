@@ -1,12 +1,12 @@
 <h1 align="center">ESP-WROOM-32</h1>
 
-<p>La <strong>ESP-WROOM-32</strong> es un módulo basado en el microcontrolador <strong>ESP32</strong>, desarrollado para aplicaciones de electrónica, automatización, robótica e Internet de las Cosas (IoT). Se caracteriza por integrar conectividad <strong>Wi-Fi y Bluetooth</strong>, además de diferentes periféricos para la conexión de sensores y actuadores.</p>
+<p>La <strong>ESP-32</strong> es un módulo basado en el microcontrolador <strong>ESP32</strong>, desarrollado para aplicaciones de electrónica, automatización, robótica e Internet de las Cosas (IoT). Se caracteriza por integrar conectividad <strong>Wi-Fi y Bluetooth</strong>, además de diferentes periféricos para la conexión de sensores y actuadores.</p>
 
 <h2>Estructura y arquitectura</h2>
 
-<p>La ESP-WROOM-32 posee una arquitectura basada en un microprocesador <strong>Xtensa Dual-Core de 32 bits LX6</strong>, memoria interna, conectividad inalámbrica y múltiples periféricos. Su estructura está compuesta principalmente por el procesador, memoria Flash (típicamente de 4 MB), memoria SRAM (520 KB), memoria ROM (448 KB), módulos Wi-Fi y Bluetooth, pines GPIO y sistemas de comunicación.</p>
+<p>La ESP-32 posee una arquitectura basada en un microprocesador <strong>Xtensa Dual-Core de 32 bits LX6</strong>, memoria interna, conectividad inalámbrica y múltiples periféricos. Su estructura está compuesta principalmente por el procesador, memoria Flash (típicamente de 4 MB), memoria SRAM (520 KB), memoria ROM (448 KB), módulos Wi-Fi y Bluetooth, pines GPIO y sistemas de comunicación.</p>
 
-<p>A continuación, se detalla el diagrama de bloques de sus funciones:</p>
+<p>A continuación, se :</p>
 
 <div align="center">
   <img src="../Imagenes/diagrama.jpg" alt="Diagrama de bloques funcionales de la ESP32">
