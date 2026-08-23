@@ -7,7 +7,7 @@ Primero se desarrolló el siguiente esquema en <b>Wokwi</b>, utilizando una ESP3
 </p>
 
 <p align="center">
-  <img src="Imagenes/Wokwi.jpg" alt="Esquema desarrollado en Wokwi" width="600">
+  <img src="Imagenes/Wokwi.png" alt="Esquema desarrollado en Wokwi" width="600">
 </p>
 
 <p align="center">
