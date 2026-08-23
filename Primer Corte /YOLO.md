@@ -180,27 +180,24 @@ El conjunto de datos fue obtenido mediante la plataforma
 <h3><b>Conjunto de datos utilizado</b></h3>
 
 <p align="center">
-  <img src="Imagenes/YOLO/Roboflow.png" alt="Conjunto de datos utilizado en Roboflow" width="700">
+  <img src="../Imagenes/Datos.png" alt="Conjunto de datos utilizado en Roboflow" width="700">
 </p>
 
 <h2><b>Entrenamiento del modelo</b></h2>
 
 <p>
-Después de obtener el conjunto de datos desde <b>Roboflow</b>, se procedió a entrenar el modelo de <b>YOLO</b> para que pudiera reconocer las dos clases de objetos: <b>moto de juguete</b> y <b>carro de juguete</b>.
+Después de obtener el conjunto de datos desde <b>Roboflow</b>, se procedió a entrenar el modelo de <b>YOLO</b> para que pudiera reconocer un carro y una moto de juguete</b>.
 </p>
 
 <p>
-Para realizar el entrenamiento se utilizó <b>Google Colab</b>, debido a que el entrenamiento de un modelo de visión artificial requiere una mayor capacidad de procesamiento. Esta herramienta permitió utilizar recursos computacionales adecuados para realizar el entrenamiento del modelo.
-</p>
-<p>
-En Google Colab se ingresaron los archivos correspondientes al conjunto de datos obtenido desde Roboflow y posteriormente se ejecutó el proceso de entrenamiento del modelo.
+Para realizar el entrenamiento se utilizó <b>Google Colab</b>, debido a que el poder computacional requerido es bastante alto y si se hiciera de manera local se demoraría horas aun así debido a que cantidad de imagenes  y datos era alta se demoro 40 minutos en generar el modelo.
 </p>
 
 <h3><b>Proceso de entrenamiento</b></h3>
 
 <p align="center">
   <!-- Colocar aquí la imagen del proceso de entrenamiento en Google Colab -->
-  <img src="Imagenes/YOLO/Entrenamiento.png" alt="Entrenamiento del modelo YOLO en Google Colab" width="700">
+  <img src="../Imagenes/Entrenamiento.png" alt="Entrenamiento del modelo YOLO en Google Colab" width="700">
 </p>
 
 <h3><b>Código utilizado para el entrenamiento</b></h3>
@@ -259,17 +256,13 @@ print("\n¡Entrenamiento finalizado exitosamente!")
 <h2><b>Modelo generado</b></h2>
 
 <p>
-Una vez finalizado el entrenamiento, Google Colab generó el modelo entrenado, el cual posteriormente fue utilizado para realizar la detección de motos y carros.
-</p>
-
-<p>
-Este modelo permite analizar las imágenes capturadas por la cámara y determinar qué objeto se encuentra presente.
+Una vez finalizado el entrenamiento, Google Colab generó el modelo entrenado el cual se encuentra disponible como best.pt.
 </p>
 
 <h2><b>Programa principal en Python</b></h2>
 
 <p>
-Después de entrenar el modelo, se desarrolló un programa en <b>Python</b> encargado de utilizar YOLO para realizar la detección de objetos y comunicarse con la ESP32.
+Después de entrenar el modelo, se desarrolló un programa en <b>Python</b> encargado de utilizar YOLO para realizar la detección de objetos y comunicarse con la ESP32 por medio del serial COM para poder encender el led rojo si detecta un carro y el led verde si detecta una moto.
 </p>
 
 <p>
@@ -279,34 +272,148 @@ El programa recibe la imagen de la cámara, ejecuta el modelo YOLO y determina s
 <h3><b>Código principal de Python</b></h3>
 
 <pre>
-<code>
-# =========================================================
-# CÓDIGO PRINCIPAL EN PYTHON
-# =========================================================
+from ultralytics import YOLO
+import cv2
+import serial
+import time
+import os
 
-# Pegar aquí el código principal de Python.
+# ==========================================
+# 1. CONFIGURACIÓN SERIAL (ESP32)
+# ==========================================
+PUERTO = "COM3"
+BAUDRATE = 115200
+
+try:
+    esp32 = serial.Serial(PUERTO, BAUDRATE, timeout=1)
+    time.sleep(2)
+    print(f"ESP32 conectado exitosamente en {PUERTO}")
+except Exception as e:
+    print(f"Error al conectar con el puerto {PUERTO}: {e}")
+    exit()
+
+# ==========================================
+# 2. CARGAR AMBOS MODELOS
+# ==========================================
+print("Cargando modelo original para personas...")
+modelo_base = YOLO("yolov8n.pt")
+
+ruta_descargas = os.path.join(os.path.expanduser('~'), 'Downloads')
+ruta_mi_modelo = os.path.join(ruta_descargas, "Modelo_Unificado", "weights", "best.pt")
+
+if not os.path.exists(ruta_mi_modelo):
+    ruta_mi_modelo = os.path.join(ruta_descargas, "Modelo_Unificado", "best.pt")
+if not os.path.exists(ruta_mi_modelo):
+    ruta_mi_modelo = os.path.join(ruta_descargas, "best.pt")
+
+print(f"Cargando modelo de juguetes desde: {ruta_mi_modelo}")
+
+try:
+    modelo_juguetes = YOLO(ruta_mi_modelo)
+    print("¡Ambos modelos cargados correctamente!")
+except Exception as e:
+    print(f"Error al cargar 'best.pt': {e}")
+    exit()
+
+# Función para verificar si dos cajas están en la misma posición (se cruzan)
+def se_superponen(box1, box2):
+    x1_max = max(box1[0], box2[0])
+    y1_max = max(box1[1], box2[1])
+    x2_min = min(box1[2], box2[2])
+    y2_min = min(box1[3], box2[3])
+    
+    ancho = max(0, x2_min - x1_max)
+    alto = max(0, y2_min - y1_max)
+    area_interseccion = ancho * alto
+    
+    return area_interseccion > 0
+
+# ==========================================
+# 3. DETECCIÓN CON COMPARACIÓN DE CONFIANZA
+# ==========================================
+cap = cv2.VideoCapture(0)
+ultima_deteccion = ""
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        print("Error al acceder a la cámara.")
+        break
+
+    # Bajamos un poco los umbrales base para capturar los porcentajes de ambos
+    res_base = modelo_base(frame, conf=0.80, verbose=False)
+    res_juguetes = modelo_juguetes(frame, conf=0.60, verbose=False)
+
+    # Lista de detecciones de personas: [caja_coordinates, confianza]
+    personas_detectadas = []
+    for r in res_base:
+        for box in r.boxes:
+            clase = int(box.cls[0])
+            if modelo_base.names[clase] == "person":
+                caja = box.xyxy[0].tolist()
+                confianza = float(box.conf[0])
+                personas_detectadas.append((caja, confianza))
+
+    deteccion_juguete = ""
+
+    # Analizar detecciones de tu modelo de juguetes
+    for r in res_juguetes:
+        for box in r.boxes:
+            caja_juguete = box.xyxy[0].tolist()
+            conf_juguete = float(box.conf[0])
+            clase = int(box.cls[0])
+            nombre = modelo_juguetes.names[clase].lower()
+
+            es_valido = True
+
+            # Comparar contra las personas detectadas en la misma zona
+            for caja_persona, conf_persona in personas_detectadas:
+                if se_superponen(caja_juguete, caja_persona):
+                    # Si el porcentaje de PERSONA es mayor, descartamos la etiqueta de juguete
+                    if conf_persona >= conf_juguete:
+                        es_valido = False
+                        break
+
+            # Si tu modelo le ganó en precisión/confianza a la detección de persona
+            if es_valido:
+                if "carro" in nombre or "car" in nombre:
+                    deteccion_juguete = "CARRO"
+                elif "moto" in nombre or "motorcycle" in nombre:
+                    deteccion_juguete = "MOTO"
+
+    # Enviar datos al ESP32
+    if deteccion_juguete != ultima_deteccion:
+        if deteccion_juguete == "CARRO":
+            esp32.write(b"CARRO\n")
+            print(">>> CARRO DETECTADO (Mayor certeza que Persona)")
+        elif deteccion_juguete == "MOTO":
+            esp32.write(b"MOTO\n")
+            print(">>> MOTO DETECTADA (Mayor certeza que Persona)")
+        else:
+            esp32.write(b"NINGUNO\n")
+            print(">>> NINGÚN JUGUETE / PREVALECE PERSONA")
+
+        ultima_deteccion = deteccion_juguete
+
+    # Mostrar en pantalla
+    frame_pantalla = res_base[0].plot(img=frame)
+    frame_pantalla = res_juguetes[0].plot(img=frame_pantalla)
+    cv2.imshow("Deteccion con Filtro por Porcentaje de Certeza", frame_pantalla)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Cierre limpio
+cap.release()
+cv2.destroyAllWindows()
+if esp32.is_open:
+    esp32.close()
+    print("Conexión serial cerrada.")
+  
 </code>
 </pre>
 
 <h2><b>Funcionamiento del sistema</b></h2>
-
-<p>
-El funcionamiento completo del sistema se puede resumir de la siguiente manera:
-</p>
-
-<ol>
-  <li>Se obtiene una imagen mediante la cámara.</li>
-  <li>El programa de Python procesa la imagen.</li>
-  <li>YOLO analiza la imagen y busca los objetos entrenados.</li>
-  <li>El modelo identifica si el objeto corresponde a una moto o a un carro.</li>
-  <li>Python genera la orden correspondiente.</li>
-  <li>La orden es enviada a la ESP32.</li>
-  <li>La ESP32 recibe la orden y controla el LED correspondiente.</li>
-</ol>
-
-<p align="center">
-  <img src="Imagenes/YOLO/Funcionamiento.png" alt="Funcionamiento del sistema YOLO y ESP32" width="700">
-</p>
 
 <h2><b>Video de funcionamiento</b></h2>
 
