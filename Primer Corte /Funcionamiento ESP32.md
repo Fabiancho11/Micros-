@@ -8,7 +8,7 @@ La ESP-WROOM-32 posee una arquitectura basada en un microprocesador **Xtensa Dua
 
 A continuación, se detalla el diagrama de bloques de sus funciones:
 
-![Diagrama de bloques funcionales de la ESP32](image_b7b29f.png)
+![Diagrama de bloques funcionales de la ESP32](../Imagenes/diagrama.jpg)
 
 ## Características de la ESP32
 
@@ -31,9 +31,7 @@ Entre sus principales características se encuentran:
 
 Los pines GPIO de la ESP32 permiten conectar diferentes dispositivos electrónicos, como sensores, LEDs, motores y pantallas. Dependiendo de su configuración, pueden funcionar como entradas, salidas o cumplir funciones específicas.
 
-<center>
-  <img src="../Imagenes/ESP32.jpg" alt="Pinout ESP32">
-</center>
+![](../Imagenes/ESP32.jpg)
 
 ## ADC
 
