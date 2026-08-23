@@ -1,4 +1,4 @@
-# **ESP-WROOM-32 - Características y Programación**
+# **ESP-WROOM-32**
 
 La **ESP-WROOM-32** es un módulo basado en el microcontrolador **ESP32**, desarrollado para aplicaciones de electrónica, automatización, robótica e Internet de las Cosas (IoT). Se caracteriza por integrar conectividad **Wi-Fi y Bluetooth**, además de diferentes periféricos para la conexión de sensores y actuadores.
 
@@ -23,7 +23,7 @@ Entre sus principales características se encuentran:
 
 Los pines GPIO de la ESP32 permiten conectar diferentes dispositivos electrónicos, como sensores, LEDs, motores y pantallas. Dependiendo de su configuración, pueden funcionar como entradas, salidas o cumplir funciones específicas.
 
-![Pinout ESP32](../Imagenes/ESP32.jpg)
+**![Pinout ESP32](../Imagenes/ESP32.jpg)**
 
 ## ADC
 
