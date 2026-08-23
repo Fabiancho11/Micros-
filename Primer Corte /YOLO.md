@@ -426,7 +426,7 @@ A continuación se encuentra el enlace al video donde se puede observar el funci
 </p>
 
 <p align="center">
-  <a href="https://www.youtube.com/](https://youtu.be/LgYEPxgESHk" target="_blank">
+  <a href="https://youtu.be/LgYEPxgESHk" target="_blank">
     <b>Ver video de funcionamiento en YouTube</b>
   </a>
 </p>
