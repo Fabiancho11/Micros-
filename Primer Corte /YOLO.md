@@ -207,11 +207,52 @@ En Google Colab se ingresaron los archivos correspondientes al conjunto de datos
 
 <pre>
 <code>
-# =========================================================
-# CÓDIGO DE ENTRENAMIENTO EN GOOGLE COLAB
-# =========================================================
+import zipfile
+import os
 
-# Pegar aquí el código utilizado para entrenar YOLO.
+# 1. Descomprimir el dataset unificado
+print("Descomprimiendo el dataset...")
+# Busca automáticamente cualquier archivo .zip que hayas subido
+zip_files = [f for f in os.listdir('.') if f.endswith('.zip')]
+if zip_files:
+    archivo_zip = zip_files[0]
+    with zipfile.ZipFile(archivo_zip, 'r') as zip_ref:
+        zip_ref.extractall('.')
+    print(f"Archivo {archivo_zip} descomprimido con éxito.")
+else:
+    print("Error: No se encontró ningún archivo .zip subido.")
+
+# 2. Configurar rutas del data.yaml para Colab
+ruta_yaml = os.path.abspath("Dataset_Juguetes_Unificado/data.yaml")
+
+yaml_content = f"""train: {os.path.abspath('Dataset_Juguetes_Unificado/train/images')}
+val: {os.path.abspath('Dataset_Juguetes_Unificado/valid/images')}
+test: {os.path.abspath('Dataset_Juguetes_Unificado/test/images')}
+
+nc: 2
+names: ['carro', 'moto']
+"""
+
+with open(ruta_yaml, 'w') as f:
+    f.write(yaml_content)
+
+# 3. Instalar Ultralytics y entrenar en la GPU
+!pip install ultralytics
+
+from ultralytics import YOLO
+
+print("\nIniciando entrenamiento acelerado por GPU...")
+model = YOLO("yolov8n.pt")
+
+model.train(
+    data=ruta_yaml,
+    epochs=50,
+    imgsz=640,
+    project="Resultado_Juguetes",
+    name="Modelo_Unificado"
+)
+
+print("\n¡Entrenamiento finalizado exitosamente!")
 </code>
 </pre>
 
