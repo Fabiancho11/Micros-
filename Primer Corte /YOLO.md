@@ -89,38 +89,74 @@ El código utilizado en la ESP32 fue desarrollado en <b>MicroPython</b>. A conti
 
 <pre>
 <code>
-# =========================================================
-# CÓDIGO MICROPYTHON - ESP32
-# =========================================================
+from machine import Pin
+import sys
+import uselect
+import time
 
-# Pegar aquí el código utilizado en la ESP32.
-</code>
-</pre>
+# LEDS
+rojo = Pin(26, Pin.OUT)
+verde = Pin(27, Pin.OUT)
 
-<h2><b>Librerías utilizadas</b></h2>
+# ESTADO YOLO
+deteccion_yolo = ""
 
-<p>
-Para desarrollar el sistema se utilizaron diferentes librerías de Python necesarias para la comunicación con la ESP32, procesamiento de imágenes, funcionamiento del modelo YOLO y ejecución del programa.
-</p>
+# SERIAL
+poll = uselect.poll()
+poll.register(sys.stdin, uselect.POLLIN)
 
-<p>
-Las librerías utilizadas fueron descargadas e instaladas previamente en el entorno de desarrollo.
-</p>
+print("================================")
+print("ESP32 LISTO (Solo YOLO, sin pulsadores)")
+print("GPIO 27 -> LED VERDE (Moto)")
+print("GPIO 26 -> LED ROJO (Carro)")
+print("Esperando YOLO...")
+print("================================")
 
-<pre>
-<code>
-# =========================================================
-# LIBRERÍAS UTILIZADAS
-# =========================================================
+# BUCLE PRINCIPAL
+while True:
 
-# Escribir aquí las librerías utilizadas en el proyecto.
+    # RECIBIR YOLO
+    eventos = poll.poll(10)
+
+    if eventos:
+        dato = sys.stdin.readline().strip()
+        print("Recibido:", dato)
+
+        if dato == "CARRO":
+            deteccion_yolo = "CARRO"
+
+        elif dato == "MOTO":
+            deteccion_yolo = "MOTO"
+
+        elif dato == "NINGUNO":
+            deteccion_yolo = ""
+
+    # CONTROL DE LEDS SEGÚN YOLO
+    if deteccion_yolo == "CARRO":
+        rojo.value(1)
+        verde.value(0)
+
+    elif deteccion_yolo == "MOTO":
+        rojo.value(0)
+        verde.value(1)
+
+    else:
+        # Si recibe "NINGUNO" o está vacío, apaga ambos
+        rojo.value(0)
+        verde.value(0)
+
+    time.sleep_ms(10)
 </code>
 </pre>
 
 <h2><b>Obtención del conjunto de datos</b></h2>
 
 <p>
-Para entrenar el modelo se utilizó <b>Roboflow</b>, donde se obtuvo un conjunto de imágenes de los objetos que se querían detectar.
+Para realizar el proyecto se utilizó <b>Roboflow</b>, una plataforma que permitió obtener un conjunto de datos ya organizado y preparado para el entrenamiento del modelo de detección de objetos.
+</p>
+
+<p>
+El archivo obtenido contenía las imágenes y los datos correspondientes a dos clases de objetos: <b>carros de juguete</b> y <b>motos de juguete</b>. De esta manera, no fue necesario crear y organizar manualmente el conjunto de datos desde cero.
 </p>
 
 <p>
@@ -128,31 +164,34 @@ El conjunto de datos estuvo compuesto por:
 </p>
 
 <ul>
-  <li><b>1498 imágenes de motos.</b></li>
-  <li><b>1096 imágenes de carros.</b></li>
+  <li><b>1498 imágenes de motos de juguete.</b></li>
+  <li><b>1096 imágenes de carros de juguete.</b></li>
 </ul>
 
 <p>
-Estas imágenes fueron utilizadas como datos de entrenamiento para que el modelo pudiera aprender a diferenciar entre una moto y un carro.
+Estas imágenes y sus respectivos datos fueron utilizados posteriormente para entrenar el modelo YOLO, permitiendo que este aprendiera a diferenciar entre un carro de juguete y una moto de juguete.
+</p>
+
+<p>
+El conjunto de datos fue obtenido mediante la plataforma 
+<a href="https://roboflow.com/"><b>Roboflow</b></a>.
 </p>
 
 <h3><b>Conjunto de datos utilizado</b></h3>
 
 <p align="center">
-  <!-- Colocar aquí la imagen del conjunto de datos de Roboflow -->
   <img src="Imagenes/YOLO/Roboflow.png" alt="Conjunto de datos utilizado en Roboflow" width="700">
 </p>
 
 <h2><b>Entrenamiento del modelo</b></h2>
 
 <p>
-Después de obtener las imágenes, fue necesario entrenar el modelo de YOLO para que pudiera reconocer correctamente las dos clases: <b>moto</b> y <b>carro</b>.
+Después de obtener el conjunto de datos desde <b>Roboflow</b>, se procedió a entrenar el modelo de <b>YOLO</b> para que pudiera reconocer las dos clases de objetos: <b>moto de juguete</b> y <b>carro de juguete</b>.
 </p>
 
 <p>
-Para realizar el entrenamiento se utilizó <b>Google Colab</b>, debido a que el entrenamiento de un modelo de visión artificial requiere una mayor capacidad de procesamiento. Colab permitió utilizar recursos computacionales superiores a los disponibles localmente.
+Para realizar el entrenamiento se utilizó <b>Google Colab</b>, debido a que el entrenamiento de un modelo de visión artificial requiere una mayor capacidad de procesamiento. Esta herramienta permitió utilizar recursos computacionales adecuados para realizar el entrenamiento del modelo.
 </p>
-
 <p>
 En Google Colab se ingresaron los archivos correspondientes al conjunto de datos obtenido desde Roboflow y posteriormente se ejecutó el proceso de entrenamiento del modelo.
 </p>
