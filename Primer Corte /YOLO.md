@@ -21,37 +21,44 @@ Primero se desarrolló el siguiente esquema en Wokwi, utilizando una ESP32, dos 
 Posteriormente, se desarrolló el código en <b>MicroPython</b> para programar el funcionamiento de la ESP32. El código permite encender y apagar cada LED mediante su respectivo pulsador.
 </p>
 
-<p>
-El funcionamiento del programa se explica mediante comentarios dentro del código, indicando la configuración de los pines, la lectura de los pulsadores y el control de los LEDs.
-</p>
-
-<h3 align="center"><b>Código utilizado</b></h3>
+<h3 align="center"><b>Código MicroPython</b></h3>
 
 <pre>
 <code>
-# =========================================================
-# CÓDIGO EN MICROPYTHON
-# =========================================================
+from machine import Pin
+import time
 
-# Pegar aquí el código desarrollado en MicroPython.
+# ==========================================
+# LEDS
+# ==========================================
+rojo = Pin(26, Pin.OUT)
+verde = Pin(25, Pin.OUT)
 
+# ==========================================
+# PULSADORES
+# ==========================================
+pulsador_rojo = Pin(13, Pin.IN, Pin.PULL_UP)
+pulsador_verde = Pin(14, Pin.IN, Pin.PULL_UP)
+
+# ==========================================
+# BUCLE PRINCIPAL
+# ==========================================
+while True:
+
+    # CONTROL POR PULSADORES
+    if pulsador_rojo.value() == 0:
+        rojo.value(1)
+        verde.value(0)
+
+    elif pulsador_verde.value() == 0:
+        rojo.value(0)
+        verde.value(1)
+
+    else:
+        rojo.value(0)
+        verde.value(0)
+
+    time.sleep_ms(10)
 
 </code>
 </pre>
-
-<h2 align="center"><b>Funcionamiento del sistema</b></h2>
-
-<p>
-El sistema funciona mediante dos pulsadores, donde cada uno controla un LED de forma independiente. Al presionar un pulsador, la ESP32 detecta su estado y modifica el estado del LED correspondiente.
-</p>
-
-<ul>
-  <li>El primer pulsador controla el primer LED.</li>
-  <li>El segundo pulsador controla el segundo LED.</li>
-  <li>Cada LED puede encenderse y apagarse de manera independiente.</li>
-  <li>El programa se ejecuta utilizando MicroPython en la ESP32.</li>
-</ul>
-
-<p>
-Con este desarrollo se comprobó el funcionamiento del circuito mediante la simulación en <b>Wokwi</b> y la programación de la ESP32 utilizando <b>MicroPython</b>.
-</p>
