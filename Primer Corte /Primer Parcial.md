@@ -1,4 +1,4 @@
-<h1 style="text-align: center;">Primer Parcial - Microcontroladores </h1>
+<h1 salign = center>Primer Parcial - Microcontroladores </h1>
 
 <p><strong>Integrantes:</strong></p>
 <ul>
