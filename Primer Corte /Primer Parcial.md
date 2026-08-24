@@ -6,6 +6,22 @@
     <li>Fabian Abril Casallas</li>
 </ul>
 
+<hr>
+
+<h1>Auto</h1>
+
+<p>
+    Para generar la figura de un auto en la pantalla de un osciloscopio se utilizan los pines DAC de la ESP32, específicamente el <strong>GPIO 25</strong> para controlar el eje X y el <strong>GPIO 26</strong> para controlar el eje Y. Estos pines cuentan con conversión digital a analógica, por lo que permiten generar diferentes niveles de voltaje. Al variar continuamente el voltaje de ambos pines dentro de su rango de funcionamiento, es posible controlar la posición horizontal y vertical del punto mostrado en la pantalla del osciloscopio configurado en modo X-Y.
+</p>
+
+<p>
+    La figura del auto se genera mediante una serie de coordenadas almacenadas en las variables <code>ruta_x</code> y <code>ruta_y</code>. Cada par de valores representa una posición dentro de la pantalla, y al recorrer estas coordenadas en un orden determinado se pueden dibujar las diferentes partes de la silueta, como el chasis, el techo y las ruedas. La variación simultánea de los voltajes en los pines GPIO 25 y GPIO 26 hace que el punto de luz se desplace por cada una de estas posiciones hasta formar la figura completa del auto.
+</p>
+
+<p>
+    Para obtener líneas más sólidas y evitar saltos bruscos entre las coordenadas, se utiliza una interpolación de puntos mediante la variable <code>pasos_por_linea = 20</code>. Un ciclo <code>for</code> genera posiciones intermedias entre cada par de coordenadas, logrando un movimiento gradual del punto de luz. Finalmente, todo el recorrido se repite constantemente mediante un ciclo <code>while True</code>. Gracias a este refresco continuo y a la persistencia de la visión, el ojo humano percibe una imagen fija de la silueta del auto en la pantalla.
+</p>
+
 <h2>Simulación en Wokwi</h2>
 
 <p>
@@ -21,22 +37,6 @@
     <a href="https://wokwi.com/projects/472703213305188353" target="_blank">
         Ver simulación en Wokwi
     </a>
-</p>
-
-<hr>
-
-<h1>Auto</h1>
-
-<p>
-    Para generar la figura de un auto en la pantalla de un osciloscopio se utilizan los pines DAC de la ESP32, específicamente el <strong>GPIO 25</strong> para controlar el eje X y el <strong>GPIO 26</strong> para controlar el eje Y. Estos pines cuentan con conversión digital a analógica, por lo que permiten generar diferentes niveles de voltaje. Al variar continuamente el voltaje de ambos pines dentro de su rango de funcionamiento, es posible controlar la posición horizontal y vertical del punto mostrado en la pantalla del osciloscopio configurado en modo X-Y.
-</p>
-
-<p>
-    La figura del auto se genera mediante una serie de coordenadas almacenadas en las variables <code>ruta_x</code> y <code>ruta_y</code>. Cada par de valores representa una posición dentro de la pantalla, y al recorrer estas coordenadas en un orden determinado se pueden dibujar las diferentes partes de la silueta, como el chasis, el techo y las ruedas. La variación simultánea de los voltajes en los pines GPIO 25 y GPIO 26 hace que el punto de luz se desplace por cada una de estas posiciones hasta formar la figura completa del auto.
-</p>
-
-<p>
-    Para obtener líneas más sólidas y evitar saltos bruscos entre las coordenadas, se utiliza una interpolación de puntos mediante la variable <code>pasos_por_linea = 20</code>. Un ciclo <code>for</code> genera posiciones intermedias entre cada par de coordenadas, logrando un movimiento gradual del punto de luz. Finalmente, todo el recorrido se repite constantemente mediante un ciclo <code>while True</code>. Gracias a este refresco continuo y a la persistencia de la visión, el ojo humano percibe una imagen fija de la silueta del auto en la pantalla.
 </p>
 
 <h2>Código Completo</h2>
