@@ -125,7 +125,7 @@ comandos de voz mediante el chat bot.
          width="700">
 </p>
 
-<h2><b>4. Código de la aplicación Python (PC)</b></h2>
+<h2><b>Codigo de la aplicación Python (PC)</b></h2>
 
 <p>
 Para el control por texto y voz se utlizo Groq AI, al cual se accede mediante una URL y una API Key. 
