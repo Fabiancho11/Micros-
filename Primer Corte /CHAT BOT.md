@@ -400,7 +400,7 @@ LEDs rojo y verde.
 
 <p align="center">
     <!-- Cambiar el enlace por el video real -->
-    <a href="https://www.youtube.com/" target="_blank">
+    <a href="https://youtu.be/EHqepvXtMkA" target="_blank">
         <b>Ver video de funcionamiento en YouTube</b>
     </a>
 </p>
