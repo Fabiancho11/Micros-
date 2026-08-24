@@ -420,7 +420,7 @@ Hay que destacar una cosa se tuvo que utilizar el modelo que trae Yolo por defec
 <h2><b>Diagrama de Bloques</b></h2>
 
 <p align="center">
-  <img src="../Imagenes/Diagrama.png" width="600">
+  <img src="../Imagenes/Diagrama.jpg" width="600">
 </p>
 
 <h2><b>Video de funcionamiento</b></h2>
