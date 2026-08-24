@@ -1,4 +1,4 @@
-<h1><b>CHATBOT DOMOTICO PARA CONTROLAR LEDS POR VOZ</b></h1>
+<h1><b>CHATBOT PARA CONTROLAR LEDS POR VOZ</b></h1>
 
 <p>
 Para poder utlizar controlar el encendido y apagado de un led rojo y verde por comandos de voz utlizando un chat bot se creo un sistema
