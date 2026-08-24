@@ -1,4 +1,4 @@
-<h1>Primer Parcial - Microcontroladores - Auto</h1>
+<h1>Primer Parcial - Microcontroladores </h1>
 
 <p><strong>Integrantes:</strong></p>
 <ul>
@@ -8,10 +8,10 @@
 
 <hr>
 
-<h1>Auto</h1>
+<h1 style="text-align: center;">Generación de la figura de un auto en un osciloscopio por medio de la ESP-32</h1>
 
 <p>
-    Para generar la figura de un auto en la pantalla de un osciloscopio se utilizan los pines DAC de la ESP32, específicamente el <strong>GPIO 25</strong> para controlar el eje X y el <strong>GPIO 26</strong> para controlar el eje Y. Estos pines cuentan con conversión digital a analógica, por lo que permiten generar diferentes niveles de voltaje. Al variar continuamente el voltaje de ambos pines dentro de su rango de funcionamiento, es posible controlar la posición horizontal y vertical del punto mostrado en la pantalla del osciloscopio configurado en modo X-Y.
+    Para generar la figura de un auto en la pantalla de un osciloscopio se utilizan los pines DAC de la ESP-32, específicamente el <strong>GPIO 25</strong> para controlar el eje X y el <strong>GPIO 26</strong> para controlar el eje Y. Estos pines cuentan con conversión digital a analógica, por lo que permiten generar diferentes niveles de voltaje. Al variar continuamente el voltaje de ambos pines dentro de su rango de funcionamiento, es posible controlar la posición horizontal y vertical del punto mostrado en la pantalla del osciloscopio configurado en modo X-Y.
 </p>
 
 <p>
