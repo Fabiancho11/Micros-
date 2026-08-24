@@ -1,6 +1,6 @@
 <h1 align="center">ESP-WROOM-32</h1>
 
-<p>La <strong>ESP-32</strong> es un módulo basado en el microcontrolador <strong>ESP32</strong> desarrollado para aplicaciones de electrónica, automatización, robótica e Internet de las Cosas (IoT). Se caracteriza por integrar conectividad <strong>Wi-Fi y Bluetooth</strong> además de diferentes periféricos para la conexión de sensores y actuadores.</p>
+<p>La ESP-32 es un microcontrolador desarrollado para aplicaciones de electrónica, automatización, robótica e Internet de las Cosas (IoT). Se caracteriza por integrar conectividad <strong>Wi-Fi y Bluetooth</strong> además de diferentes periféricos para la conexión de sensores y actuadores.</p>
 
 <h2>Estructura y arquitectura</h2>
 
