@@ -1,26 +1,108 @@
-<h1>Auto </h1>
+<h1>Primer Parcial - Microcontroladores - Auto</h1>
 
-<p>Este proyecto muestra cómo usar un microcontrolador (como un ESP32) para dibujar la silueta de un auto en la pantalla de un osciloscopio clásico. Para lograrlo, usamos los pines DAC (Convertidor Digital a Analógico) y configuramos el osciloscopio en el famoso <strong>modo X-Y</strong>.</p>
+<p><strong>Integrantes:</strong></p>
+<ul>
+    <li>Jeicob David Pinilla Ruiz</li>
+    <li>Fabian Abril Casallas</li>
+</ul>
+
+<h2>Simulación en Wokwi</h2>
+
+<p>
+    Antes de realizar la implementación física, el proyecto fue simulado en
+    Wokwi. La simulación permitió comprobar el funcionamiento del código y
+    verificar la correcta generacion del auto por medio de la ESP-32.
+</p>
+
+<!-- Imagen de la simulación -->
+<img src="../Imagenes/Simulacion.jpg" alt="Simulación del auto en Wokwi">
+
+<p>
+    <strong>Enlace de la simulación:</strong>
+    <a href="https://wokwi.com/projects/472703213305188353" target="_blank">
+        Ver simulación en Wokwi
+    </a>
+</p>
+
+<hr>
+
+<h1>Auto</h1>
+
+<p>
+    Este proyecto muestra cómo usar un microcontrolador, como el ESP32, para dibujar la
+    silueta de un auto en la pantalla de un osciloscopio clásico. Para lograrlo, se utilizan
+    los pines DAC (Convertidor Digital a Analógico) y se configura el osciloscopio en
+    <strong>modo X-Y</strong>.
+</p>
 
 <h2>¿Cómo se hace la figura paso a paso?</h2>
 
-<p>Dibujar en un osciloscopio no es como imprimir una imagen; es más bien como jugar con un <em>Telesketch (Etch A Sketch)</em> súper rápido. Solo tienes un punto de luz que debes mover constantemente. Aquí te explico cómo funciona el código:</p>
+<p>
+    Dibujar en un osciloscopio no es como imprimir una imagen. Se utiliza un punto de luz
+    que debe moverse constantemente por la pantalla para formar la figura.
+</p>
 
-<h3>1. Controlando el rayo de luz (Los DAC)</h3>
-<p>Las primeras líneas del código configuran los pines 25 y 26. Estos pines tienen un DAC, lo que significa que pueden sacar un voltaje variable (analógico) en lugar de solo encendido/apagado (digital). El pin 25 controla el movimiento horizontal (Eje X) y el pin 26 controla el vertical (Eje Y). Al variar los voltajes al mismo tiempo, movemos el punto de luz a cualquier coordenada de la pantalla.</p>
+<h3>1. Controlando el rayo de luz: los DAC</h3>
 
-<h3>2. El problema de "no poder levantar el lápiz"</h3>
-<p>El reto más grande en un osciloscopio es que el rayo de luz siempre está encendido. Si quieres dibujar el contorno del auto y luego una ventana, no puedes "levantar el lápiz" para saltar al centro. ¿La solución? El código define una lista de <code>puntos_clave</code> que traza el carro en <strong>un solo trazo continuo</strong>. Empieza por el chasis, hace las llantas hacia abajo y vuelve a subir. Para hacer la ventana, el trazo entra por el baúl, dibuja el cuadrado de la ventana, y <em>se devuelve por el mismo camino</em> para salir de nuevo al contorno sin que se note una línea extra cruzando el auto.</p>
+<p>
+    Los pines 25 y 26 del ESP32 cuentan con conversión digital a analógica. Esto permite
+    generar diferentes niveles de voltaje en lugar de simplemente tener un estado de
+    encendido o apagado.
+</p>
 
-<h3>3. Rellenando los huecos (Interpolación)</h3>
-<p>Si solo le enviamos al osciloscopio las coordenadas de las esquinas (los puntos clave), el punto de luz saltaría tan rápido de un extremo a otro que apenas veríamos unas líneas muy tenues o el dibujo se deformaría. Por eso usamos la variable <code>pasos_por_linea = 20</code>. El ciclo <code>for</code> que le sigue hace un cálculo matemático simple para crear 20 puntos intermedios entre cada esquina. Esto obliga al rayo del osciloscopio a viajar más despacio y dibujar líneas sólidas y bien definidas.</p>
+<ul>
+    <li><strong>GPIO 25:</strong> controla el movimiento horizontal, correspondiente al eje X.</li>
+    <li><strong>GPIO 26:</strong> controla el movimiento vertical, correspondiente al eje Y.</li>
+</ul>
 
-<h3>4. Engañando al ojo humano (El bucle infinito)</h3>
-<p>Al final del código hay un <code>while True</code>. El fósforo de la pantalla del osciloscopio brilla solo por una fracción de segundo. Para que veamos un auto completo y estático, el microcontrolador tiene que enviar todas las coordenadas (la lista <code>ruta_x</code> y <code>ruta_y</code>) una y otra vez lo más rápido posible. Gracias a la persistencia de nuestra visión, en lugar de ver un punto moviéndose a toda velocidad, vemos la imagen fija del coche.</p>
+<p>
+    Al cambiar los voltajes de ambos pines simultáneamente, es posible mover el punto de luz
+    del osciloscopio a diferentes posiciones de la pantalla.
+</p>
 
+<h3>2. Creación de la silueta del auto</h3>
+
+<p>
+    El osciloscopio mantiene el rayo de luz encendido, por lo que no es posible levantar el
+    lápiz como se haría al dibujar sobre papel. Por esta razón, el código utiliza una lista
+    llamada <code>puntos_clave</code>, la cual contiene las coordenadas necesarias para
+    formar la figura del auto mediante un recorrido continuo.
+</p>
+
+<p>
+    El recorrido permite dibujar el chasis, las ruedas y otros elementos de la silueta,
+    evitando saltos innecesarios entre las diferentes partes de la figura.
+</p>
+
+<h3>3. Interpolación de puntos</h3>
+
+<p>
+    Si únicamente se enviaran las coordenadas de las esquinas, el punto de luz realizaría
+    saltos muy rápidos entre ellas. Para evitar esto, se utiliza la variable
+    <code>pasos_por_linea = 20</code>.
+</p>
+
+<p>
+    Mediante un ciclo <code>for</code> se generan puntos intermedios entre cada par de
+    coordenadas. Esto permite que el punto de luz se desplace gradualmente y forme líneas
+    más sólidas y definidas.
+</p>
+
+<h3>4. Actualización continua de la imagen</h3>
+
+<p>
+    El código utiliza un ciclo <code>while True</code> para repetir constantemente el
+    recorrido de las coordenadas almacenadas en <code>ruta_x</code> y
+    <code>ruta_y</code>.
+</p>
+
+<p>
+    Debido a la persistencia de la visión y al refresco continuo de la pantalla, el ojo
+    humano percibe una imagen fija, aunque en realidad el punto de luz está recorriendo
+    continuamente toda la silueta del auto.
+</p>
 
 <h2>Código Completo</h2>
-
 
 <pre><code>
 
@@ -94,10 +176,6 @@ while True:
         dac_y.write(ruta_y[i])  
 
 </code></pre>
-
-<h2>Simulación</h2>
-<p>Puedes probar este circuito y ver cómo se dibuja paso a paso sin necesidad de hardware físico usando Wokwi.</p>
-<p><strong>Enlace a la simulación en Wokwi:</strong> <a href="[https://wokwi.com/projects/472703213305188353]">[AQUÍ_PONES_TU_ENLACE_DE_WOKWI]</a></p>
 
 <h2>Demostración en Video</h2>
 <p>Mira el resultado final funcionando directamente en un osciloscopio real:</p>
