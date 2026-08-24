@@ -381,13 +381,6 @@ if __name__ == "__main__":
 
 <h2><b>Diagrama de bloques</b></h2>
 
-<p>
-El usuario puede interactuar con el sistema mediante voz, texto o botones.
-La aplicación Python recibe estas instrucciones, las procesa y envía los
-comandos correspondientes a la ESP32. Finalmente, la ESP32 controla los
-LEDs rojo y verde.
-</p>
-
 <p align="center">
     <!-- Colocar aquí la imagen del diagrama de bloques -->
     <img src="../Imagenes/DiagramaBloques.png"
