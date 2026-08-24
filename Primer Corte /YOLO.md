@@ -1,3 +1,8 @@
+<p><strong>Integrantes:</strong></p>
+<ul>
+    <li>Jeicob David Pinilla Ruiz</li>
+    <li>Fabian Abril Casallas</li>
+</ul>
 
 <h2 align="left"><b>Desarrollo del esquema en Wokwi</b></h2>
 
