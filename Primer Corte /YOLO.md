@@ -417,7 +417,11 @@ if esp32.is_open:
 Hay que destacar una cosa se tuvo que utilizar el modelo que trae Yolo por defecto ya que estaba detectado una persona como un carro y se tuvo que ajustar el valor de precisión para no confundir con otros objetos.
 </p>
 
-<h2><b>Funcionamiento del sistema</b></h2>
+<h2><b>Diagrama de Bloques</b></h2>
+
+<p align="center">
+  <img src="../Imagenes/Diagrama.png" width="600">
+</p>
 
 <h2><b>Video de funcionamiento</b></h2>
 
