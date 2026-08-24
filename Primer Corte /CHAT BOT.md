@@ -6,15 +6,7 @@ de control apoyado por el chat bot qrok ai.
 </p>
 
 
-<h2><b>Funcionamiento general</b></h2>
-
-<p>
-El sistema tiene tres partes principales:
-</p>
-
-<ul>
-    <li><b>ESP32 (MicroPython):</b> controla los LEDs y recibe comandos.</li>
-</ul>
+<h2><b>vESP32 (MicroPython):</b> controla los LEDs y recibe comandos.</b></h2>
 
 <pre><code>    
 from machine import Pin
