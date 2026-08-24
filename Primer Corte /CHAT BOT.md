@@ -1,3 +1,8 @@
+<p><strong>Integrantes:</strong></p>
+<ul>
+    <li>Jeicob David Pinilla Ruiz</li>
+    <li>Fabian Abril Casallas</li>
+</ul>
 <h1><b>CHATBOT PARA CONTROLAR LEDS POR VOZ</b></h1>
 
 <p>
