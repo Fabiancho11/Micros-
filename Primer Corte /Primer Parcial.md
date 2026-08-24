@@ -114,6 +114,5 @@ while True:
 
 </code></pre>
 
-<h2>Demostración en Video</h2>
-<p>Mira el resultado final funcionando directamente en un osciloscopio real:</p>
+<h2>Funcionamiento</h2>
 <p><a href="https://youtube.com/shorts/MMPqPZSSY4s" target="_blank">Ver video de funcionamiento en YouTube</a></p>
