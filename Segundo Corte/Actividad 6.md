@@ -5,8 +5,7 @@
     <li>Fabian Abril Casallas</li>
 </ul>
 
-<p><strong>PUNTO 1</strong></p>
-<h1><b>SISTEMA DE DIBUJO 3D CON BRAZO ROBÓTICO</b></h1>
+<h1><b>PUNTO 1</b></h1>
 
 <p>
 Sistema de dibujo 3D que integra un brazo robótico controlado mediante una ESP32
@@ -104,9 +103,8 @@ realizada mediante PyBullet.
 </p>
 
 <p align="center">
-<p><strong>PUNTO 2</strong></p>
 
-<h1><b>SISTEMA INTEGRADO: VISIÓN ARTIFICIAL Y ESP-NOW</b></h1>
+<h1><b>PUNTO 2</b></h1>
 
 <p>
 El sistema integra visión artificial, comunicación serial y comunicación inalámbrica
