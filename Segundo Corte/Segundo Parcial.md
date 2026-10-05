@@ -11,25 +11,6 @@
     Clasificación de monedas mediante visión artificial (YOLO), con ESP32 e interfaz de monitoreo en Python.
 </p>
 
-<hr>
-
-<h2><b>Funcionamiento</b></h2>
-
-<p>
-Las monedas son depositadas a través de una rampa hacia una banda transportadora
-manipulada por un motoreductor. A medida que avanza cada moneda por la banda transportadora 
-la camara de un celular colocada en un soporte captura la imagen para procesarla
-con el modelo YOLO. Posteriormente la moneda cae hacia un disco selector
-rotativo impulsado por un motor paso a paso, el cual posiciona de manera precisa uno
-de los 10 vasos.
-</p>
-
-<p>
-Una vez que un vaso se llena, un carro robótico con garra accionado por un servomotor
-MG90S lo retira y lo traslada hacia la estación de tapado, donde un mecanismo de
-piñón y cremallera coloca la tapa para completar el empaquetado.
-</p>
-
 <h2><b>1. Banda Transportadora y Soporte de Cámara </b></h2>
 
 <p>
