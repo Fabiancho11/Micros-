@@ -75,7 +75,7 @@ posición.
 
 <p align="center">
     <!-- Colocar aquí la imagen del diagrama de bloques -->
-    <img src="../Imagenes/DiagramaBloques.png"
+    <img src="../Imagenes/bloque2.png"
          alt="Diagrama de bloques del sistema"
          width="800">
 </p>
@@ -103,7 +103,7 @@ ESP32. Finalmente, el número reconocido es mostrado en una pantalla OLED.
 <h2><b>2. Diagrama de Bloques</b></h2>
 
 <p align="center">
-    <img src="../Imagenes/DiagramaBloques.png"
+    <img src="../Imagenes/bloque3.png"
          alt="Diagrama de bloques del sistema"
          width="900">
 </p>
