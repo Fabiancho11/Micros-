@@ -35,7 +35,7 @@ carritos para permitir el intercambio de información entre ellos.
 <h2><b>Diagrama de bloques</b></h2>
 
 <p align="center">
-    <img src="../Imagenes/bloque_feromonas.png"
+    <img src="../Imagenes/bloque7.png"
          alt="Diagrama de bloques del sistema de navegación con feromonas"
          width="800">
 </p>
@@ -68,7 +68,7 @@ se envía a los demás ESP32 para que puedan utilizarla durante su navegación.
 </p>
 
 <p align="center">
-    <img src="../Imagenes/pybullet_feromonas.png"
+    <img src="../Imagenes/laberinto.png"
          alt="Simulación del laberinto y los tres carritos en PyBullet"
          width="800">
 </p>
@@ -102,7 +102,7 @@ Wi-Fi y la visualización del gemelo digital en PyBullet.
 
 <p align="center">
     <!-- Reemplazar el enlace por el video real -->
-    <a href="https://youtu.be/TUV_ENLACE_AQUI" target="_blank">
+    <a href="https://youtu.be/HMbSgn6qK1o" target="_blank">
         <b>Ver video del funcionamiento en YouTube</b>
     </a>
 </p>
@@ -124,6 +124,8 @@ cada ESP32 mediante un cuerpo de diferente color.
 
 <pre>
 <code>
+
+# PC - Gemelo Digital PyBullet e Intercambio de Feromonas con Control de Llegadas
 import socket
 import json
 import threading
@@ -131,546 +133,140 @@ import time
 import pybullet as p
 import pybullet_data
 
-
-# =========================================================
-# CONFIGURACIÓN DEL SERVIDOR
-# =========================================================
-
 PORT = 5005
 
-
-# =========================================================
-# CONFIGURACIÓN DEL LABERINTO
-# =========================================================
-
-W, H = 13, 13
-
+W, H = 15, 21
 GRID = [
-    [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
-    [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1],
-    [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
 
-
-# =========================================================
-# META Y POSICIONES INICIALES
-# =========================================================
-
-GOAL = (7, 1)
+GOAL = (11, 2)
 
 STARTS = {
-    "ESP32_1": (1, 11),
-    "ESP32_2": (5, 11),
-    "ESP32_3": (9, 11)
+    "ESP32_1": (1, 19),
+    "ESP32_2": (2, 19),
+    "ESP32_3": (3, 19)
 }
-
-
-# =========================================================
-# POSICIONES DE LOS ROBOTS
-# =========================================================
 
 robots = {
-    "ESP32_1": {
-        "x": STARTS["ESP32_1"][0],
-        "y": STARTS["ESP32_1"][1]
-    },
-
-    "ESP32_2": {
-        "x": STARTS["ESP32_2"][0],
-        "y": STARTS["ESP32_2"][1]
-    },
-
-    "ESP32_3": {
-        "x": STARTS["ESP32_3"][0],
-        "y": STARTS["ESP32_3"][1]
-    }
+    "ESP32_1": {"x": STARTS["ESP32_1"][0], "y": STARTS["ESP32_1"][1]},
+    "ESP32_2": {"x": STARTS["ESP32_2"][0], "y": STARTS["ESP32_2"][1]},
+    "ESP32_3": {"x": STARTS["ESP32_3"][0], "y": STARTS["ESP32_3"][1]},
 }
 
-
-# =========================================================
-# CLIENTES ESP32 Y PROTECCIÓN DE DATOS
-# =========================================================
-
 clientes_esp = set()
-
 lock = threading.Lock()
+llegadas = []
+tiempo_inicio = time.time()
 
-
-# =========================================================
-# SOCKET UDP
-# =========================================================
-
-sock = socket.socket(
-    socket.AF_INET,
-    socket.SOCK_DGRAM
-)
-
-sock.setsockopt(
-    socket.SOL_SOCKET,
-    socket.SO_REUSEADDR,
-    1
-)
-
-sock.bind(
-    ("0.0.0.0", PORT)
-)
-
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+sock.bind(("0.0.0.0", PORT))
 sock.settimeout(0.2)
 
-
-# =========================================================
-# SERVIDOR UDP
-# =========================================================
-
 def servidor():
-
-    print(
-        f"Servidor UDP en puerto {PORT}"
-    )
-
+    global tiempo_inicio
     while True:
-
         try:
-
             datos, addr = sock.recvfrom(1024)
-
             clientes_esp.add(addr)
-
-            msg = json.loads(
-                datos.decode()
-            )
-
+            msg = json.loads(datos.decode())
             rid = msg.get("id")
-
-
-            # -------------------------------------------------
-            # Actualizar posición del robot
-            # -------------------------------------------------
-
+            
             if rid in robots:
-
+                nx = int(msg.get("x", robots[rid]["x"]))
+                ny = int(msg.get("y", robots[rid]["y"]))
+                
                 with lock:
-
-                    robots[rid]["x"] = int(
-                        msg.get(
-                            "x",
-                            robots[rid]["x"]
-                        )
-                    )
-
-                    robots[rid]["y"] = int(
-                        msg.get(
-                            "y",
-                            robots[rid]["y"]
-                        )
-                    )
-
-
-                # -------------------------------------------------
-                # Recibir feromona depositada
-                # -------------------------------------------------
-
-                ph_dep = float(
-                    msg.get(
-                        "ph_dep",
-                        0.0
-                    )
-                )
-
-
+                    robots[rid]["x"] = nx
+                    robots[rid]["y"] = ny
+                    
+                    # Verificación de llegada a la meta
+                    if (nx, ny) == GOAL and rid not in llegadas:
+                        llegadas.append(rid)
+                        t_llegada = round(time.time() - tiempo_inicio, 2)
+                        puesto = len(llegadas)
+                        print(f"\n ¡{rid} ha LLEGADO A LA META! Puesto #{puesto} (Tiempo: {t_llegada}s)")
+                
+                ph_dep = float(msg.get("ph_dep", 0.0))
                 if ph_dep > 0:
-
                     paquete_update = json.dumps({
-
-                        "cmd": "ph_update",
-
-                        "x": robots[rid]["x"],
-
-                        "y": robots[rid]["y"],
-
-                        "v": ph_dep
-
+                        "cmd": "ph_update", "x": nx, "y": ny, "v": ph_dep
                     }).encode()
-
-
-                    # -------------------------------------------------
-                    # Enviar feromona a los demás ESP32
-                    # -------------------------------------------------
-
                     for cliente in clientes_esp:
-
                         if cliente != addr:
-
-                            sock.sendto(
-                                paquete_update,
-                                cliente
-                            )
-
-
+                            sock.sendto(paquete_update, cliente)
         except socket.timeout:
-
             pass
-
-
         except Exception:
-
             pass
 
-
-# =========================================================
-# CREAR OBJETOS 3D
-# =========================================================
-
-def crear_caja(
-    pos,
-    half_extents,
-    masa=0,
-    color=(0.7, 0.7, 0.7, 1)
-):
-
-    col = p.createCollisionShape(
-        p.GEOM_BOX,
-        halfExtents=half_extents
-    )
-
-
-    vis = p.createVisualShape(
-        p.GEOM_BOX,
-        halfExtents=half_extents,
-        rgbaColor=color
-    )
-
-
-    return p.createMultiBody(
-
-        baseMass=masa,
-
-        baseCollisionShapeIndex=col,
-
-        baseVisualShapeIndex=vis,
-
-        basePosition=pos
-
-    )
-
-
-# =========================================================
-# PROGRAMA PRINCIPAL
-# =========================================================
+def crear_caja(pos, half_extents, masa=0, color=(0.7,0.7,0.7,1)):
+    col = p.createCollisionShape(p.GEOM_BOX, halfExtents=half_extents)
+    vis = p.createVisualShape(p.GEOM_BOX, halfExtents=half_extents, rgbaColor=color)
+    return p.createMultiBody(baseMass=masa, baseCollisionShapeIndex=col, baseVisualShapeIndex=vis, basePosition=pos)
 
 def main():
-
-    # -----------------------------------------------------
-    # Iniciar servidor UDP
-    # -----------------------------------------------------
-
-    thread = threading.Thread(
-        target=servidor,
-        daemon=True
-    )
-
-    thread.start()
-
-
-    # -----------------------------------------------------
-    # Iniciar PyBullet
-    # -----------------------------------------------------
-
+    global tiempo_inicio
+    threading.Thread(target=servidor, daemon=True).start()
     p.connect(p.GUI)
+    p.setAdditionalSearchPath(pybullet_data.getDataPath())
+    p.setGravity(0, 0, -9.81)
+    
+    p.resetDebugVisualizerCamera(cameraDistance=22, cameraYaw=0, cameraPitch=-85, cameraTargetPosition=[W/2, H/2, 0])
 
-    p.setAdditionalSearchPath(
-        pybullet_data.getDataPath()
-    )
-
-    p.setGravity(
-        0,
-        0,
-        -9.81
-    )
-
-
-    p.resetDebugVisualizerCamera(
-
-        cameraDistance=16,
-
-        cameraYaw=0,
-
-        cameraPitch=-80,
-
-        cameraTargetPosition=[
-            W / 2,
-            H / 2,
-            0
-        ]
-
-    )
-
-
-    # -----------------------------------------------------
-    # Crear suelo
-    # -----------------------------------------------------
-
-    plane_id = p.createCollisionShape(
-
-        p.GEOM_BOX,
-
-        halfExtents=[
-            W / 2,
-            H / 2,
-            0.05
-        ]
-
-    )
-
-
-    p.createMultiBody(
-
-        0,
-
-        plane_id,
-
-        -1,
-
-        [
-            W / 2 - 0.5,
-            H / 2 - 0.5,
-            -0.05
-        ]
-
-    )
-
-
-    # -----------------------------------------------------
-    # Construir laberinto
-    # -----------------------------------------------------
+    plane_id = p.createCollisionShape(p.GEOM_BOX, halfExtents=[W/2, H/2, 0.05])
+    p.createMultiBody(0, plane_id, -1, [W/2-0.5, H/2-0.5, -0.05])
 
     for y in range(H):
-
         for x in range(W):
-
             if GRID[y][x] == 1:
+                crear_caja([x, H - 1 - y, 0.5], [0.48, 0.48, 0.5], 0, (0.25, 0.25, 0.28, 1))
 
-                crear_caja(
+    # Casilla Meta en (11, 2)
+    crear_caja([GOAL[0], H - 1 - GOAL[1], 0.02], [0.42, 0.42, 0.02], 0, (0.1, 0.9, 0.1, 1))
 
-                    [
-                        x,
-                        y,
-                        0.5
-                    ],
-
-                    [
-                        0.48,
-                        0.48,
-                        0.5
-                    ],
-
-                    0,
-
-                    (
-                        0.25,
-                        0.25,
-                        0.28,
-                        1
-                    )
-
-                )
-
-
-    # -----------------------------------------------------
-    # Crear meta
-    # -----------------------------------------------------
-
-    crear_caja(
-
-        [
-            GOAL[0],
-            GOAL[1],
-            0.02
-        ],
-
-        [
-            0.42,
-            0.42,
-            0.02
-        ],
-
-        0,
-
-        (
-            0.1,
-            0.9,
-            0.1,
-            1
-        )
-
-    )
-
-
-    # -----------------------------------------------------
-    # Colores de los ESP32
-    # -----------------------------------------------------
-
-    COLOR_AMARILLO = (
-        1.0,
-        0.85,
-        0.0,
-        1.0
-    )
-
-    COLOR_AZUL = (
-        0.1,
-        0.4,
-        0.9,
-        1.0
-    )
-
-    COLOR_VERDE = (
-        0.1,
-        0.8,
-        0.2,
-        1.0
-    )
-
-
-    # -----------------------------------------------------
-    # Crear carritos
-    # -----------------------------------------------------
-
+    # Vehículos (ESP32_3 en ROJO)
     cuerpos = {
-
-        "ESP32_1": crear_caja(
-
-            [
-                STARTS["ESP32_1"][0],
-                STARTS["ESP32_1"][1],
-                0.35
-            ],
-
-            [
-                0.3,
-                0.22,
-                0.2
-            ],
-
-            1.0,
-
-            COLOR_AMARILLO
-
-        ),
-
-
-        "ESP32_2": crear_caja(
-
-            [
-                STARTS["ESP32_2"][0],
-                STARTS["ESP32_2"][1],
-                0.35
-            ],
-
-            [
-                0.3,
-                0.22,
-                0.2
-            ],
-
-            1.0,
-
-            COLOR_AZUL
-
-        ),
-
-
-        "ESP32_3": crear_caja(
-
-            [
-                STARTS["ESP32_3"][0],
-                STARTS["ESP32_3"][1],
-                0.35
-            ],
-
-            [
-                0.3,
-                0.22,
-                0.2
-            ],
-
-            1.0,
-
-            COLOR_VERDE
-
-        )
-
+        "ESP32_1": crear_caja([STARTS["ESP32_1"][0], H - 1 - STARTS["ESP32_1"][1], 0.35], [0.3, 0.22, 0.2], 1.0, (1.0, 0.85, 0.0, 1.0)), # Amarillo
+        "ESP32_2": crear_caja([STARTS["ESP32_2"][0], H - 1 - STARTS["ESP32_2"][1], 0.35], [0.3, 0.22, 0.2], 1.0, (0.1, 0.4, 0.9, 1.0)),  # Azul
+        "ESP32_3": crear_caja([STARTS["ESP32_3"][0], H - 1 - STARTS["ESP32_3"][1], 0.35], [0.3, 0.22, 0.2], 1.0, (0.9, 0.1, 0.1, 1.0)),  # ROJO
     }
 
-
-    print(
-        "PyBullet iniciado con colores personalizados."
-    )
-
-
-    # -----------------------------------------------------
-    # Bucle principal de simulación
-    # -----------------------------------------------------
+    tiempo_inicio = time.time()
+    print("--- INICIANDO SIMULACIÓN DE CARRERA Y NAVEGACIÓN ---")
 
     while p.isConnected():
-
         with lock:
-
-            datos = {
-                rid: dict(v)
-                for rid, v in robots.items()
-            }
-
-
+            datos = {rid: dict(v) for rid, v in robots.items()}
         for rid, info in datos.items():
-
-            p.resetBasePositionAndOrientation(
-
-                cuerpos[rid],
-
-                [
-                    info["x"],
-                    info["y"],
-                    0.35
-                ],
-
-                [
-                    0,
-                    0,
-                    0,
-                    1
-                ]
-
-            )
-
-
+            p.resetBasePositionAndOrientation(cuerpos[rid], [info["x"], H - 1 - info["y"], 0.35], [0, 0, 0, 1])
         p.stepSimulation()
-
-        time.sleep(
-            1 / 60
-        )
-
-
-    p.disconnect()
-
-
-# =========================================================
-# INICIO DEL PROGRAMA
-# =========================================================
+        time.sleep(1/60)
 
 if __name__ == "__main__":
-
     main()
+    
 </code>
 </pre>
 
@@ -691,385 +287,135 @@ como objetivo llegar a la posición <strong>(7, 1)</strong>.
 
 <pre>
 <code>
-import network
-import socket
-import time
-import json
-import random
 
-
-# =========================================================
-# CONFIGURACIÓN WI-FI
-# =========================================================
+import network, socket, time, json, random
 
 SSID = "TVC_FAMILIAABRIL"
-
 PASSWORD = "SeA1ft81oD"
-
 PC_IP = "192.168.1.2"
-
 PC_PORT = 5005
 
-
-# =========================================================
-# IDENTIFICACIÓN DEL ROBOT
-# =========================================================
-
 ROBOT_ID = "ESP32_1"
-
-
-# =========================================================
-# CONFIGURACIÓN DEL LABERINTO
-# =========================================================
-
-W, H = 13, 13
-
+W, H = 15, 21
 GRID = [
-    [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
-    [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1],
-    [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
+GOAL = (11, 2)
+x, y = 1, 19
 
+pheromone = {(c, r): 1.0 for r in range(H) for c in range(W) if GRID[r][c] == 0}
+memoria_camino = set([(x, y)]) # Recuerda por dónde ha pasado para no hacer bucles pequeños
+pila_retorno = [] # Le sirve para dar reversa si entra a un callejón sin salida
 
-# =========================================================
-# META
-# =========================================================
-
-GOAL = (7, 1)
-
-
-# =========================================================
-# POSICIÓN INICIAL
-# =========================================================
-
-x, y = 1, 11
-
-visitados = set([
-    (x, y)
-])
-
-
-# =========================================================
-# MAPA DE FEROMONAS
-# =========================================================
-
-pheromone = {}
-
-for r in range(H):
-
-    for c in range(W):
-
-        if GRID[r][c] == 0:
-
-            pheromone[
-                (c, r)
-            ] = 1.0
-
-
-# =========================================================
-# CONEXIÓN WI-FI
-# =========================================================
-
-wlan = network.WLAN(
-    network.STA_IF
-)
-
+wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
+wlan.connect(SSID, PASSWORD)
+while not wlan.isconnected(): time.sleep(0.5)
 
-wlan.connect(
-    SSID,
-    PASSWORD
-)
-
-
-while not wlan.isconnected():
-
-    time.sleep(0.5)
-
-
-# =========================================================
-# SOCKET UDP
-# =========================================================
-
-sock = socket.socket(
-    socket.AF_INET,
-    socket.SOCK_DGRAM
-)
-
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setblocking(False)
 
+def paso_hormiga_local(cx, cy):
+    vecinos_validos = []
+    # Mirar solo almas inmediatas: Arriba, Abajo, Izq, Der
+    for dx, dy in [(1,0), (-1,0), (0,1), (0,-1)]:
+        nx, ny = cx + dx, cy + dy
+        if 0 <= nx < W and 0 <= ny < H and GRID[ny][nx] == 0:
+            if (nx, ny) not in memoria_camino: # No devolvernos inmediatamente
+                vecinos_validos.append((nx, ny))
+    
+    if vecinos_validos:
+        # Exploración de hormiga: Tomar decisión probabilística basada en olores
+        pesos = []
+        for nx, ny in vecinos_validos:
+            nivel_feromona = pheromone.get((nx, ny), 1.0)
+            dist_meta = abs(nx - GOAL[0]) + abs(ny - GOAL[1])
+            atraccion = 10.0 / (dist_meta + 1)
+            peso = (nivel_feromona ** 2) * atraccion # Ecuación clásica de ACO
+            pesos.append(peso)
+        
+        # Ruleta probabilística
+        suma_pesos = sum(pesos)
+        rnd = random.random() * suma_pesos
+        acumulado = 0
+        for i, (nx, ny) in enumerate(vecinos_validos):
+            acumulado += pesos[i]
+            if acumulado >= rnd:
+                pila_retorno.append((cx, cy))
+                memoria_camino.add((nx, ny))
+                return nx, ny, True # True = Está avanzando y explorando
+        # Por seguridad de redondeo matemático
+        nx, ny = vecinos_validos[-1]
+        pila_retorno.append((cx, cy))
+        memoria_camino.add((nx, ny))
+        return nx, ny, True
+    else:
+        # ¡CALLEJÓN SIN SALIDA! - Retroceder sobre sus propios pasos
+        if len(pila_retorno) > 0:
+            px, py = pila_retorno.pop()
+            return px, py, False # False = Retrocediendo
+        return cx, cy, False
 
-# =========================================================
-# FUNCIÓN PARA OBTENER VECINOS
-# =========================================================
-
-def vecinos(px, py):
-
-    v = []
-
-    for dx, dy in [
-        (1, 0),
-        (-1, 0),
-        (0, 1),
-        (0, -1)
-    ]:
-
-        nx = px + dx
-        ny = py + dy
-
-
-        if (
-            0 <= nx < W
-            and 0 <= ny < H
-            and GRID[ny][nx] == 0
-        ):
-
-            v.append(
-                (nx, ny)
-            )
-
-
-    return v
-
-
-# =========================================================
-# FUNCIÓN HEURÍSTICA
-# =========================================================
-
-def heuristica(px, py):
-
-    return 1.0 / (
-        1
-        + abs(px - GOAL[0])
-        + abs(py - GOAL[1])
-    )
-
-
-# =========================================================
-# SELECCIONAR SIGUIENTE POSICIÓN
-# =========================================================
-
-def elegir_siguiente():
-
-    candidatos = [
-
-        v
-        for v in vecinos(x, y)
-        if v not in visitados
-
-    ]
-
-
-    if not candidatos:
-
-        candidatos = vecinos(x, y)
-
-        if not candidatos:
-
-            return (x, y)
-
-
-    pesos = []
-
-
-    for v in candidatos:
-
-        tau = pheromone.get(
-            v,
-            1.0
-        )
-
-        eta = heuristica(
-            v[0],
-            v[1]
-        )
-
-
-        pesos.append(
-
-            (tau ** 1.2)
-            *
-            (eta ** 3.0)
-
-        )
-
-
-    total = sum(pesos)
-
-
-    if total <= 0:
-
-        return random.choice(
-            candidatos
-        )
-
-
-    r = random.random() * total
-
-    acum = 0
-
-
-    for i, w in enumerate(pesos):
-
-        acum += w
-
-        if r <= acum:
-
-            return candidatos[i]
-
-
-    return candidatos[-1]
-
-
-# =========================================================
-# TEMPORIZADOR DE MOVIMIENTO
-# =========================================================
-
-ultimo_paso = time.ticks_ms()
-
-
-# =========================================================
-# BUCLE PRINCIPAL
-# =========================================================
+ultimo_movimiento = time.ticks_ms()
+ultima_evaporacion = time.ticks_ms()
 
 while True:
-
-    # -----------------------------------------------------
-    # Recibir feromonas de otros ESP32
-    # -----------------------------------------------------
-
+    # Oler feromonas de otros
     try:
-
-        data, addr = sock.recvfrom(512)
-
-        msg = json.loads(
-            data.decode()
-        )
-
-
+        data, _ = sock.recvfrom(512)
+        msg = json.loads(data.decode())
         if msg.get("cmd") == "ph_update":
+            pos_p = (msg["x"], msg["y"])
+            pheromone[pos_p] = pheromone.get(pos_p, 1.0) + msg["v"]
+    except: pass
 
-            px = msg["x"]
+    # Evaporación natural de la colonia
+    if time.ticks_diff(time.ticks_ms(), ultima_evaporacion) > 2000:
+        for k in pheromone:
+            if pheromone[k] > 1.0:
+                pheromone[k] = max(1.0, pheromone[k] * 0.95)
+        ultima_evaporacion = time.ticks_ms()
 
-            py = msg["y"]
-
-            pval = msg["v"]
-
-
-            pheromone[
-                (px, py)
-            ] = (
-
-                pheromone.get(
-                    (px, py),
-                    1.0
-                )
-
-                + pval
-
-            )
-
-
-    except:
-
-        pass
-
-
-    # -----------------------------------------------------
-    # Realizar movimiento cada segundo
-    # -----------------------------------------------------
-
-    if time.ticks_diff(
-        time.ticks_ms(),
-        ultimo_paso
-    ) > 1000:
-
-
+    # Movimiento físico paso a paso
+    if time.ticks_diff(time.ticks_ms(), ultimo_movimiento) > 500:
         if (x, y) != GOAL:
-
-            nx, ny = elegir_siguiente()
-
-
-            visitados.add(
-                (nx, ny)
-            )
-
-
-            x, y = nx, ny
-
-
-            # -------------------------------------------------
-            # Depositar feromona
-            # -------------------------------------------------
-
-            deposito = 0.5
-
-
-            pheromone[
-                (x, y)
-            ] = (
-
-                pheromone.get(
-                    (x, y),
-                    1.0
-                )
-
-                + deposito
-
-            )
-
-
-            # -------------------------------------------------
-            # Enviar posición al PC
-            # -------------------------------------------------
-
-            paquete = {
-
-                "id": ROBOT_ID,
-
-                "x": x,
-
-                "y": y,
-
-                "ph_dep": deposito
-
-            }
-
-
-            sock.sendto(
-
-                json.dumps(
-                    paquete
-                ).encode(),
-
-                (
-                    PC_IP,
-                    PC_PORT
-                )
-
-            )
-
-
-            print(
-                f"{ROBOT_ID} "
-                f"se movió a {x},{y}"
-            )
-
-
-        ultimo_paso = time.ticks_ms()
-
-
-    time.sleep_ms(50)
+            x, y, avanzando = paso_hormiga_local(x, y)
+            
+            if avanzando:
+                # Si está descubriendo camino, deposita feromona fuerte
+                deposito = 2.0
+                pheromone[(x, y)] = pheromone.get((x, y), 1.0) + deposito
+                sock.sendto(json.dumps({"id": ROBOT_ID, "x": x, "y": y, "ph_dep": deposito}).encode(), (PC_IP, PC_PORT))
+            else:
+                # Si está retrocediendo de un callejón, NO deposita feromona (para que otros no entren ahí)
+                sock.sendto(json.dumps({"id": ROBOT_ID, "x": x, "y": y, "ph_dep": 0.0}).encode(), (PC_IP, PC_PORT))
+            
+            if (x, y) == GOAL:
+                print("¡Llegué a la meta explorando!")
+        ultimo_movimiento = time.ticks_ms()
+    
+    time.sleep_ms(30)
+    
 </code>
 </pre>
 
@@ -1091,381 +437,125 @@ probabilidades de selección de sus siguientes movimientos.
 
 <pre>
 <code>
-import network
-import socket
-import time
-import json
-import random
 
-
-# =========================================================
-# CONFIGURACIÓN WI-FI
-# =========================================================
+import network, socket, time, json, random
 
 SSID = "TVC_FAMILIAABRIL"
-
 PASSWORD = "SeA1ft81oD"
-
 PC_IP = "192.168.1.2"
-
 PC_PORT = 5005
 
-
-# =========================================================
-# IDENTIFICACIÓN DEL ROBOT
-# =========================================================
-
 ROBOT_ID = "ESP32_2"
-
-
-# =========================================================
-# CONFIGURACIÓN DEL LABERINTO
-# =========================================================
-
-W, H = 13, 13
-
+W, H = 15, 21
 GRID = [
-    [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
-    [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1],
-    [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
+GOAL = (11, 2)
+x, y = 2, 19
 
+pheromone = {(c, r): 1.0 for r in range(H) for c in range(W) if GRID[r][c] == 0}
+memoria_camino = set([(x, y)])
+pila_retorno = []
 
-# =========================================================
-# META Y POSICIÓN INICIAL
-# =========================================================
-
-GOAL = (7, 1)
-
-x, y = 5, 11
-
-visitados = set([
-    (x, y)
-])
-
-
-# =========================================================
-# MAPA DE FEROMONAS
-# =========================================================
-
-pheromone = {}
-
-for r in range(H):
-
-    for c in range(W):
-
-        if GRID[r][c] == 0:
-
-            pheromone[
-                (c, r)
-            ] = 1.0
-
-
-# =========================================================
-# CONEXIÓN WI-FI
-# =========================================================
-
-wlan = network.WLAN(
-    network.STA_IF
-)
-
+wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
+wlan.connect(SSID, PASSWORD)
+while not wlan.isconnected(): time.sleep(0.5)
 
-wlan.connect(
-    SSID,
-    PASSWORD
-)
-
-
-while not wlan.isconnected():
-
-    time.sleep(0.5)
-
-
-# =========================================================
-# SOCKET UDP
-# =========================================================
-
-sock = socket.socket(
-    socket.AF_INET,
-    socket.SOCK_DGRAM
-)
-
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setblocking(False)
 
+def paso_hormiga_local(cx, cy):
+    vecinos_validos = []
+    for dx, dy in [(1,0), (-1,0), (0,1), (0,-1)]:
+        nx, ny = cx + dx, cy + dy
+        if 0 <= nx < W and 0 <= ny < H and GRID[ny][nx] == 0:
+            if (nx, ny) not in memoria_camino:
+                vecinos_validos.append((nx, ny))
+    
+    if vecinos_validos:
+        pesos = []
+        for nx, ny in vecinos_validos:
+            nivel_feromona = pheromone.get((nx, ny), 1.0)
+            dist_meta = abs(nx - GOAL[0]) + abs(ny - GOAL[1])
+            atraccion = 10.0 / (dist_meta + 1)
+            peso = (nivel_feromona ** 2) * atraccion
+            pesos.append(peso)
+        
+        suma_pesos = sum(pesos)
+        rnd = random.random() * suma_pesos
+        acumulado = 0
+        for i, (nx, ny) in enumerate(vecinos_validos):
+            acumulado += pesos[i]
+            if acumulado >= rnd:
+                pila_retorno.append((cx, cy))
+                memoria_camino.add((nx, ny))
+                return nx, ny, True
+        nx, ny = vecinos_validos[-1]
+        pila_retorno.append((cx, cy))
+        memoria_camino.add((nx, ny))
+        return nx, ny, True
+    else:
+        if len(pila_retorno) > 0:
+            px, py = pila_retorno.pop()
+            return px, py, False
+        return cx, cy, False
 
-# =========================================================
-# OBTENER VECINOS
-# =========================================================
-
-def vecinos(px, py):
-
-    v = []
-
-    for dx, dy in [
-        (1, 0),
-        (-1, 0),
-        (0, 1),
-        (0, -1)
-    ]:
-
-        nx = px + dx
-
-        ny = py + dy
-
-
-        if (
-            0 <= nx < W
-            and 0 <= ny < H
-            and GRID[ny][nx] == 0
-        ):
-
-            v.append(
-                (nx, ny)
-            )
-
-
-    return v
-
-
-# =========================================================
-# FUNCIÓN HEURÍSTICA
-# =========================================================
-
-def heuristica(px, py):
-
-    return 1.0 / (
-        1
-        + abs(px - GOAL[0])
-        + abs(py - GOAL[1])
-    )
-
-
-# =========================================================
-# SELECCIÓN DEL SIGUIENTE MOVIMIENTO
-# =========================================================
-
-def elegir_siguiente():
-
-    candidatos = [
-
-        v
-        for v in vecinos(x, y)
-        if v not in visitados
-
-    ]
-
-
-    if not candidatos:
-
-        candidatos = vecinos(x, y)
-
-        if not candidatos:
-
-            return (x, y)
-
-
-    pesos = []
-
-
-    for v in candidatos:
-
-        tau = pheromone.get(
-            v,
-            1.0
-        )
-
-        eta = heuristica(
-            v[0],
-            v[1]
-        )
-
-
-        pesos.append(
-
-            (tau ** 1.2)
-            *
-            (eta ** 3.0)
-
-        )
-
-
-    total = sum(pesos)
-
-
-    if total <= 0:
-
-        return random.choice(
-            candidatos
-        )
-
-
-    r = random.random() * total
-
-    acum = 0
-
-
-    for i, w in enumerate(pesos):
-
-        acum += w
-
-        if r <= acum:
-
-            return candidatos[i]
-
-
-    return candidatos[-1]
-
-
-# =========================================================
-# TEMPORIZADOR
-# =========================================================
-
-ultimo_paso = time.ticks_ms()
-
-
-# =========================================================
-# BUCLE PRINCIPAL
-# =========================================================
+ultimo_movimiento = time.ticks_ms()
+ultima_evaporacion = time.ticks_ms()
 
 while True:
-
-    # -----------------------------------------------------
-    # Recibir feromonas
-    # -----------------------------------------------------
-
     try:
-
-        data, addr = sock.recvfrom(512)
-
-        msg = json.loads(
-            data.decode()
-        )
-
-
+        data, _ = sock.recvfrom(512)
+        msg = json.loads(data.decode())
         if msg.get("cmd") == "ph_update":
+            pos_p = (msg["x"], msg["y"])
+            pheromone[pos_p] = pheromone.get(pos_p, 1.0) + msg["v"]
+    except: pass
 
-            px = msg["x"]
+    if time.ticks_diff(time.ticks_ms(), ultima_evaporacion) > 2000:
+        for k in pheromone:
+            if pheromone[k] > 1.0:
+                pheromone[k] = max(1.0, pheromone[k] * 0.95)
+        ultima_evaporacion = time.ticks_ms()
 
-            py = msg["y"]
-
-            pval = msg["v"]
-
-
-            pheromone[
-                (px, py)
-            ] = (
-
-                pheromone.get(
-                    (px, py),
-                    1.0
-                )
-
-                + pval
-
-            )
-
-
-    except:
-
-        pass
-
-
-    # -----------------------------------------------------
-    # Movimiento
-    # -----------------------------------------------------
-
-    if time.ticks_diff(
-        time.ticks_ms(),
-        ultimo_paso
-    ) > 1000:
-
-
+    if time.ticks_diff(time.ticks_ms(), ultimo_movimiento) > 500:
         if (x, y) != GOAL:
-
-            nx, ny = elegir_siguiente()
-
-
-            visitados.add(
-                (nx, ny)
-            )
-
-
-            x, y = nx, ny
-
-
-            # -------------------------------------------------
-            # Depositar feromona
-            # -------------------------------------------------
-
-            deposito = 0.5
-
-
-            pheromone[
-                (x, y)
-            ] = (
-
-                pheromone.get(
-                    (x, y),
-                    1.0
-                )
-
-                + deposito
-
-            )
-
-
-            # -------------------------------------------------
-            # Enviar datos al PC
-            # -------------------------------------------------
-
-            paquete = {
-
-                "id": ROBOT_ID,
-
-                "x": x,
-
-                "y": y,
-
-                "ph_dep": deposito
-
-            }
-
-
-            sock.sendto(
-
-                json.dumps(
-                    paquete
-                ).encode(),
-
-                (
-                    PC_IP,
-                    PC_PORT
-                )
-
-            )
-
-
-            print(
-                f"{ROBOT_ID} "
-                f"se movió a {x},{y}"
-            )
-
-
-        ultimo_paso = time.ticks_ms()
-
-
-    time.sleep_ms(50)
+            x, y, avanzando = paso_hormiga_local(x, y)
+            
+            if avanzando:
+                deposito = 2.0
+                pheromone[(x, y)] = pheromone.get((x, y), 1.0) + deposito
+                sock.sendto(json.dumps({"id": ROBOT_ID, "x": x, "y": y, "ph_dep": deposito}).encode(), (PC_IP, PC_PORT))
+            else:
+                sock.sendto(json.dumps({"id": ROBOT_ID, "x": x, "y": y, "ph_dep": 0.0}).encode(), (PC_IP, PC_PORT))
+            
+            if (x, y) == GOAL:
+                print("¡Llegué a la meta explorando!")
+        ultimo_movimiento = time.ticks_ms()
+    
+    time.sleep_ms(30)
+    
 </code>
 </pre>
 
@@ -1487,381 +577,125 @@ central.
 
 <pre>
 <code>
-import network
-import socket
-import time
-import json
-import random
 
-
-# =========================================================
-# CONFIGURACIÓN WI-FI
-# =========================================================
+import network, socket, time, json, random
 
 SSID = "TVC_FAMILIAABRIL"
-
 PASSWORD = "SeA1ft81oD"
-
 PC_IP = "192.168.1.2"
-
 PC_PORT = 5005
 
-
-# =========================================================
-# IDENTIFICACIÓN DEL ROBOT
-# =========================================================
-
 ROBOT_ID = "ESP32_3"
-
-
-# =========================================================
-# CONFIGURACIÓN DEL LABERINTO
-# =========================================================
-
-W, H = 13, 13
-
+W, H = 15, 21
 GRID = [
-    [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-    [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
-    [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1],
-    [1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-    [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
+GOAL = (11, 2)
+x, y = 3, 19
 
+pheromone = {(c, r): 1.0 for r in range(H) for c in range(W) if GRID[r][c] == 0}
+memoria_camino = set([(x, y)])
+pila_retorno = []
 
-# =========================================================
-# META Y POSICIÓN INICIAL
-# =========================================================
-
-GOAL = (7, 1)
-
-x, y = 9, 11
-
-visitados = set([
-    (x, y)
-])
-
-
-# =========================================================
-# MAPA DE FEROMONAS
-# =========================================================
-
-pheromone = {}
-
-for r in range(H):
-
-    for c in range(W):
-
-        if GRID[r][c] == 0:
-
-            pheromone[
-                (c, r)
-            ] = 1.0
-
-
-# =========================================================
-# CONEXIÓN WI-FI
-# =========================================================
-
-wlan = network.WLAN(
-    network.STA_IF
-)
-
+wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
+wlan.connect(SSID, PASSWORD)
+while not wlan.isconnected(): time.sleep(0.5)
 
-wlan.connect(
-    SSID,
-    PASSWORD
-)
-
-
-while not wlan.isconnected():
-
-    time.sleep(0.5)
-
-
-# =========================================================
-# SOCKET UDP
-# =========================================================
-
-sock = socket.socket(
-    socket.AF_INET,
-    socket.SOCK_DGRAM
-)
-
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setblocking(False)
 
+def paso_hormiga_local(cx, cy):
+    vecinos_validos = []
+    for dx, dy in [(1,0), (-1,0), (0,1), (0,-1)]:
+        nx, ny = cx + dx, cy + dy
+        if 0 <= nx < W and 0 <= ny < H and GRID[ny][nx] == 0:
+            if (nx, ny) not in memoria_camino:
+                vecinos_validos.append((nx, ny))
+    
+    if vecinos_validos:
+        pesos = []
+        for nx, ny in vecinos_validos:
+            nivel_feromona = pheromone.get((nx, ny), 1.0)
+            dist_meta = abs(nx - GOAL[0]) + abs(ny - GOAL[1])
+            atraccion = 10.0 / (dist_meta + 1)
+            peso = (nivel_feromona ** 2) * atraccion
+            pesos.append(peso)
+        
+        suma_pesos = sum(pesos)
+        rnd = random.random() * suma_pesos
+        acumulado = 0
+        for i, (nx, ny) in enumerate(vecinos_validos):
+            acumulado += pesos[i]
+            if acumulado >= rnd:
+                pila_retorno.append((cx, cy))
+                memoria_camino.add((nx, ny))
+                return nx, ny, True
+        nx, ny = vecinos_validos[-1]
+        pila_retorno.append((cx, cy))
+        memoria_camino.add((nx, ny))
+        return nx, ny, True
+    else:
+        if len(pila_retorno) > 0:
+            px, py = pila_retorno.pop()
+            return px, py, False
+        return cx, cy, False
 
-# =========================================================
-# OBTENER VECINOS
-# =========================================================
-
-def vecinos(px, py):
-
-    v = []
-
-    for dx, dy in [
-        (1, 0),
-        (-1, 0),
-        (0, 1),
-        (0, -1)
-    ]:
-
-        nx = px + dx
-
-        ny = py + dy
-
-
-        if (
-            0 <= nx < W
-            and 0 <= ny < H
-            and GRID[ny][nx] == 0
-        ):
-
-            v.append(
-                (nx, ny)
-            )
-
-
-    return v
-
-
-# =========================================================
-# FUNCIÓN HEURÍSTICA
-# =========================================================
-
-def heuristica(px, py):
-
-    return 1.0 / (
-        1
-        + abs(px - GOAL[0])
-        + abs(py - GOAL[1])
-    )
-
-
-# =========================================================
-# SELECCIONAR SIGUIENTE POSICIÓN
-# =========================================================
-
-def elegir_siguiente():
-
-    candidatos = [
-
-        v
-        for v in vecinos(x, y)
-        if v not in visitados
-
-    ]
-
-
-    if not candidatos:
-
-        candidatos = vecinos(x, y)
-
-        if not candidatos:
-
-            return (x, y)
-
-
-    pesos = []
-
-
-    for v in candidatos:
-
-        tau = pheromone.get(
-            v,
-            1.0
-        )
-
-        eta = heuristica(
-            v[0],
-            v[1]
-        )
-
-
-        pesos.append(
-
-            (tau ** 1.2)
-            *
-            (eta ** 3.0)
-
-        )
-
-
-    total = sum(pesos)
-
-
-    if total <= 0:
-
-        return random.choice(
-            candidatos
-        )
-
-
-    r = random.random() * total
-
-    acum = 0
-
-
-    for i, w in enumerate(pesos):
-
-        acum += w
-
-        if r <= acum:
-
-            return candidatos[i]
-
-
-    return candidatos[-1]
-
-
-# =========================================================
-# TEMPORIZADOR
-# =========================================================
-
-ultimo_paso = time.ticks_ms()
-
-
-# =========================================================
-# BUCLE PRINCIPAL
-# =========================================================
+ultimo_movimiento = time.ticks_ms()
+ultima_evaporacion = time.ticks_ms()
 
 while True:
-
-    # -----------------------------------------------------
-    # Recibir feromonas
-    # -----------------------------------------------------
-
     try:
-
-        data, addr = sock.recvfrom(512)
-
-        msg = json.loads(
-            data.decode()
-        )
-
-
+        data, _ = sock.recvfrom(512)
+        msg = json.loads(data.decode())
         if msg.get("cmd") == "ph_update":
+            pos_p = (msg["x"], msg["y"])
+            pheromone[pos_p] = pheromone.get(pos_p, 1.0) + msg["v"]
+    except: pass
 
-            px = msg["x"]
+    if time.ticks_diff(time.ticks_ms(), ultima_evaporacion) > 2000:
+        for k in pheromone:
+            if pheromone[k] > 1.0:
+                pheromone[k] = max(1.0, pheromone[k] * 0.95)
+        ultima_evaporacion = time.ticks_ms()
 
-            py = msg["y"]
-
-            pval = msg["v"]
-
-
-            pheromone[
-                (px, py)
-            ] = (
-
-                pheromone.get(
-                    (px, py),
-                    1.0
-                )
-
-                + pval
-
-            )
-
-
-    except:
-
-        pass
-
-
-    # -----------------------------------------------------
-    # Movimiento
-    # -----------------------------------------------------
-
-    if time.ticks_diff(
-        time.ticks_ms(),
-        ultimo_paso
-    ) > 1000:
-
-
+    if time.ticks_diff(time.ticks_ms(), ultimo_movimiento) > 500:
         if (x, y) != GOAL:
-
-            nx, ny = elegir_siguiente()
-
-
-            visitados.add(
-                (nx, ny)
-            )
-
-
-            x, y = nx, ny
-
-
-            # -------------------------------------------------
-            # Depositar feromona
-            # -------------------------------------------------
-
-            deposito = 0.5
-
-
-            pheromone[
-                (x, y)
-            ] = (
-
-                pheromone.get(
-                    (x, y),
-                    1.0
-                )
-
-                + deposito
-
-            )
-
-
-            # -------------------------------------------------
-            # Enviar datos al PC
-            # -------------------------------------------------
-
-            paquete = {
-
-                "id": ROBOT_ID,
-
-                "x": x,
-
-                "y": y,
-
-                "ph_dep": deposito
-
-            }
-
-
-            sock.sendto(
-
-                json.dumps(
-                    paquete
-                ).encode(),
-
-                (
-                    PC_IP,
-                    PC_PORT
-                )
-
-            )
-
-
-            print(
-                f"{ROBOT_ID} "
-                f"se movió a {x},{y}"
-            )
-
-
-        ultimo_paso = time.ticks_ms()
-
-
-    time.sleep_ms(50)
+            x, y, avanzando = paso_hormiga_local(x, y)
+            
+            if avanzando:
+                deposito = 2.0
+                pheromone[(x, y)] = pheromone.get((x, y), 1.0) + deposito
+                sock.sendto(json.dumps({"id": ROBOT_ID, "x": x, "y": y, "ph_dep": deposito}).encode(), (PC_IP, PC_PORT))
+            else:
+                sock.sendto(json.dumps({"id": ROBOT_ID, "x": x, "y": y, "ph_dep": 0.0}).encode(), (PC_IP, PC_PORT))
+            
+            if (x, y) == GOAL:
+                print("¡Llegué a la meta explorando!")
+        ultimo_movimiento = time.ticks_ms()
+    
+    time.sleep_ms(30)
+    
 </code>
 </pre>
 
@@ -2003,25 +837,3 @@ físicos y su representación virtual.
 </table>
 
 <hr>
-
-<h2><b>9. Resumen del sistema</b></h2>
-
-<p>
-El proyecto integra sistemas embebidos, comunicación inalámbrica, algoritmos
-de navegación y simulación 3D. Los tres ESP32 funcionan como agentes
-independientes que exploran el mismo laberinto y comparten información sobre
-las posiciones donde se han depositado feromonas.
-</p>
-
-<p>
-El computador recibe esta información mediante UDP y actúa como servidor
-central. Además de retransmitir las feromonas, mantiene un gemelo digital
-realizado en PyBullet que permite visualizar el movimiento de los tres
-carritos en tiempo real.
-</p>
-
-<p>
-De esta manera, el sistema combina el comportamiento cooperativo de varios
-robots con comunicación por red y una representación virtual del entorno
-físico.
-</p>
