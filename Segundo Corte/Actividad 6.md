@@ -77,7 +77,7 @@ número 4, el brazo levanta el lápiz antes de desplazarse hacia la siguiente
 posición.
 </p>
 
-
+<hr>
 <p>
 Codigo ESP32
 </p>
@@ -108,30 +108,30 @@ class I2cLcd:
         self.write_cmd(0x06)
         self.clear()
 
-    def write_cmd(self, cmd):
+def write_cmd(self, cmd):
         self.send(cmd, 0)
 
-    def write_char(self, char):
+ def write_char(self, char):
         self.send(ord(char), 1)
 
-    def send(self, data, mode):
+ def send(self, data, mode):
         high = mode | (data & 0xF0) | self.backlight
         low = mode | ((data << 4) & 0xF0) | self.backlight
         self.i2c.writeto(self.i2c_addr, bytes([high | 0x04, high, low | 0x04, low]))
 
-    def clear(self):
+def clear(self):
         self.write_cmd(0x01)
         time.sleep_ms(2)
 
-    def move_to(self, col, row):
-        addr = col & 0x3F
+ def move_to(self, col, row):
+     addr = col & 0x3F
         if row & 1:
             addr += 0x40
         if row & 2:
             addr += 0x14
         self.write_cmd(0x80 | addr)
 
-    def putstr(self, string):
+def putstr(self, string):
         for char in string:
             self.write_char(char)
 
@@ -202,7 +202,7 @@ while True:
 
 </code>
 </pre>
-
+<hr>
 <p>
 Codigo Pyton
 </p>
@@ -285,15 +285,15 @@ def mover_a_punto(x, y, z):
         residualThreshold=1e-4
     )
 
-    p.setJointMotorControlArray(
+ p.setJointMotorControlArray(
         bodyIndex=robot,
         jointIndices=[JOINT_BASE, JOINT_BRAZO, JOINT_GRIPPER],
         controlMode=p.POSITION_CONTROL,
         targetPositions=joint_poses[:3],
         forces=[120, 120, 60]
-    )
+ )
 
-    for _ in range(15):
+  for _ in range(15):
         p.stepSimulation()
         time.sleep(1 / 240)
 
@@ -307,13 +307,13 @@ def generar_numero(numero):
     s = TAMAÑO
     trazos = []
 
-    def transformar(lx, ly):
+def transformar(lx, ly):
         ly = -ly 
         dx_rot = ly * s
         dy_rot = -lx * s
         return [CX + dx_rot, CY + dy_rot, CZ]
 
-    def linea_local(x1, y1, x2, y2, pasos=10):
+def linea_local(x1, y1, x2, y2, pasos=10):
         puntos = []
         for i in range(pasos + 1):
             t = i / pasos
@@ -322,7 +322,7 @@ def generar_numero(numero):
             puntos.append(transformar(lx, ly))
         return puntos
 
-    if numero == "0":
+ if numero == "0":
         trazo = []
         for i in range(31):
             t = 2 * math.pi * i / 30
@@ -384,24 +384,24 @@ def dibujar_numero(numero):
     p.removeAllUserDebugItems()
     trazos = generar_numero(numero)
 
-    if not trazos:
+if not trazos:
         print("Número no configurado")
         return
 
-    for trazo in trazos:
+for trazo in trazos:
         if not trazo: 
             continue
         mover_a_punto(trazo[0][0], trazo[0][1], trazo[0][2] + 0.06)
         mover_a_punto(trazo[0][0], trazo[0][1], trazo[0][2])
         punto_anterior = obtener_punta()
 
-        for punto in trazo[1:]:
+for punto in trazo[1:]:
             mover_a_punto(punto[0], punto[1], punto[2])
             posicion_actual = obtener_punta()
             dibujar_linea(punto_anterior, posicion_actual)
             punto_anterior = posicion_actual
 
-        mover_a_punto(punto_anterior[0], punto_anterior[1], punto_anterior[2] + 0.06)
+mover_a_punto(punto_anterior[0], punto_anterior[1], punto_anterior[2] + 0.06)
     print(f"Número {numero} terminado")
 
 # ============================================================
@@ -422,7 +422,7 @@ while True:
     time.sleep(1 / 240)
 </code>
 </pre>
-
+<hr>
 <h2><b>Diagrama de bloques</b></h2>
 
 <p align="center">
@@ -525,41 +525,41 @@ cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 def crear_plantillas():
     plantillas = {i: [] for i in range(10)}
     
-    # 1. Plantillas base con fuente de computadora
-    for numero in range(10):
+# 1. Plantillas base con fuente de computadora
+  for numero in range(10):
         imagen = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
         texto = str(numero)
         tam = cv2.getTextSize(texto, cv2.FONT_HERSHEY_SIMPLEX, 2.6, 7)[0]
         x = (TAMANO - tam[0]) // 2
         y = (TAMANO + tam[1]) // 2
         
-        cv2.putText(
+cv2.putText(
             imagen, texto, (x, y),
             cv2.FONT_HERSHEY_SIMPLEX, 2.6, 255, 7, cv2.LINE_AA
         )
         plantillas[numero].append(imagen)
 
-    # 2. Plantilla extra para el 2 (trazo clásico a mano)
-    img_2 = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
+# 2. Plantilla extra para el 2 (trazo clásico a mano)
+img_2 = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
     cv2.ellipse(img_2, (50, 30), (25, 20), 0, 180, 360, 255, 8) 
     cv2.line(img_2, (75, 30), (25, 85), 255, 8)                
     cv2.line(img_2, (25, 85), (80, 85), 255, 8)                
     plantillas[2].append(img_2)
 
-    # 3. Plantillas extra para el 4 (abierto, estilo cruz de marcador)
-    img_4_1 = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
+# 3. Plantillas extra para el 4 (abierto, estilo cruz de marcador)
+img_4_1 = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
     cv2.line(img_4_1, (30, 20), (30, 60), 255, 9)   # Vertical izquierda
     cv2.line(img_4_1, (30, 60), (85, 60), 255, 9)   # Horizontal
     cv2.line(img_4_1, (65, 20), (65, 95), 255, 9)   # Vertical derecha cruzada
     plantillas[4].append(img_4_1)
 
-    img_4_2 = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
+img_4_2 = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
     cv2.line(img_4_2, (20, 20), (20, 55), 255, 9)   # Vertical izq corta
     cv2.line(img_4_2, (20, 55), (90, 55), 255, 9)   # Horizontal larga
     cv2.line(img_4_2, (70, 15), (70, 95), 255, 9)   # Vertical der larga
     plantillas[4].append(img_4_2)
 
-    return plantillas
+return plantillas
 
 plantillas = crear_plantillas()
 
@@ -573,57 +573,57 @@ def normalizar_numero(binaria):
         binaria, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
     )
 
-    if not contornos:
+if not contornos:
         return None, None
 
-    alto_img, ancho_img = binaria.shape
+alto_img, ancho_img = binaria.shape
     margen = 6
     contornos_validos = []
 
-    for c in contornos:
+for c in contornos:
         x, y, w, h = cv2.boundingRect(c)
         area = cv2.contourArea(c)
 
-        # Filtrar bordes tocando los extremos (mano o borde del papel)
-        if x < margen or y < margen or (x + w) > (ancho_img - margen) or (y + h) > (alto_img - margen):
+# Filtrar bordes tocando los extremos (mano o borde del papel)
+if x < margen or y < margen or (x + w) > (ancho_img - margen) or (y + h) > (alto_img - margen):
             continue
 
-        if area > 200:
+if area > 200:
             contornos_validos.append(c)
 
-    if not contornos_validos:
+if not contornos_validos:
         return None, None
 
-    # Seleccionar el contorno principal
-    contorno_ppal = max(contornos_validos, key=cv2.contourArea)
+# Seleccionar el contorno principal
+contorno_ppal = max(contornos_validos, key=cv2.contourArea)
     x, y, w, h = cv2.boundingRect(contorno_ppal)
 
-    if w <= 0 or h <= 0:
+if w <= 0 or h <= 0:
         return None, None
 
-    recorte_binario = binaria[y:y+h, x:x+w]
+  recorte_binario = binaria[y:y+h, x:x+w]
 
-    # Escalar manteniendo aspecto
-    escala = min(68.0 / w, 68.0 / h)
+ # Escalar manteniendo aspecto
+ escala = min(68.0 / w, 68.0 / h)
     nuevo_ancho = max(1, int(w * escala))
     nuevo_alto = max(1, int(h * escala))
 
-    recorte_resized = cv2.resize(
+   recorte_resized = cv2.resize(
         recorte_binario, (nuevo_ancho, nuevo_alto), interpolation=cv2.INTER_AREA
     )
 
-    resultado = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
+  resultado = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
     x_c = (TAMANO - nuevo_ancho) // 2
     y_c = (TAMANO - nuevo_alto) // 2
     resultado[y_c:y_c+nuevo_alto, x_c:x_c+nuevo_ancho] = recorte_resized
 
-    info = {
+ info = {
         'w': w,
         'h': h,
         'aspect_ratio': float(h) / max(1, w)
     }
 
-    return resultado, info
+   return resultado, info
 
 # ============================================================
 # COMPARACIÓN CON TRANSFORMADA DE DISTANCIA (CHAMFER)
@@ -633,16 +633,16 @@ def calcular_distancia_chamfer(img_num, plantilla):
     dist_plantilla = cv2.distanceTransform(255 - plantilla, cv2.DIST_L2, 3)
     dist_img = cv2.distanceTransform(255 - img_num, cv2.DIST_L2, 3)
 
-    pts_img = img_num > 0
+   pts_img = img_num > 0
     pts_plantilla = plantilla > 0
 
-    if not np.any(pts_img) or not np.any(pts_plantilla):
+if not np.any(pts_img) or not np.any(pts_plantilla):
         return 999.0
 
-    d1 = np.mean(dist_plantilla[pts_img])
+d1 = np.mean(dist_plantilla[pts_img])
     d2 = np.mean(dist_img[pts_plantilla])
 
-    return (d1 + d2) / 2.0
+ return (d1 + d2) / 2.0
 
 # ============================================================
 # CLASIFICACIÓN TOPOLÓGICA Y ESTRUCTURAL
@@ -653,76 +653,76 @@ def reconocer_numero(binaria):
     if norm is None:
         return None
 
-    # Contar agujeros internos con RETR_CCOMP
-    contornos_comp, jerarquia = cv2.findContours(
+  # Contar agujeros internos con RETR_CCOMP
+ contornos_comp, jerarquia = cv2.findContours(
         norm, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE
     )
 
-    num_agujeros = 0
+   num_agujeros = 0
     agujeros_info = []
 
-    if jerarquia is not None:
+if jerarquia is not None:
         jer = jerarquia[0]
         for i in range(len(contornos_comp)):
             # Si el contorno tiene padre (es un hueco interno)
-            if jer[i][3] != -1:
+        if jer[i][3] != -1:
                 area_h = cv2.contourArea(contornos_comp[i])
                 if area_h > 25:  # Filtro de ruido
                     num_agujeros += 1
                     hx, hy, hw, hh = cv2.boundingRect(contornos_comp[i])
                     agujeros_info.append((hy + hh / 2.0, area_h))
 
-    aspect_ratio = info['aspect_ratio']
+ aspect_ratio = info['aspect_ratio']
 
-    # --------------------------------------------------------
-    # CASO 1: 2 AGUJEROS -> Definitivamente es un 8
-    # --------------------------------------------------------
-    if num_agujeros >= 2:
+ # --------------------------------------------------------
+ # CASO 1: 2 AGUJEROS -> Definitivamente es un 8
+ # --------------------------------------------------------
+ if num_agujeros >= 2:
         return 8
 
-    # --------------------------------------------------------
-    # CASO 2: 1 AGUJERO -> Candidatos: 0, 6, 9, 4 (cerrado)
-    # --------------------------------------------------------
-    if num_agujeros == 1:
+ # --------------------------------------------------------
+ # CASO 2: 1 AGUJERO -> Candidatos: 0, 6, 9, 4 (cerrado)
+# --------------------------------------------------------
+if num_agujeros == 1:
         y_agujero_rel = agujeros_info[0][0] / float(TAMANO)
         area_agujero = agujeros_info[0][1]
 
-        # Agujero en la parte superior -> 9
-        if y_agujero_rel < 0.46:
+  # Agujero en la parte superior -> 9
+ if y_agujero_rel < 0.46:
             return 9
-        # Agujero en la parte inferior -> 6
-        elif y_agujero_rel > 0.54:
+ # Agujero en la parte inferior -> 6
+ elif y_agujero_rel > 0.54:
             return 6
-        else:
+      else:
             # Agujero en el centro
             if area_agujero > 180:
                 return 0
             else:
                 return 4
 
-    # --------------------------------------------------------
-    # CASO 3: 0 AGUJEROS -> Candidatos: 1, 2, 3, 5, 7, 4 (abierto)
-    # --------------------------------------------------------
-    # Si la altura es más del doble del ancho -> Es un 1
-    if aspect_ratio > 2.0:
+   # --------------------------------------------------------
+ # CASO 3: 0 AGUJEROS -> Candidatos: 1, 2, 3, 5, 7, 4 (abierto)
+ # --------------------------------------------------------
+  # Si la altura es más del doble del ancho -> Es un 1
+  if aspect_ratio > 2.0:
         return 1
 
-    # Comparación por distancia Chamfer
-    candidatos = [2, 3, 4, 5, 7]
+# Comparación por distancia Chamfer
+ candidatos = [2, 3, 4, 5, 7]
     mejor_num = None
     menor_dist = float("inf")
 
-    for num in candidatos:
+  for num in candidatos:
         for plant in plantillas[num]:
             dist_norm = calcular_distancia_chamfer(norm, plant)
             if dist_norm < menor_dist:
                 menor_dist = dist_norm
                 mejor_num = num
 
-    if menor_dist > 22.0:
+ if menor_dist > 22.0:
         return None
 
-    return mejor_num
+   return mejor_num
 
 # ============================================================
 # PROGRAMA PRINCIPAL
@@ -737,59 +737,59 @@ while True:
         print("No se pudo leer la cámara.")
         break
 
-    frame = cv2.flip(frame, 1)
+frame = cv2.flip(frame, 1)
     alto, ancho = frame.shape[:2]
 
-    # Cuadro de enfoque
-    x1 = int(ancho * 0.30)
+ # Cuadro de enfoque
+ x1 = int(ancho * 0.30)
     y1 = int(alto * 0.20)
     x2 = int(ancho * 0.70)
     y2 = int(alto * 0.80)
 
-    roi = frame[y1:y2, x1:x2]
+ roi = frame[y1:y2, x1:x2]
     gris = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
     gris = cv2.GaussianBlur(gris, (5, 5), 0)
 
-    # Binarización adaptativa limpia contra sombras
-    binaria = cv2.adaptiveThreshold(
+# Binarización adaptativa limpia contra sombras
+ binaria = cv2.adaptiveThreshold(
         gris, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
         cv2.THRESH_BINARY_INV, 35, 12
     )
 
-    # Unir trazos rotos del marcador y eliminar ruido
-    kernel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
+ # Unir trazos rotos del marcador y eliminar ruido
+ kernel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
     binaria = cv2.morphologyEx(binaria, cv2.MORPH_CLOSE, kernel_close)
 
-    kernel_open = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+   kernel_open = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
     binaria = cv2.morphologyEx(binaria, cv2.MORPH_OPEN, kernel_open)
 
-    # Reconocimiento
-    numero = reconocer_numero(binaria)
+# Reconocimiento
+ numero = reconocer_numero(binaria)
 
-    # Visualización
-    if numero is not None:
+ # Visualización
+ if numero is not None:
         texto = f"Detectado: {numero}"
         cv2.putText(frame, texto, (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
     else:
         cv2.putText(frame, "Detectando...", (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
 
-    cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
     cv2.imshow("Reconocimiento de numeros", frame)
     cv2.imshow("Procesamiento", binaria)
 
-    # Envío Serie
-    if numero is not None:
+# Envío Serie
+ if numero is not None:
         tiempo_actual = time.time()
         if numero != ultimo_numero or (tiempo_actual - ultimo_envio > TIEMPO_ENTRE_ENVIOS):
-            mensaje = f"{numero}\n"
-            esp.write(mensaje.encode())
-            print(f"Número enviado al ESP-A: {numero}")
-            ultimo_numero = numero
-            ultimo_envio = tiempo_actual
+ mensaje = f"{numero}\n"
+esp.write(mensaje.encode())
+print(f"Número enviado al ESP-A: {numero}")
+ultimo_numero = numero
+ ultimo_envio = tiempo_actual
 
-    tecla = cv2.waitKey(1) & 0xFF
-    if tecla == ord("q"):
-        break
+tecla = cv2.waitKey(1) & 0xFF
+if tecla == ord("q"):
+break
 
 cap.release()
 cv2.destroyAllWindows()
@@ -872,48 +872,48 @@ buffer = ""
 
 while True:
 
-    # Revisar si llegó información por USB
-    dato = sys.stdin.read(1)
+# Revisar si llegó información por USB
+dato = sys.stdin.read(1)
 
-    if dato:
+if dato:
 
-        # Detectar fin de mensaje
-        if dato == "\n":
+# Detectar fin de mensaje
+if dato == "\n":
 
-            numero = buffer.strip()
-            buffer = ""
+ numero = buffer.strip()
+    buffer = ""
 
-            if numero:
+if numero:
 
-                print("Número recibido del PC:", numero)
+print("Número recibido del PC:", numero)
 
-                # ==================================
-                # ENVIAR POR ESP-NOW
-                # ==================================
+# ==================================
+# ENVIAR POR ESP-NOW
+# ==================================
 
-                try:
+try:
 
-                    enviado = e.send(
+enviado = e.send(
                         MAC_ESP_B,
                         numero.encode(),
                         True
                     )
 
-                    if enviado:
+if enviado:
                         print("Enviado al ESP-B:", numero)
                     else:
                         print("Error enviando al ESP-B")
 
-                except Exception as error:
+except Exception as error:
 
-                    print("Error ESP-NOW:")
-                    print(error)
+print("Error ESP-NOW:")
+print(error)
 
-        else:
+else:
 
-            buffer += dato
+buffer += dato
 
-    time.sleep_ms(10)
+time.sleep_ms(10)
 </code>
 </pre>
 
@@ -1028,37 +1028,33 @@ print()
 
 while True:
 
-    host, mensaje = e.recv()
+host, mensaje = e.recv()
 
-    if mensaje is not None:
+if mensaje is not None:
+try:
+ numero = mensaje.decode().strip()
 
-        try:
+print("Numero recibido:", numero)
 
-            numero = mensaje.decode().strip()
+# ------------------------------------------
+# MOSTRAR EN OLED
+# ------------------------------------------
+oled.fill(0)
 
-            print("Numero recibido:", numero)
+oled.text("NUMERO", 38, 5)
 
-            # ------------------------------------------
-            # MOSTRAR EN OLED
-            # ------------------------------------------
+# Mostrar el numero
+oled.text(numero, 55, 28)
 
-            oled.fill(0)
+oled.show()
 
-            oled.text("NUMERO", 38, 5)
+except Exception as error:
+print("Error:", error)
 
-            # Mostrar el numero
-            oled.text(numero, 55, 28)
-
-            oled.show()
-
-        except Exception as error:
-
-            print("Error:", error)
-
-    time.sleep_ms(10)
+time.sleep_ms(10)
 </code>
 </pre>
-
+<hr>
 <p>
 Este programa se ejecuta en una <strong>ESP32-S3</strong> que funciona como
 la ESP que recibe el numero y lo muestra.
