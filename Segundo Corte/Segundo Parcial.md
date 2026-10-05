@@ -1,26 +1,23 @@
+<p><strong>Integrantes:</strong></p>
+<ul>
+    <li>Jeicob David Pinilla Ruiz</li>
+    <li>Fabian Abril Casallas</li>
+</ul>
 <p align="center">
-    <h1 align="center"><b>SISTEMA AUTOMATIZADO DE CLASIFICACIÓN Y EMPAQUETADO DE MONEDAS</b></h1>
+    <h1 align="center"><b>Segundo Parcial</b></h1>
 </p>
 
 <p align="center">
-    Clasificación de monedas mediante visión artificial (YOLO), control mecatrónico con ESP32 e interfaz de monitoreo en Python.
+    Clasificación de monedas mediante visión artificial (YOLO), con ESP32 e interfaz de monitoreo en Python.
 </p>
 
 <hr>
 
-<h2><b>Descripción del proyecto</b></h2>
-
-<p>
-Este proyecto implementa un sistema mecatrónico integral diseñado para la recepción,
-identificación, clasificación, transporte y sellado de monedas de forma automatizada.
-El sistema combina procesamiento de imagen mediante visión artificial con redes
-neuronales (YOLO), adquisición de datos y control de actuadores en tiempo real mediante
-una tarjeta ESP32, y una interfaz gráfica interactiva desarrollada en Python.
-</p>
+<h2><b>Funcionamiento</b></h2>
 
 <p>
 Las monedas son depositadas a través de una rampa hacia una banda transportadora
-accionada por un motoreductor. A medida que avanza cada moneda, la cámara de un
+manipulada por un motoreductor. A medida que avanza cada moneda, la cámara de un
 smartphone posicionada en un soporte especializado captura su imagen para procesarla
 con el modelo YOLO. Posteriormente, la moneda es guiada hacia un disco selector
 rotativo impulsado por un motor paso a paso, el cual posiciona de manera precisa uno
@@ -33,7 +30,7 @@ MG90S lo retira y lo traslada hacia la estación de tapado, donde un mecanismo d
 piñón y cremallera coloca la tapa para completar el empaquetado.
 </p>
 
-<h2><b>1. Banda Transportadora y Soporte de Cámara 🚚</b></h2>
+<h2><b>1. Banda Transportadora y Soporte de Cámara </b></h2>
 
 <p>
 La primera etapa consiste en una rampa de entrada por la cual se depositan las
@@ -57,7 +54,7 @@ para incrementar la precisión del modelo.
          width="800">
 </p>
 
-<h2><b>2. Disco Selector de Vasos y Motor Paso a Paso 🔄</b></h2>
+<h2><b>2. Disco Selector de Vasos y Motor Paso a Paso </b></h2>
 
 <p>
 Una vez clasificada la moneda, esta cae dentro de uno de los recipientes
@@ -86,7 +83,7 @@ en la posición correcta.
 
 <hr>
 
-<h2><b>3. Carro de Transporte con Garra Robótica 🚜</b></h2>
+<h2><b>3. Carro de Transporte con Garra Robótica </b></h2>
 
 <p>
 Cuando un vaso alcanza la cantidad requerida de monedas, entra en acción el
@@ -108,7 +105,7 @@ hacia el área de sellado.
 
 <hr>
 
-<h2><b>4. Sistema de Tapado Mecánico 🛠️</b></h2>
+<h2><b>4. Sistema de Tapado Mecánico </b></h2>
 
 <p>
 El proceso de empaquetado finaliza en el módulo de tapado. Este sistema cuenta
@@ -125,7 +122,7 @@ sobre la parte superior del vaso hasta sellarlo.
 
 <hr>
 
-<h2><b>5. Interfaz de Monitoreo y Chatbot en Python 💻</b></h2>
+<h2><b>5. Interfaz de Monitoreo y Chatbot en Python </b></h2>
 
 <p>
 El sistema cuenta con una interfaz gráfica desarrollada en Python que se
