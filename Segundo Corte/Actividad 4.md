@@ -1,494 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot para controlar LEDs por voz</title>
+    <title>Control de Luces con Gestos</title>
     <style>
-        /* Estilos generales para que se vea moderno y limpio */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f2f5; /* Fondo gris claro */
+            margin: 20px;
+            background-color: #f4f4f9;
             color: #333;
         }
-
-        /* Contenedor principal que centra todo en la pantalla */
+        h1, h2 {
+            color: #2c3e50;
+        }
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Títulos */
-        h1 {
-            color: #1a5276;
-            text-align: center;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-        h2 {
-            color: #2980b9;
-            margin-top: 40px;
-            border-left: 4px solid #2980b9;
-            padding-left: 10px;
-        }
-        h3 {
-            color: #2c3e50;
-        }
-
-        /* Cuadro bonito para los integrantes */
-        .integrantes {
-            background-color: #e8f4f8;
-            padding: 15px 25px;
+            background: #fff;
+            padding: 20px;
             border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #bce8f1;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .integrantes p {
-            margin: 0 0 10px 0;
-            font-size: 1.1em;
-            color: #31708f;
-        }
-        .integrantes ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        /* Diseño de los bloques de código (estilo editor oscuro) */
         pre {
             background-color: #272822;
             color: #f8f8f2;
             padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto; /* Agrega barra de desplazamiento si el código es largo */
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 14px;
         }
         code {
             font-family: Consolas, "Courier New", monospace;
-            font-size: 14px;
         }
-
-        /* Estilos para centrar e integrar imágenes */
-        .img-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-        .img-container img {
-            max-width: 100%;
-            height: auto;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Botón de YouTube estilo profesional */
-        .btn-youtube {
-            display: block;
-            width: fit-content;
-            margin: 30px auto;
-            padding: 15px 30px;
-            background-color: #ff0000;
+        .video-link {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #e74c3c;
             color: white;
             text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
             border-radius: 5px;
-            transition: background-color 0.3s ease;
-            text-align: center;
+            font-weight: bold;
         }
-        .btn-youtube:hover {
-            background-color: #cc0000;
+        .video-link:hover {
+            background-color: #c0392b;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        
-        <div class="integrantes">
-            <p><strong>Integrantes del Proyecto:</strong></p>
-            <ul>
-                <li>Jeicob David Pinilla Ruiz</li>
-                <li>Fabian Abril Casallas</li>
-            </ul>
-        </div>
+<div class="container">
+    <h1>Controlando luces con las manos 👋💡</h1>
+    
+    <p>¡Hola a todos! Hoy quiero compartir con ustedes un proyecto súper divertido que armé. La idea principal es poder controlar unas luces LED usando solo gestos con mi mano. Para lograr esto, usé la cámara web de mi computadora y una placa llamada ESP32.</p>
 
-        <h1>CHATBOT PARA CONTROLAR LEDS POR VOZ</h1>
+    <h2>¿Qué hace este proyecto?</h2>
+    <p>Como pueden ver en la imagen de referencia llamada <strong>image_9112e7.jpg</strong>, el sistema reconoce diferentes señas que hago con la mano y le dice a los LEDs cómo deben prenderse:</p>
+    <ul>
+        <li>✊ <strong>Puño cerrado:</strong> Prende el LED amarillo al 30% de fuerza.</li>
+        <li>✌️ <strong>Signo de paz (dos dedos):</strong> Prende el LED azul al 70%.</li>
+        <li>🖐️ <strong>Mano abierta:</strong> Prende el LED rojo al máximo (100%).</li>
+        <li>👎 <strong>Pulgar abajo:</strong> Inicia una secuencia especial de luces (Modo 1).</li>
+        <li>👍 <strong>Pulgar arriba:</strong> Inicia otra secuencia diferente (Modo 2).</li>
+    </ul>
 
-        <p>
-            Para poder controlar el encendido y apagado de un LED rojo y un LED verde mediante comandos de voz utilizando un chatbot, se creó un sistema de control apoyado por el motor de inteligencia artificial Groq AI.
-        </p>
+    <img src="image_9112e7.jpg" alt="Diagrama del proyecto con gestos y la placa ESP32">
 
-        <h2>ESP32 MicroPython: Controla los LEDs y recibe comandos</h2>
-        <p>Este es el código que va dentro de la tarjeta ESP32. Se encarga de leer los botones físicos y también de escuchar las órdenes que le envía la computadora por el cable USB.</p>
+    <h2>Demostración en Video 🎥</h2>
+    <p>Para que vean que esto realmente funciona y no es magia, grabé un video donde muestro cómo muevo la mano y las luces cambian solas. Pueden verlo en YouTube haciendo clic en el botón de abajo:</p>
+    
+    <!-- Aquí puedes reemplazar "TU_ENLACE_AQUI" con el link real de tu video de YouTube -->
+    <a href="TU_ENLACE_AQUI" class="video-link" target="_blank">Ver el video del funcionamiento en YouTube</a>
 
-<pre><code>from machine import Pin
-import sys
-import select
+    <hr>
+
+    <h2>1. El código de la computadora (Python) 🐍</h2>
+    <p>Este es el primer programa. Funciona en mi computadora usando Python y una herramienta llamada MediaPipe. Básicamente, este código prende la cámara, mira mi mano, le dibuja unos puntitos imaginarios para saber qué dedos están levantados, y luego manda un número secreto (del 1 al 5) por un cable USB hacia la tarjeta ESP32.</p>
+
+    <pre><code>
+import cv2
+import math
 import time
+import serial
+import mediapipe as mp
 
-# =========================
-# CONFIGURACIÓN DE LEDS
-# =========================
-rojo = Pin(26, Pin.OUT)
-verde = Pin(27, Pin.OUT)
+# --- 1. CONFIGURACIÓN DE CÁMARA Y ESP32 ---
+INDICE_CAMARA = 1  # Cambia por el índice de tu cámara/app
+PUERTO_COM = 'COM3'
+BAUD_RATE = 115200
 
-# Variables para guardar si el LED está prendido (1) o apagado (0)
-estado_rojo = 0
-estado_verde = 0
+# --- 2. CONFIGURACIÓN DE MEDIAPIPE ---
+mp_hands = mp.solutions.hands
+mp_drawing = mp.solutions.drawing_utils
 
-rojo.value(estado_rojo)
-verde.value(estado_verde)
+hands = mp_hands.Hands(
+    static_image_mode=False,
+    max_num_hands=1,
+    min_detection_confidence=0.7,
+    min_tracking_confidence=0.7
+)
 
-# =========================
-# CONFIGURACIÓN PULSADORES
-# =========================
-pulsador_verde = Pin(12, Pin.IN, Pin.PULL_UP)
-pulsador_rojo = Pin(14, Pin.IN, Pin.PULL_UP)
+# --- 3. CONEXIÓN SERIAL CON ESP32 ---
+try:
+    esp32 = serial.Serial(PUERTO_COM, BAUD_RATE, timeout=0.1)
+    time.sleep(2)
+    print(f"Conectado a la ESP32 en {PUERTO_COM}")
+except Exception as e:
+    print(f"Advertencia: No se pudo abrir {PUERTO_COM} ({e})")
+    print("Modo de prueba: solo visualización.")
+    esp32 = None
 
-# Tiempos para evitar el "rebote" (que un pulso cuente doble)
-ultimo_tiempo_v = 0
-ultimo_tiempo_r = 0
+def detectar_gesto(landmarks):
+    wrist = landmarks[0]
+    thumb_tip = landmarks[4]
+    thumb_mcp = landmarks[2]
+    index_pip = landmarks[6]
+    middle_mcp = landmarks[9]
 
-# Configurar lectura del puerto serial sin bloquear el ciclo
-poll_obj = select.poll()
-poll_obj.register(sys.stdin, select.POLLIN)
+    # Identificación de dedos levantados (Índice, Medio, Anular, Meñique)
+    indice_arriba = landmarks[8].y < landmarks[6].y
+    medio_arriba = landmarks[12].y < landmarks[10].y
+    anular_arriba = landmarks[16].y < landmarks[14].y
+    menique_arriba = landmarks[20].y < landmarks[18].y
 
-print("ESP32 Lista y esperando comandos...")
+    dedos_extendidos = sum([indice_arriba, medio_arriba, anular_arriba, menique_arriba])
+
+    # Escala de la mano (distancia entre muñeca y nudillo medio)
+    escala_mano = math.hypot(middle_mcp.x - wrist.x, middle_mcp.y - wrist.y)
+    
+    # Distancia entre la punta del pulgar y el lateral del índice (donde descansa en un puño)
+    dist_pulgar_guardado = math.hypot(thumb_tip.x - index_pip.x, thumb_tip.y - index_pip.y)
+
+    # 1. Victoria (Índice y Medio arriba) -> Comando '2'
+    if indice_arriba and medio_arriba and not anular_arriba and not menique_arriba:
+        return '2', "Victoria (Nivel 70%)"
+
+    # 2. Palma Abierta (3 o 4 dedos extendidos) -> Comando '3'
+    if dedos_extendidos >= 3:
+        return '3', "Palma Abierta (Nivel 100%)"
+
+    # 3. Gestos con los 4 dedos cerrados (Puño, Pulgar Arriba, Pulgar Abajo)
+    if dedos_extendidos == 0:
+        # Si la punta del pulgar está replegada sobre el índice = Puño Cerrado
+        if dist_pulgar_guardado < (escala_mano * 0.40):
+            return '1', "Puño (Nivel 30%)"
+
+        # Si el pulgar se despega verticalmente:
+        if thumb_tip.y < thumb_mcp.y:
+            return '5', "Pulgar Arriba (Secuencia 2)"
+        else:
+            return '4', "Pulgar Abajo (Secuencia 1)"
+
+    return None, "Gesto No Reconocido"
+
+# --- 4. BUCLE DE CAPTURA Y TRANSMISIÓN ---
+cap = cv2.VideoCapture(INDICE_CAMARA, cv2.CAP_DSHOW)
+ultimo_comando = None
+ultimo_envio = 0
+
+while cap.isOpened():
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    frame = cv2.flip(frame, 1)
+    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    results = hands.process(rgb_frame)
+
+    texto_gesto = "Esperando mano..."
+
+    if results.multi_hand_landmarks:
+        for hand_landmarks in results.multi_hand_landmarks:
+            mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+            
+            comando, texto_gesto = detectar_gesto(hand_landmarks.landmark)
+
+            # Envío de comando con filtro de tiempo (1 segundo entre repetidos)
+            tiempo_actual = time.time()
+            if comando and (comando != ultimo_comando or (tiempo_actual - ultimo_envio > 1.0)):
+                if esp32 and esp32.is_open:
+                    esp32.write(comando.encode())
+                    print(f"Enviado a ESP32: '{comando}' -> {texto_gesto}")
+                ultimo_comando = comando
+                ultimo_envio = tiempo_actual
+
+    # Interfaz visual
+    cv2.putText(frame, f"Estado: {texto_gesto}", (10, 40), 
+                cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+    cv2.imshow("Controlador de Gestos - ESP32", frame)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+if esp32 and esp32.is_open:
+    esp32.close()
+cv2.destroyAllWindows()
+    </code></pre>
+
+    <hr>
+
+    <h2>2. El código de las luces (MicroPython para la ESP32) 💡</h2>
+    <p>Este segundo código vive adentro de la tarjetita ESP32. Su trabajo es muy simple: todo el tiempo está escuchando por el cable USB. Cuando oye un número que le mandó la computadora, ajusta la energía que le manda a los LEDs (usando algo que los ingenieros llaman PWM, que es solo cambiar el brillo rápido) o hace las secuencias de encendido y apagado de las interrupciones.</p>
+
+    <pre><code>
+import sys
+import time
+import uselect
+from machine import Pin, PWM
+
+# =========================================================
+# CONFIGURACIÓN PWM
+# =========================================================
+
+FREQ = 1000
+
+led_30 = PWM(Pin(27), freq=FREQ, duty_u16=0)   # LED Amarillo
+led_70 = PWM(Pin(26), freq=FREQ, duty_u16=0)   # LED Azul
+led_100 = PWM(Pin(25), freq=FREQ, duty_u16=0)  # LED Rojo
+
+
+# =========================================================
+# FUNCIÓN PARA FIJAR BRILLO
+# =========================================================
+
+def fijar_brillo(led_pwm, porcentaje):
+    duty = int((porcentaje / 100.0) * 65535)
+    led_pwm.duty_u16(duty)
+
+
+# =========================================================
+# APAGAR TODOS
+# =========================================================
+
+def apagar_todos():
+    fijar_brillo(led_30, 0)
+    fijar_brillo(led_70, 0)
+    fijar_brillo(led_100, 0)
+
+apagar_todos()
+
+
+# =========================================================
+# MODO 1 - PULGAR ABAJO
+#
+# Amarillo -> Azul -> Rojo
+# Luego apaga Rojo -> Azul -> Amarillo
+# =========================================================
+
+def ejecutar_modo1():
+    # 1. Amarillo 30%
+    fijar_brillo(led_30, 30)
+    time.sleep(1)
+
+    # 2. Azul 70%
+    # Amarillo permanece encendido
+    fijar_brillo(led_70, 70)
+    time.sleep(1)
+
+    # 3. Rojo 100%
+    # Amarillo y Azul permanecen encendidos
+    fijar_brillo(led_100, 100)
+    time.sleep(1)
+
+    # 4. Apagar Rojo
+    fijar_brillo(led_100, 0)
+    time.sleep(1)
+
+    # 5. Apagar Azul
+    fijar_brillo(led_70, 0)
+    time.sleep(1)
+
+    # 6. Apagar Amarillo
+    fijar_brillo(led_30, 0)
+    time.sleep(1)
+
+    apagar_todos()
+
+
+# =========================================================
+# MODO 2 - PULGAR ARRIBA
+#
+# Rojo -> Azul -> Amarillo
+# Luego apaga Amarillo -> Azul -> Rojo
+# =========================================================
+
+def ejecutar_modo2():
+    # 1. Rojo 100%
+    fijar_brillo(led_100, 100)
+    time.sleep(1)
+
+    # 2. Azul 70%
+    # Rojo permanece encendido
+    fijar_brillo(led_70, 70)
+    time.sleep(1)
+
+    # 3. Amarillo 30%
+    # Rojo y Azul permanecen encendidos
+    fijar_brillo(led_30, 30)
+    time.sleep(1)
+
+    # 4. Apagar Amarillo
+    fijar_brillo(led_30, 0)
+    time.sleep(1)
+
+    # 5. Apagar Azul
+    fijar_brillo(led_70, 0)
+    time.sleep(1)
+
+    # 6. Apagar Rojo
+    fijar_brillo(led_100, 0)
+    time.sleep(1)
+
+    apagar_todos()
+
+
+# =========================================================
+# ESCUCHAR PUERTO USB SERIAL
+# =========================================================
+
+poll_obj = uselect.poll()
+poll_obj.register(sys.stdin, uselect.POLLIN)
+
+print("ESP32 lista en MicroPython (Modo PWM Activo)...")
+
+
+# =========================================================
+# BUCLE PRINCIPAL
+# =========================================================
 
 while True:
-    tiempo_actual = time.ticks_ms()
+    if poll_obj.poll(10):
+        comando = sys.stdin.read(1)
 
-    # ==========================================
-    # 1. CONTROL POR BOTONES FÍSICOS (Alternar)
-    # ==========================================
-    
-    # Botón verde
-    if pulsador_verde.value() == 0:
-        if time.ticks_diff(tiempo_actual, ultimo_tiempo_v) > 300: # 300ms de espera
-            estado_verde = not estado_verde # Alterna el estado
-            verde.value(estado_verde)
-            print("OK Verde", "Encendido" if estado_verde else "Apagado")
-            ultimo_tiempo_v = tiempo_actual
+        if comando == "1":
+            # Puño cerrado -> Amarillo 30%
+            apagar_todos()
+            fijar_brillo(led_30, 30)
 
-    # Botón rojo
-    if pulsador_rojo.value() == 0:
-        if time.ticks_diff(tiempo_actual, ultimo_tiempo_r) > 300:
-            estado_rojo = not estado_rojo
-            rojo.value(estado_rojo)
-            print("OK Rojo", "Encendido" if estado_rojo else "Apagado")
-            ultimo_tiempo_r = tiempo_actual
+        elif comando == "2":
+            # Signo Victoria -> Azul 70%
+            apagar_todos()
+            fijar_brillo(led_70, 70)
 
-    # ==========================================
-    # 2. CONTROL POR SERIAL (Desde Python)
-    # ==========================================
-    eventos = poll_obj.poll(0)
-    
-    if eventos:
-        comando = sys.stdin.readline().strip()
-        
-        if comando == "ROJO_ON":
-            estado_rojo = 1
-            rojo.value(estado_rojo)
-            print("OK Rojo Encendido")
-            
-        elif comando == "ROJO_OFF":
-            estado_rojo = 0
-            rojo.value(estado_rojo)
-            print("OK Rojo Apagado")
-            
-        elif comando == "VERDE_ON":
-            estado_verde = 1
-            verde.value(estado_verde)
-            print("OK Verde Encendido")
-            
-        elif comando == "VERDE_OFF":
-            estado_verde = 0
-            verde.value(estado_verde)
-            print("OK Verde Apagado")
-            
-        elif comando == "TODOS_ON":
-            estado_rojo = 1
-            estado_verde = 1
-            rojo.value(estado_rojo)
-            verde.value(estado_verde)
-            print("OK Todos Encendidos")
-            
-        elif comando == "TODOS_OFF":
-            estado_rojo = 0
-            estado_verde = 0
-            rojo.value(estado_rojo)
-            verde.value(estado_verde)
-            print("OK Todos Apagados")
-</code></pre>
+        elif comando == "3":
+            # Palma abierta -> Rojo 100%
+            apagar_todos()
+            fijar_brillo(led_100, 100)
 
-        <h2>Interfaz gráfica</h2>
-        <p>
-            La aplicación cuenta con una interfaz gráfica muy fácil de usar. Permite controlar los LEDs de tres maneras: manualmente tocando los botones, escribiendo órdenes de texto, o hablándole directamente al micrófono gracias a nuestro chatbot inteligente.
-        </p>
+        elif comando == "4":
+            # Pulgar abajo
+            ejecutar_modo1()
 
-        <div class="img-container">
-            <!-- Asegúrate de que la ruta de tu imagen sea correcta -->
-            <img src="../Imagenes/Interfaz.png" alt="Interfaz gráfica del sistema">
-        </div>
+        elif comando == "5":
+            # Pulgar arriba
+            ejecutar_modo2()
+    </code></pre>
 
-        <h2>Código de la aplicación Python (PC)</h2>
-        <p>
-            Para darle "inteligencia" al sistema, usamos Groq AI. Funciona así: el programa escucha lo que dices o lees lo que escribes, se lo envía a la inteligencia artificial mediante una API, y la IA nos devuelve la orden exacta (en un formato llamado JSON). Finalmente, nuestro programa de Python le manda esa orden a la tarjeta ESP32 por el cable (puerto COM).
-        </p>
-
-        <h3>Código Python de la interfaz</h3>
-<pre><code>import serial
-import time
-import speech_recognition as sr
-from openai import OpenAI
-import sounddevice as sd
-import soundfile as sf
-import os
-import json
-import tkinter as tk
-import threading
-
-# =========================================================
-# 1. CONFIGURACIÓN
-# =========================================================
-PUERTO = 'COM3'
-BAUDIOS = 115200
-# =========================================================
-# AQUI VA LA API KEY
-# =========================================================
-API_KEY = "API_KEY"
-
-# =========================================================
-# 2. CLASE DE LA INTERFAZ GRÁFICA
-# =========================================================
-class AppControlLED:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Panel de Control LEDs")
-        self.root.geometry("450x300")  # Ventana más pequeña y compacta
-        self.root.resizable(False, False)
-
-        # Configurar cliente Groq
-        self.cliente_ia = OpenAI(
-            api_key=API_KEY,
-            base_url="https://api.groq.com/openai/v1"
-        )
-
-        self.conexion_serial = None
-        
-        self.crear_interfaz()
-        self.conectar_serial()
-
-    def conectar_serial(self):
-        try:
-            self.conexion_serial = serial.Serial(PUERTO, BAUDIOS, timeout=1)
-            time.sleep(2)
-            print(f"Microcontrolador conectado exitosamente en {PUERTO}")
-        except serial.SerialException:
-            print(f"Advertencia: No se pudo abrir {PUERTO}. Modo simulación activado.")
-
-    def crear_interfaz(self):
-        # --- SECCIÓN 1: Control Manual ---
-        marco_manual = tk.LabelFrame(self.root, text="Control Manual", padx=10, pady=10)
-        marco_manual.pack(padx=10, pady=10, fill="x")
-
-        # Botones Rojos
-        btn_rojo_on = tk.Button(marco_manual, text="Rojo ON", bg="#ffcccc", width=12, 
-                                command=lambda: self.enviar_comando_directo("rojo_on"))
-        btn_rojo_on.grid(row=0, column=0, padx=5, pady=5)
-
-        btn_rojo_off = tk.Button(marco_manual, text="Rojo OFF", bg="#e6e6e6", width=12, 
-                                 command=lambda: self.enviar_comando_directo("rojo_off"))
-        btn_rojo_off.grid(row=0, column=1, padx=5, pady=5)
-
-        # Botones Verdes
-        btn_verde_on = tk.Button(marco_manual, text="Verde ON", bg="#ccffcc", width=12, 
-                                 command=lambda: self.enviar_comando_directo("verde_on"))
-        btn_verde_on.grid(row=1, column=0, padx=5, pady=5)
-
-        btn_verde_off = tk.Button(marco_manual, text="Verde OFF", bg="#e6e6e6", width=12, 
-                                  command=lambda: self.enviar_comando_directo("verde_off"))
-        btn_verde_off.grid(row=1, column=1, padx=5, pady=5)
-
-        # --- SECCIÓN 2: Control por Texto ---
-        marco_texto = tk.LabelFrame(self.root, text="Orden por Texto", padx=10, pady=10)
-        marco_texto.pack(padx=10, pady=5, fill="x")
-
-        self.entrada_texto = tk.Entry(marco_texto, width=35)
-        self.entrada_texto.pack(side="left", padx=5)
-
-        btn_enviar_texto = tk.Button(marco_texto, text="Enviar", bg="#ccccff", 
-                                     command=self.procesar_texto)
-        btn_enviar_texto.pack(side="left", padx=5)
-
-        # --- SECCIÓN 3: Control por Voz ---
-        marco_voz = tk.LabelFrame(self.root, text="Orden por Voz", padx=10, pady=10)
-        marco_voz.pack(padx=10, pady=5, fill="x")
-
-        self.btn_voz = tk.Button(marco_voz, text="Hablar (4 seg)", bg="#ffccff", height=1, 
-                                 command=self.procesar_voz)
-        self.btn_voz.pack(fill="x", padx=5)
-
-    # =========================================================
-    # 3. LÓGICA DE LA APLICACIÓN
-    # =========================================================
-
-    def enviar_comando_directo(self, comando):
-        """Envía comandos validados al microcontrolador."""
-        if self.conexion_serial and self.conexion_serial.is_open:
-            self.conexion_serial.write((comando + '\n').encode('utf-8'))
-            print(f"ESP32: Enviado comando -> {comando}")
-        else:
-            print(f"Simulacion: {comando} (Puerto no conectado)")
-
-    def interpretar_con_groq(self, texto_usuario):
-        """Consulta a Groq para convertir lenguaje natural en comandos."""
-        print("Chat Bot (Groq): Procesando la orden...")
-        
-        prompt = f"""
-Analiza la siguiente orden en español para controlar dos LEDs.
-Orden del usuario: "{texto_usuario}"
-Los comandos posibles son únicamente:
-- rojo_on
-- rojo_off
-- verde_on
-- verde_off
-Corrige automáticamente pequeños errores de escritura.
-Devuelve los comandos correspondientes.
-"""
-        try:
-            respuesta = self.cliente_ia.chat.completions.create(
-                model="openai/gpt-oss-20b",
-                messages=[{"role": "user", "content": prompt}],
-                reasoning_effort="low",
-                max_completion_tokens=500,
-                response_format={
-                    "type": "json_schema",
-                    "json_schema": {
-                        "name": "control_leds",
-                        "strict": True,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "comandos": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "enum": ["rojo_on", "rojo_off", "verde_on", "verde_off"]
-                                    }
-                                }
-                            },
-                            "required": ["comandos"],
-                            "additionalProperties": False
-                        }
-                    }
-                }
-            )
-
-            contenido = respuesta.choices[0].message.content
-            print("Chat Bot (Groq): Respuesta recibida con éxito.")
-            
-            if not contenido: return []
-            
-            datos = json.loads(contenido)
-            return datos.get("comandos", [])
-
-        except Exception as e:
-            print(f"Error conectando con Groq: {e}")
-            return []
-
-    # =========================================================
-    # 4. FUNCIONES MULTIHILO (Para no congelar la GUI)
-    # =========================================================
-
-    def procesar_texto(self):
-        texto = self.entrada_texto.get().strip()
-        if texto:
-            print(f"\nTexto ingresado: '{texto}'")
-            self.entrada_texto.delete(0, tk.END)
-            threading.Thread(target=self.ejecutar_orden, args=(texto,), daemon=True).start()
-
-    def procesar_voz(self):
-        self.btn_voz.config(state="disabled", text="Grabando...", bg="#ff6666")
-        threading.Thread(target=self.hilo_grabar_voz, daemon=True).start()
-
-    def hilo_grabar_voz(self):
-        duracion = 4
-        frecuencia = 44100
-        archivo_temp = "temporal.wav"
-
-        print("\nEscuchando por 4 segundos...")
-        
-        try:
-            grabacion = sd.rec(int(duracion * frecuencia), samplerate=frecuencia, channels=1)
-            sd.wait()
-            sf.write(archivo_temp, grabacion, frecuencia)
-            
-            reconocedor = sr.Recognizer()
-            with sr.AudioFile(archivo_temp) as source:
-                audio_data = reconocedor.record(source)
-                texto = reconocedor.recognize_google(audio_data, language="es-ES")
-                
-            print(f"Dijiste: '{texto}'")
-            self.ejecutar_orden(texto)
-
-        except sr.UnknownValueError:
-            print("No pude entender el audio.")
-        except Exception as e:
-            print(f"Error con el micrófono: {e}")
-        finally:
-            if os.path.exists(archivo_temp):
-                os.remove(archivo_temp)
-            
-            self.root.after(0, lambda: self.btn_voz.config(state="normal", text="Hablar (4 seg)", bg="#ffccff"))
-
-    def ejecutar_orden(self, texto):
-        comandos = self.interpretar_con_groq(texto)
-        if comandos:
-            print(f"Chat Bot (Groq) determinó ejecutar: {', '.join(comandos)}")
-            for cmd in comandos:
-                self.enviar_comando_directo(cmd)
-                time.sleep(0.1)
-        else:
-            print("No se identificaron comandos válidos.")
-
-# =========================================================
-# 5. INICIO DEL PROGRAMA
-# =========================================================
-if __name__ == "__main__":
-    ventana = tk.Tk()
-    app = AppControlLED(ventana)
-    
-    def al_cerrar():
-        if app.conexion_serial and app.conexion_serial.is_open:
-            app.conexion_serial.close()
-            print("Puerto serie cerrado. Saliendo...")
-        ventana.destroy()
-        
-    ventana.protocol("WM_DELETE_WINDOW", al_cerrar)
-    ventana.mainloop()
-</code></pre>
-
-        <h2>Diagrama de bloques</h2>
-        <p>A continuación se muestra cómo se comunican todas las partes de nuestro proyecto:</p>
-        <div class="img-container">
-            <!-- Asegúrate de que la ruta de tu imagen sea correcta -->
-            <img src="../Imagenes/DiagramaBloques.png" alt="Diagrama de bloques del sistema">
-        </div>
-
-        <h2>¡Mira cómo funciona! 🎥</h2>
-        <p>Hicimos un video demostrando todo el sistema en acción. Puedes verlo haciendo clic en el siguiente botón:</p>
-        
-        <a href="https://youtu.be/EHqepvXtMkA" target="_blank" class="btn-youtube">
-            ▶️ Ver video en YouTube
-        </a>
-
-    </div>
+    <p>¡Y eso es todo! Espero que les haya gustado este proyecto. Es súper fácil de hacer y muestra cómo podemos usar la tecnología para controlar cosas en el mundo real solo moviendo las manos.</p>
+</div>
 
 </body>
+</html>
