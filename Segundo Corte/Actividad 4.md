@@ -51,7 +51,7 @@ de los diferentes gestos y la respuesta de los LEDs.
 
 <p align="center">
     <!-- Reemplazar el enlace por el video real -->
-    <a href="TU_ENLACE_AQUI" target="_blank">
+    <a href="https://youtu.be/0vXCjzX6YHw" target="_blank">
         <b>Ver video del funcionamiento en YouTube</b>
     </a>
 </p>
