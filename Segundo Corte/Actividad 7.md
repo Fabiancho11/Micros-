@@ -35,7 +35,7 @@ carritos para permitir el intercambio de información entre ellos.
 <h2><b>Diagrama de bloques</b></h2>
 
 <p align="center">
-    <img src="../Imagenes/bloque7.png"
+    <img src="../Imagenes/bloque7.jpg"
          alt="Diagrama de bloques del sistema de navegación con feromonas"
          width="800">
 </p>
