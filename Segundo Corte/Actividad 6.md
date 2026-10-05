@@ -100,21 +100,6 @@ computador y posteriormente transmitir el resultado entre dos microcontroladores
 ESP32. Finalmente, el número reconocido es mostrado en una pantalla OLED.
 </p>
 
-<h2><b>1. Demostración en Video</b></h2>
-
-<p>
-En el siguiente enlace se puede observar el funcionamiento completo del sistema,
-desde el reconocimiento del número mediante la cámara hasta su visualización
-en la pantalla OLED.
-</p>
-
-<p align="center">
-    <!-- Colocar aquí el enlace del video -->
-    <a href="https://youtu.be/kkkakf-kYo8" target="_blank">
-        <b>Ver video de funcionamiento</b>
-    </a>
-</p>
-
 <h2><b>2. Diagrama de Bloques</b></h2>
 
 <p align="center">
@@ -136,7 +121,7 @@ secuencia:
     <li><strong>Pantalla OLED:</strong> muestra el número reconocido.</li>
 </ul>
 
-<h2><b>3. Explicación de los Códigos</b></h2>
+<h2><b>3. Explicación del codigo </b></h2>
 
 <h3><b>Código 1: Reconocimiento con Python y OpenCV</b></h3>
 
@@ -219,35 +204,12 @@ nodo esclavo o receptor del sistema.
     </li>
 </ul>
 
-<h2><b>4. Evidencia del Funcionamiento</b></h2>
-
-<p>
-A continuación se puede colocar la evidencia fotográfica del sistema,
-incluyendo la cámara utilizada para el reconocimiento, el ESP-A, el
-ESP32-S3 y la pantalla OLED.
-</p>
-
-<p align="center">
-    <img src="../Imagenes/Montaje.png"
-         alt="Montaje del sistema de reconocimiento y comunicación ESP-NOW"
-         width="800">
-</p>
-
-<h2><b>5. Flujo de Funcionamiento</b></h2>
-
-<p>
-El proceso completo comienza con la captura del número mediante la cámara.
-Python procesa la imagen utilizando OpenCV y determina qué dígito fue
-reconocido. El resultado se envía por comunicación serial al ESP-A.
-Posteriormente, el ESP-A transmite el número de manera inalámbrica mediante
-ESP-NOW al ESP32-S3. Finalmente, el ESP32-S3 recibe el dato y lo muestra
-en la pantalla OLED.
-</p>
+<h2><b>4. Funcionamiento</b></h2>
 
 <p align="center">
     <b>Cámara → Python/OpenCV → ESP-A → ESP-NOW → ESP32-S3 → OLED</b>
 </p>
-    <a href="https://youtu.be/EHqepvXtMkA" target="_blank">
+    <a href="https://youtu.be/kkkakf-kYo8" target="_blank">
         <b>Ver video de funcionamiento en YouTube</b>
     </a>
 </p>
