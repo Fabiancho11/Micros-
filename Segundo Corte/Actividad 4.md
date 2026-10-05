@@ -337,7 +337,7 @@ cv2.destroyAllWindows()
 
 <hr>
 
-<h2><b>2. Código MicroPython para la ESP32</b></h2>
+<h2><b>2. Codigo MicroPython para la ESP32</b></h2>
 
 <p>
 Este programa se ejecuta directamente en la ESP32 utilizando MicroPython, la ESP32 recibe los comandos enviados desde el computador mediante el puerto serial.
