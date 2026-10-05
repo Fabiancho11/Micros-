@@ -49,7 +49,7 @@ para incrementar la precisión del modelo.
 </p>
 
 <p align="center">
-    <img src="../Imagenes/1banda_transportadora.png"
+    <img src="../Imagenes/1_banda_transportadora.png"
          alt="Banda transportadora con rampa y soporte para smartphone"
          width="800">
 </p>
