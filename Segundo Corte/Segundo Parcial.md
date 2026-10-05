@@ -17,11 +17,11 @@
 
 <p>
 Las monedas son depositadas a través de una rampa hacia una banda transportadora
-manipulada por un motoreductor. A medida que avanza cada moneda, la cámara de un
-smartphone posicionada en un soporte especializado captura su imagen para procesarla
-con el modelo YOLO. Posteriormente, la moneda es guiada hacia un disco selector
+manipulada por un motoreductor. A medida que avanza cada moneda por la banda transportadora 
+la camara de un celular colocada en un soporte captura la imagen para procesarla
+con el modelo YOLO. Posteriormente la moneda cae hacia un disco selector
 rotativo impulsado por un motor paso a paso, el cual posiciona de manera precisa uno
-de los 10 vasos receptores.
+de los 10 vasos.
 </p>
 
 <p>
