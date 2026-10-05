@@ -81,14 +81,17 @@ posición.
 <p>
 Codigo ESP32
 </p>
+
 <pre>
 <code>
+
 from machine import Pin, I2C
 import time
 
 # =========================================================
 # 1. CLASE CONTROLADORA PARA PANTALLA LCD I2C (16x2 / 20x4)
 # =========================================================
+
 class I2cLcd:
     def __init__(self, i2c, i2c_addr, num_lines=2, num_columns=16):
         self.i2c = i2c
@@ -96,67 +99,119 @@ class I2cLcd:
         self.num_lines = num_lines
         self.num_columns = num_columns
         self.backlight = 0x08
+
         time.sleep_ms(20)
+
         self.write_cmd(0x03)
         time.sleep_ms(5)
+
         self.write_cmd(0x03)
         time.sleep_ms(1)
+
         self.write_cmd(0x03)
         self.write_cmd(0x02)
+
         self.write_cmd(0x28)
         self.write_cmd(0x0C)
         self.write_cmd(0x06)
+
         self.clear()
 
-def write_cmd(self, cmd):
+    def write_cmd(self, cmd):
         self.send(cmd, 0)
 
- def write_char(self, char):
+    def write_char(self, char):
         self.send(ord(char), 1)
 
- def send(self, data, mode):
+    def send(self, data, mode):
         high = mode | (data & 0xF0) | self.backlight
         low = mode | ((data << 4) & 0xF0) | self.backlight
-        self.i2c.writeto(self.i2c_addr, bytes([high | 0x04, high, low | 0x04, low]))
 
-def clear(self):
+        self.i2c.writeto(
+            self.i2c_addr,
+            bytes([
+                high | 0x04,
+                high,
+                low | 0x04,
+                low
+            ])
+        )
+
+    def clear(self):
         self.write_cmd(0x01)
         time.sleep_ms(2)
 
- def move_to(self, col, row):
-     addr = col & 0x3F
+    def move_to(self, col, row):
+        addr = col & 0x3F
+
         if row & 1:
             addr += 0x40
+
         if row & 2:
             addr += 0x14
+
         self.write_cmd(0x80 | addr)
 
-def putstr(self, string):
+    def putstr(self, string):
         for char in string:
             self.write_char(char)
+
 
 # =========================================================
 # 2. INICIALIZACIÓN DE PERIFÉRICOS
 # =========================================================
-# Bus I2C para LCD (GPIO 21 = SDA, GPIO 22 = SCL)
-i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=400000)
 
-# Escaneo automático de la dirección I2C del LCD
+# Bus I2C para LCD
+# GPIO 21 = SDA
+# GPIO 22 = SCL
+
+i2c = I2C(
+    0,
+    scl=Pin(22),
+    sda=Pin(21),
+    freq=400000
+)
+
+
+# =========================================================
+# ESCANEO AUTOMÁTICO DE LA DIRECCIÓN I2C
+# =========================================================
+
 devices = i2c.scan()
+
 if len(devices) == 0:
+
     print("Error: No se encontró ninguna pantalla LCD I2C conectada.")
     lcd = None
+
 else:
+
     lcd_addr = devices[0]
-    print(f"LCD detectado en la dirección: {hex(lcd_addr)}")
-    lcd = I2cLcd(i2c, lcd_addr, 2, 16)
+
+    print(
+        f"LCD detectado en la dirección: {hex(lcd_addr)}"
+    )
+
+    lcd = I2cLcd(
+        i2c,
+        lcd_addr,
+        2,
+        16
+    )
+
     lcd.clear()
+
     lcd.move_to(0, 0)
     lcd.putstr(" Teclado + ESP32")
+
     lcd.move_to(0, 1)
     lcd.putstr("Tecla: ")
 
-# Mapa y pines del Teclado Matricial (Lado Izquierdo)
+
+# =========================================================
+# 3. MAPA Y PINES DEL TECLADO MATRICIAL
+# =========================================================
+
 KEYS = [
     ['1', '2', '3', 'A'],
     ['4', '5', '6', 'B'],
@@ -167,39 +222,79 @@ KEYS = [
 ROW_PINS = [13, 12, 14, 27]
 COL_PINS = [26, 25, 33, 32]
 
-rows = [Pin(p, Pin.OUT) for p in ROW_PINS]
-cols = [Pin(p, Pin.IN, Pin.PULL_UP) for p in COL_PINS]
+
+# Configuración de filas y columnas
+
+rows = [
+    Pin(p, Pin.OUT)
+    for p in ROW_PINS
+]
+
+cols = [
+    Pin(p, Pin.IN, Pin.PULL_UP)
+    for p in COL_PINS
+]
+
+
+# Inicializar filas en estado HIGH
 
 for r in rows:
     r.value(1)
 
-def read_keypad():
-    for row_idx, r in enumerate(rows):
-        r.value(0)
-        for col_idx, c in enumerate(cols):
-            if c.value() == 0:
-                time.sleep_ms(20)  # Debounce
-                while c.value() == 0:
-                    time.sleep_ms(10)
-                r.value(1)
-                return KEYS[row_idx][col_idx]
-        r.value(1)
-    return None
 
 # =========================================================
-# 3. BUCLE PRINCIPAL
+# 4. LECTURA DEL TECLADO
 # =========================================================
+
+def read_keypad():
+
+    for row_idx, r in enumerate(rows):
+
+        r.value(0)
+
+        for col_idx, c in enumerate(cols):
+
+            if c.value() == 0:
+
+                # Antirrebote
+                time.sleep_ms(20)
+
+                # Esperar hasta soltar la tecla
+                while c.value() == 0:
+                    time.sleep_ms(10)
+
+                r.value(1)
+
+                return KEYS[row_idx][col_idx]
+
+        r.value(1)
+
+    return None
+
+
+# =========================================================
+# 5. BUCLE PRINCIPAL
+# =========================================================
+
 print("Sistema iniciado. Presiona una tecla...")
 
 while True:
-    key = read_keypad()
-    if key:
-        print(key)  # Envía a Python vía Serial
-        if lcd:
-            lcd.move_to(7, 1)
-            lcd.putstr(f"{key}  ")  # Muestra la tecla en la LCD
-    time.sleep_ms(10)
 
+    key = read_keypad()
+
+    if key:
+
+        # Enviar tecla por puerto serial
+        print(key)
+
+        # Mostrar tecla en LCD
+        if lcd:
+
+            lcd.move_to(7, 1)
+            lcd.putstr(f"{key}  ")
+
+    time.sleep_ms(10)    
+    
 </code>
 </pre>
 <hr>
