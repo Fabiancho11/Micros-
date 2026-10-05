@@ -80,26 +80,13 @@ posición.
          width="800">
 </p>
 
-<h2><b>Evidencia fotográfica</b></h2>
-
-<p>
-A continuación se puede colocar la evidencia del montaje físico de la ESP32,
-el teclado, la pantalla LCD y la simulación realizada en PyBullet.
-</p>
-
-<p align="center">
-    <!-- Colocar aquí la fotografía del montaje o captura de PyBullet -->
-    <img src="../Imagenes/Montaje.png"
-         alt="Montaje físico y simulación del sistema"
-         width="800">
-</p>
-
 <h2><b>Video de funcionamiento</b></h2>
 
-<p>
-En el siguiente enlace se puede observar el funcionamiento del sistema,
-incluyendo la comunicación entre la ESP32, el computador y la simulación
-realizada mediante PyBullet.
+<p align="center">
+    <!-- Colocar aquí el enlace del video -->
+    <a href="https://youtu.be/UvwNwgkJg9M" target="_blank">
+        <b>Ver video de funcionamiento</b>
+    </a>
 </p>
 
 <p align="center">
@@ -123,7 +110,7 @@ en la pantalla OLED.
 
 <p align="center">
     <!-- Colocar aquí el enlace del video -->
-    <a href="#" target="_blank">
+    <a href="https://youtu.be/kkkakf-kYo8" target="_blank">
         <b>Ver video de funcionamiento</b>
     </a>
 </p>
