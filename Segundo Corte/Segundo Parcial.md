@@ -52,12 +52,10 @@ para incrementar la precisión del modelo.
 </p>
 
 <p align="center">
-    <img src="1_banda_transportadora.png"
+    <img src="../Imagenes/banda_transportadora.png"
          alt="Banda transportadora con rampa y soporte para smartphone"
          width="800">
 </p>
-
-<hr>
 
 <h2><b>2. Disco Selector de Vasos y Motor Paso a Paso 🔄</b></h2>
 
@@ -75,13 +73,13 @@ en la posición correcta.
 </p>
 
 <p align="center">
-    <img src="2_disco_selector.png"
+    <img src="../Imagenes/2_disco_selector.png"
          alt="Disco selector de 10 posiciones para vasos"
          width="800">
 </p>
 
 <p align="center">
-    <img src="2_motor_paso_paso.png"
+    <img src="../Imagenes/2_motor_paso_paso.png"
          alt="Motor paso a paso NEMA 17 utilizado para el control angular"
          width="400">
 </p>
@@ -103,7 +101,7 @@ hacia el área de sellado.
 </p>
 
 <p align="center">
-    <img src="3_carro_garra.png"
+    <img src="../Imagenes/3_carro_garra.png"
          alt="Carro de transporte con garra y servomotor MG90S"
          width="800">
 </p>
@@ -120,7 +118,7 @@ sobre la parte superior del vaso hasta sellarlo.
 </p>
 
 <p align="center">
-    <img src="4_sistema_tapado.png"
+    <img src="../Imagenes/4_sistema_tapado.png"
          alt="Mecanismo de tapado con piñón y cremallera"
          width="800">
 </p>
@@ -145,7 +143,7 @@ banda transportadora.
 </p>
 
 <p align="center">
-    <img src="5_interfaz_python.png"
+   <img src="../Imagenes/5_interfaz_python.png"
          alt="Dashboard en tiempo real e interfaz con chatbot desarrollada en Python"
          width="800">
 </p>
