@@ -303,6 +303,7 @@ Codigo Pyton
 </p>
 <pre>
 <code>
+    
 import pybullet as p
 import pybullet_data
 import serial
@@ -310,210 +311,676 @@ import time
 import os
 import math
 
+
 # ============================================================
 # CONFIGURACIÓN DEL PUERTO SERIAL Y RUTAS
 # ============================================================
+
 PUERTO_COM = "COM3"
 BAUDIOS = 115200
+
 RUTA_URDF = r"C:\Users\fabia\Downloads\brazo.urdf"
+
 
 # ============================================================
 # CONEXIÓN SERIAL
 # ============================================================
+
 try:
-    ser = serial.Serial(PUERTO_COM, BAUDIOS, timeout=0.1)
+
+    ser = serial.Serial(
+        PUERTO_COM,
+        BAUDIOS,
+        timeout=0.1
+    )
+
     print("--------------------------------------------")
     print("Puerto serial conectado correctamente")
-    print("Puerto:", PUERTO_COM, "| Baudios:", BAUDIOS)
+    print(
+        "Puerto:",
+        PUERTO_COM,
+        "| Baudios:",
+        BAUDIOS
+    )
     print("--------------------------------------------")
+
     time.sleep(2)
+
 except Exception as e:
-    print("ERROR: No se pudo abrir el puerto serial\n", e)
+
+    print(
+        "ERROR: No se pudo abrir el puerto serial\n",
+        e
+    )
+
 
 # ============================================================
 # INICIAR PYBULLET
 # ============================================================
+
 print("Iniciando PyBullet...")
+
 physicsClient = p.connect(p.GUI)
+
 if physicsClient < 0:
+
     print("ERROR: No se pudo iniciar PyBullet")
     exit()
 
-p.setAdditionalSearchPath(pybullet_data.getDataPath())
-p.setGravity(0, 0, -9.81)
+
+p.setAdditionalSearchPath(
+    pybullet_data.getDataPath()
+)
+
+p.setGravity(
+    0,
+    0,
+    -9.81
+)
+
 p.loadURDF("plane.urdf")
 
-if not os.path.exists(RUTA_URDF):
-    print("\nERROR: No se encontró el archivo URDF\n", RUTA_URDF)
-    p.disconnect()
-    if 'ser' in locals() and ser.is_open:
-        ser.close()
-    exit()
 
 # ============================================================
-# CARGAR BRAZO
+# VERIFICAR ARCHIVO URDF
 # ============================================================
+
+if not os.path.exists(RUTA_URDF):
+
+    print(
+        "\nERROR: No se encontró el archivo URDF\n",
+        RUTA_URDF
+    )
+
+    p.disconnect()
+
+    if 'ser' in locals() and ser.is_open:
+        ser.close()
+
+    exit()
+
+
+# ============================================================
+# CARGAR BRAZO ROBÓTICO
+# ============================================================
+
 print("Cargando brazo robótico...")
-robot = p.loadURDF(RUTA_URDF, basePosition=[0, 0, 0], useFixedBase=True)
+
+robot = p.loadURDF(
+    RUTA_URDF,
+    basePosition=[0, 0, 0],
+    useFixedBase=True
+)
+
+
+# ============================================================
+# ÍNDICES DE ARTICULACIONES
+# ============================================================
 
 JOINT_BASE = 0
 JOINT_BRAZO = 1
 JOINT_GRIPPER = 2
+
 END_EFFECTOR = 2
+
 
 # ============================================================
 # FUNCIONES DE CONTROL Y DIBUJO
 # ============================================================
+
 def obtener_punta():
-    estado = p.getLinkState(robot, END_EFFECTOR, computeForwardKinematics=True)
+
+    estado = p.getLinkState(
+        robot,
+        END_EFFECTOR,
+        computeForwardKinematics=True
+    )
+
     return estado[4]
 
+
 def dibujar_linea(p1, p2):
-    p.addUserDebugLine(p1, p2, lineColorRGB=[1, 0, 0], lineWidth=5, lifeTime=0)
+
+    p.addUserDebugLine(
+        p1,
+        p2,
+        lineColorRGB=[1, 0, 0],
+        lineWidth=5,
+        lifeTime=0
+    )
+
 
 def mover_a_punto(x, y, z):
+
     joint_poses = p.calculateInverseKinematics(
-        robot, 
-        END_EFFECTOR, 
+        robot,
+        END_EFFECTOR,
         [x, y, z],
         maxNumIterations=100,
         residualThreshold=1e-4
     )
 
- p.setJointMotorControlArray(
+    p.setJointMotorControlArray(
         bodyIndex=robot,
-        jointIndices=[JOINT_BASE, JOINT_BRAZO, JOINT_GRIPPER],
+        jointIndices=[
+            JOINT_BASE,
+            JOINT_BRAZO,
+            JOINT_GRIPPER
+        ],
         controlMode=p.POSITION_CONTROL,
         targetPositions=joint_poses[:3],
-        forces=[120, 120, 60]
- )
+        forces=[
+            120,
+            120,
+            60
+        ]
+    )
 
-  for _ in range(15):
+    for _ in range(15):
+
         p.stepSimulation()
         time.sleep(1 / 240)
+
 
 # ============================================================
 # TRAYECTORIAS Y ROTACIÓN DE NÚMEROS
 # ============================================================
+
 TAMAÑO = 0.50
-CX, CY, CZ = 0.35, 0.00, 0.25
+
+CX = 0.35
+CY = 0.00
+CZ = 0.25
+
 
 def generar_numero(numero):
+
     s = TAMAÑO
     trazos = []
 
-def transformar(lx, ly):
-        ly = -ly 
+
+    # ========================================================
+    # TRANSFORMACIÓN DE COORDENADAS
+    # ========================================================
+
+    def transformar(lx, ly):
+
+        ly = -ly
+
         dx_rot = ly * s
         dy_rot = -lx * s
-        return [CX + dx_rot, CY + dy_rot, CZ]
 
-def linea_local(x1, y1, x2, y2, pasos=10):
+        return [
+            CX + dx_rot,
+            CY + dy_rot,
+            CZ
+        ]
+
+
+    # ========================================================
+    # GENERAR LÍNEA
+    # ========================================================
+
+    def linea_local(
+        x1,
+        y1,
+        x2,
+        y2,
+        pasos=10
+    ):
+
         puntos = []
+
         for i in range(pasos + 1):
+
             t = i / pasos
+
             lx = x1 + (x2 - x1) * t
             ly = y1 + (y2 - y1) * t
-            puntos.append(transformar(lx, ly))
+
+            puntos.append(
+                transformar(lx, ly)
+            )
+
         return puntos
 
- if numero == "0":
+
+    # ========================================================
+    # NÚMERO 0
+    # ========================================================
+
+    if numero == "0":
+
         trazo = []
+
         for i in range(31):
+
             t = 2 * math.pi * i / 30
-            trazo.append(transformar(0.3 * math.cos(t), 0.4 * math.sin(t)))
+
+            trazo.append(
+                transformar(
+                    0.3 * math.cos(t),
+                    0.4 * math.sin(t)
+                )
+            )
+
         trazos.append(trazo)
+
+
+    # ========================================================
+    # NÚMERO 1
+    # ========================================================
+
     elif numero == "1":
-        trazos.append(linea_local(0, -0.4, 0, 0.4))
+
+        trazos.append(
+            linea_local(
+                0,
+                -0.4,
+                0,
+                0.4
+            )
+        )
+
+
+    # ========================================================
+    # NÚMERO 2
+    # ========================================================
+
     elif numero == "2":
-        t = linea_local(-0.4, 0.4, 0.4, 0.4)
-        t += linea_local(0.4, 0.4, -0.4, -0.4)
-        t += linea_local(-0.4, -0.4, 0.4, -0.4)
+
+        t = linea_local(
+            -0.4,
+            0.4,
+            0.4,
+            0.4
+        )
+
+        t += linea_local(
+            0.4,
+            0.4,
+            -0.4,
+            -0.4
+        )
+
+        t += linea_local(
+            -0.4,
+            -0.4,
+            0.4,
+            -0.4
+        )
+
         trazos.append(t)
+
+
+    # ========================================================
+    # NÚMERO 3
+    # ========================================================
+
     elif numero == "3":
-        t = linea_local(-0.4, 0.4, 0.4, 0.4)
-        t += linea_local(0.4, 0.4, -0.4, 0)
-        t += linea_local(-0.4, 0, 0.4, 0)
-        t += linea_local(0.4, 0, -0.4, -0.4)
+
+        t = linea_local(
+            -0.4,
+            0.4,
+            0.4,
+            0.4
+        )
+
+        t += linea_local(
+            0.4,
+            0.4,
+            -0.4,
+            0
+        )
+
+        t += linea_local(
+            -0.4,
+            0,
+            0.4,
+            0
+        )
+
+        t += linea_local(
+            0.4,
+            0,
+            -0.4,
+            -0.4
+        )
+
         trazos.append(t)
+
+
+    # ========================================================
+    # NÚMERO 4
+    # ========================================================
+
     elif numero == "4":
-        trazos.append(linea_local(-0.4, 0.4, -0.4, 0) + linea_local(-0.4, 0, 0.4, 0))
-        trazos.append(linea_local(0.4, 0.4, 0.4, -0.4))
+
+        trazos.append(
+            linea_local(
+                -0.4,
+                0.4,
+                -0.4,
+                0
+            )
+            +
+            linea_local(
+                -0.4,
+                0,
+                0.4,
+                0
+            )
+        )
+
+        trazos.append(
+            linea_local(
+                0.4,
+                0.4,
+                0.4,
+                -0.4
+            )
+        )
+
+
+    # ========================================================
+    # NÚMERO 5
+    # ========================================================
+
     elif numero == "5":
-        t = linea_local(0.4, 0.4, -0.4, 0.4)
-        t += linea_local(-0.4, 0.4, -0.4, 0)
-        t += linea_local(-0.4, 0, 0.4, 0)
-        t += linea_local(0.4, 0, 0.4, -0.4)
-        t += linea_local(0.4, -0.4, -0.4, -0.4)
+
+        t = linea_local(
+            0.4,
+            0.4,
+            -0.4,
+            0.4
+        )
+
+        t += linea_local(
+            -0.4,
+            0.4,
+            -0.4,
+            0
+        )
+
+        t += linea_local(
+            -0.4,
+            0,
+            0.4,
+            0
+        )
+
+        t += linea_local(
+            0.4,
+            0,
+            0.4,
+            -0.4
+        )
+
+        t += linea_local(
+            0.4,
+            -0.4,
+            -0.4,
+            -0.4
+        )
+
         trazos.append(t)
+
+
+    # ========================================================
+    # NÚMERO 6
+    # ========================================================
+
     elif numero == "6":
-        t = linea_local(0.4, 0.4, -0.4, 0.4)
-        t += linea_local(-0.4, 0.4, -0.4, -0.4)
-        t += linea_local(-0.4, -0.4, 0.4, -0.4)
-        t += linea_local(0.4, -0.4, 0.4, 0)
-        t += linea_local(0.4, 0, -0.4, 0)
+
+        t = linea_local(
+            0.4,
+            0.4,
+            -0.4,
+            0.4
+        )
+
+        t += linea_local(
+            -0.4,
+            0.4,
+            -0.4,
+            -0.4
+        )
+
+        t += linea_local(
+            -0.4,
+            -0.4,
+            0.4,
+            -0.4
+        )
+
+        t += linea_local(
+            0.4,
+            -0.4,
+            0.4,
+            0
+        )
+
+        t += linea_local(
+            0.4,
+            0,
+            -0.4,
+            0
+        )
+
         trazos.append(t)
+
+
+    # ========================================================
+    # NÚMERO 7
+    # ========================================================
+
     elif numero == "7":
-        t = linea_local(-0.4, 0.4, 0.4, 0.4)
-        t += linea_local(0.4, 0.4, 0.0, -0.4)
+
+        t = linea_local(
+            -0.4,
+            0.4,
+            0.4,
+            0.4
+        )
+
+        t += linea_local(
+            0.4,
+            0.4,
+            0.0,
+            -0.4
+        )
+
         trazos.append(t)
+
+
+    # ========================================================
+    # NÚMERO 8
+    # ========================================================
+
     elif numero == "8":
-        t_sup, t_inf = [], []
+
+        t_sup = []
+        t_inf = []
+
         for i in range(21):
+
             t = 2 * math.pi * i / 20
-            t_sup.append(transformar(0.25 * math.cos(t), 0.2 + 0.2 * math.sin(t)))
-            t_inf.append(transformar(0.25 * math.cos(t), -0.2 + 0.2 * math.sin(t)))
+
+            t_sup.append(
+                transformar(
+                    0.25 * math.cos(t),
+                    0.2 + 0.2 * math.sin(t)
+                )
+            )
+
+            t_inf.append(
+                transformar(
+                    0.25 * math.cos(t),
+                    -0.2 + 0.2 * math.sin(t)
+                )
+            )
+
         trazos.append(t_sup)
         trazos.append(t_inf)
+
+
+    # ========================================================
+    # NÚMERO 9
+    # ========================================================
+
     elif numero == "9":
+
         trazo = []
+
         for i in range(21):
+
             t = 2 * math.pi * i / 20
-            trazo.append(transformar(0.25 * math.cos(t), 0.2 + 0.2 * math.sin(t)))
-        trazo += linea_local(0.25, 0.2, 0.25, -0.4)
+
+            trazo.append(
+                transformar(
+                    0.25 * math.cos(t),
+                    0.2 + 0.2 * math.sin(t)
+                )
+            )
+
+        trazo += linea_local(
+            0.25,
+            0.2,
+            0.25,
+            -0.4
+        )
+
         trazos.append(trazo)
+
+
     return trazos
 
+
+# ============================================================
+# DIBUJAR NÚMERO
+# ============================================================
+
 def dibujar_numero(numero):
-    print(f"\nDIBUJANDO NUMERO: {numero}")
+
+    print(
+        f"\nDIBUJANDO NUMERO: {numero}"
+    )
+
     p.removeAllUserDebugItems()
+
     trazos = generar_numero(numero)
 
-if not trazos:
+    if not trazos:
+
         print("Número no configurado")
         return
 
-for trazo in trazos:
-        if not trazo: 
+
+    for trazo in trazos:
+
+        if not trazo:
             continue
-        mover_a_punto(trazo[0][0], trazo[0][1], trazo[0][2] + 0.06)
-        mover_a_punto(trazo[0][0], trazo[0][1], trazo[0][2])
+
+
+        # Levantar herramienta
+        mover_a_punto(
+            trazo[0][0],
+            trazo[0][1],
+            trazo[0][2] + 0.06
+        )
+
+
+        # Bajar herramienta
+        mover_a_punto(
+            trazo[0][0],
+            trazo[0][1],
+            trazo[0][2]
+        )
+
+
         punto_anterior = obtener_punta()
 
-for punto in trazo[1:]:
-            mover_a_punto(punto[0], punto[1], punto[2])
+
+        # Recorrer trayectoria
+        for punto in trazo[1:]:
+
+            mover_a_punto(
+                punto[0],
+                punto[1],
+                punto[2]
+            )
+
             posicion_actual = obtener_punta()
-            dibujar_linea(punto_anterior, posicion_actual)
+
+            dibujar_linea(
+                punto_anterior,
+                posicion_actual
+            )
+
             punto_anterior = posicion_actual
 
-mover_a_punto(punto_anterior[0], punto_anterior[1], punto_anterior[2] + 0.06)
-    print(f"Número {numero} terminado")
+
+        # Levantar herramienta
+        mover_a_punto(
+            punto_anterior[0],
+            punto_anterior[1],
+            punto_anterior[2] + 0.06
+        )
+
+
+    print(
+        f"Número {numero} terminado"
+    )
+
 
 # ============================================================
 # BUCLE PRINCIPAL
 # ============================================================
-print("\nEsperando números desde la ESP32...\n")
+
+print(
+    "\nEsperando números desde la ESP32...\n"
+)
+
 while True:
+
     try:
-        if 'ser' in locals() and ser.is_open and ser.in_waiting > 0:
-            datos = ser.readline().decode("utf-8", errors="ignore").strip()
+
+        if (
+            'ser' in locals()
+            and ser.is_open
+            and ser.in_waiting > 0
+        ):
+
+            datos = (
+                ser.readline()
+                .decode(
+                    "utf-8",
+                    errors="ignore"
+                )
+                .strip()
+            )
+
+
             if datos in list("0123456789"):
+
                 dibujar_numero(datos)
+
+
             elif datos:
-                print("Dato no reconocido:", datos)
+
+                print(
+                    "Dato no reconocido:",
+                    datos
+                )
+
+
     except Exception:
+
         pass
+
+
     p.stepSimulation()
+
     time.sleep(1 / 240)
 </code>
 </pre>
