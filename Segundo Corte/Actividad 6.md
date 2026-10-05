@@ -765,8 +765,8 @@ y se lo envia a la otra para que lo muestre en una pantalla OLED.
 
 <h3><b>Código 1: Reconocimiento con Python y OpenCV</b></h3>
 
-<code>
 <pre>
+<code>
 import cv2
 import numpy as np
 import serial
@@ -819,47 +819,150 @@ cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
 # ============================================================
-# CREAR PLANTILLAS DIVERSAS (Incluye trazos manuales de 2 y 4)
+# CREAR PLANTILLAS DIVERSAS
+# Incluye trazos manuales de 2 y 4
 # ============================================================
 
 def crear_plantillas():
+
     plantillas = {i: [] for i in range(10)}
-    
-# 1. Plantillas base con fuente de computadora
-  for numero in range(10):
-        imagen = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
+
+    # 1. Plantillas base con fuente de computadora
+    for numero in range(10):
+
+        imagen = np.zeros(
+            (TAMANO, TAMANO),
+            dtype=np.uint8
+        )
+
         texto = str(numero)
-        tam = cv2.getTextSize(texto, cv2.FONT_HERSHEY_SIMPLEX, 2.6, 7)[0]
+
+        tam = cv2.getTextSize(
+            texto,
+            cv2.FONT_HERSHEY_SIMPLEX,
+            2.6,
+            7
+        )[0]
+
         x = (TAMANO - tam[0]) // 2
         y = (TAMANO + tam[1]) // 2
-        
-cv2.putText(
-            imagen, texto, (x, y),
-            cv2.FONT_HERSHEY_SIMPLEX, 2.6, 255, 7, cv2.LINE_AA
+
+        cv2.putText(
+            imagen,
+            texto,
+            (x, y),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            2.6,
+            255,
+            7,
+            cv2.LINE_AA
         )
+
         plantillas[numero].append(imagen)
 
-# 2. Plantilla extra para el 2 (trazo clásico a mano)
-img_2 = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
-    cv2.ellipse(img_2, (50, 30), (25, 20), 0, 180, 360, 255, 8) 
-    cv2.line(img_2, (75, 30), (25, 85), 255, 8)                
-    cv2.line(img_2, (25, 85), (80, 85), 255, 8)                
+    # 2. Plantilla extra para el 2
+    # Trazo clásico a mano
+    img_2 = np.zeros(
+        (TAMANO, TAMANO),
+        dtype=np.uint8
+    )
+
+    cv2.ellipse(
+        img_2,
+        (50, 30),
+        (25, 20),
+        0,
+        180,
+        360,
+        255,
+        8
+    )
+
+    cv2.line(
+        img_2,
+        (75, 30),
+        (25, 85),
+        255,
+        8
+    )
+
+    cv2.line(
+        img_2,
+        (25, 85),
+        (80, 85),
+        255,
+        8
+    )
+
     plantillas[2].append(img_2)
 
-# 3. Plantillas extra para el 4 (abierto, estilo cruz de marcador)
-img_4_1 = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
-    cv2.line(img_4_1, (30, 20), (30, 60), 255, 9)   # Vertical izquierda
-    cv2.line(img_4_1, (30, 60), (85, 60), 255, 9)   # Horizontal
-    cv2.line(img_4_1, (65, 20), (65, 95), 255, 9)   # Vertical derecha cruzada
+    # 3. Plantillas extra para el 4
+    # Abierto, estilo cruz de marcador
+
+    img_4_1 = np.zeros(
+        (TAMANO, TAMANO),
+        dtype=np.uint8
+    )
+
+    cv2.line(
+        img_4_1,
+        (30, 20),
+        (30, 60),
+        255,
+        9
+    )
+
+    cv2.line(
+        img_4_1,
+        (30, 60),
+        (85, 60),
+        255,
+        9
+    )
+
+    cv2.line(
+        img_4_1,
+        (65, 20),
+        (65, 95),
+        255,
+        9
+    )
+
     plantillas[4].append(img_4_1)
 
-img_4_2 = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
-    cv2.line(img_4_2, (20, 20), (20, 55), 255, 9)   # Vertical izq corta
-    cv2.line(img_4_2, (20, 55), (90, 55), 255, 9)   # Horizontal larga
-    cv2.line(img_4_2, (70, 15), (70, 95), 255, 9)   # Vertical der larga
+    img_4_2 = np.zeros(
+        (TAMANO, TAMANO),
+        dtype=np.uint8
+    )
+
+    cv2.line(
+        img_4_2,
+        (20, 20),
+        (20, 55),
+        255,
+        9
+    )
+
+    cv2.line(
+        img_4_2,
+        (20, 55),
+        (90, 55),
+        255,
+        9
+    )
+
+    cv2.line(
+        img_4_2,
+        (70, 15),
+        (70, 95),
+        255,
+        9
+    )
+
     plantillas[4].append(img_4_2)
 
-return plantillas
+    return plantillas
+
 
 plantillas = crear_plantillas()
 
@@ -868,161 +971,279 @@ plantillas = crear_plantillas()
 # ============================================================
 
 def normalizar_numero(binaria):
-    # Encontrar contornos externos para aislar el número
+
+    # Encontrar contornos externos
+    # para aislar el número
+
     contornos, _ = cv2.findContours(
-        binaria, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+        binaria,
+        cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE
     )
 
-if not contornos:
+    if not contornos:
         return None, None
 
-alto_img, ancho_img = binaria.shape
+    alto_img, ancho_img = binaria.shape
+
     margen = 6
     contornos_validos = []
 
-for c in contornos:
+    for c in contornos:
+
         x, y, w, h = cv2.boundingRect(c)
         area = cv2.contourArea(c)
 
-# Filtrar bordes tocando los extremos (mano o borde del papel)
-if x < margen or y < margen or (x + w) > (ancho_img - margen) or (y + h) > (alto_img - margen):
+        # Filtrar bordes tocando los extremos
+        # Mano o borde del papel
+
+        if (
+            x &lt; margen
+            or y &lt; margen
+            or (x + w) > (ancho_img - margen)
+            or (y + h) > (alto_img - margen)
+        ):
             continue
 
-if area > 200:
+        if area > 200:
             contornos_validos.append(c)
 
-if not contornos_validos:
+    if not contornos_validos:
         return None, None
 
-# Seleccionar el contorno principal
-contorno_ppal = max(contornos_validos, key=cv2.contourArea)
-    x, y, w, h = cv2.boundingRect(contorno_ppal)
+    # Seleccionar el contorno principal
 
-if w <= 0 or h <= 0:
-        return None, None
-
-  recorte_binario = binaria[y:y+h, x:x+w]
-
- # Escalar manteniendo aspecto
- escala = min(68.0 / w, 68.0 / h)
-    nuevo_ancho = max(1, int(w * escala))
-    nuevo_alto = max(1, int(h * escala))
-
-   recorte_resized = cv2.resize(
-        recorte_binario, (nuevo_ancho, nuevo_alto), interpolation=cv2.INTER_AREA
+    contorno_ppal = max(
+        contornos_validos,
+        key=cv2.contourArea
     )
 
-  resultado = np.zeros((TAMANO, TAMANO), dtype=np.uint8)
+    x, y, w, h = cv2.boundingRect(contorno_ppal)
+
+    if w &lt;= 0 or h &lt;= 0:
+        return None, None
+
+    recorte_binario = binaria[
+        y:y + h,
+        x:x + w
+    ]
+
+    # Escalar manteniendo aspecto
+
+    escala = min(
+        68.0 / w,
+        68.0 / h
+    )
+
+    nuevo_ancho = max(
+        1,
+        int(w * escala)
+    )
+
+    nuevo_alto = max(
+        1,
+        int(h * escala)
+    )
+
+    recorte_resized = cv2.resize(
+        recorte_binario,
+        (nuevo_ancho, nuevo_alto),
+        interpolation=cv2.INTER_AREA
+    )
+
+    resultado = np.zeros(
+        (TAMANO, TAMANO),
+        dtype=np.uint8
+    )
+
     x_c = (TAMANO - nuevo_ancho) // 2
     y_c = (TAMANO - nuevo_alto) // 2
-    resultado[y_c:y_c+nuevo_alto, x_c:x_c+nuevo_ancho] = recorte_resized
 
- info = {
+    resultado[
+        y_c:y_c + nuevo_alto,
+        x_c:x_c + nuevo_ancho
+    ] = recorte_resized
+
+    info = {
         'w': w,
         'h': h,
         'aspect_ratio': float(h) / max(1, w)
     }
 
-   return resultado, info
+    return resultado, info
+
 
 # ============================================================
-# COMPARACIÓN CON TRANSFORMADA DE DISTANCIA (CHAMFER)
+# COMPARACIÓN CON TRANSFORMADA DE DISTANCIA
+# CHAMFER
 # ============================================================
 
-def calcular_distancia_chamfer(img_num, plantilla):
-    dist_plantilla = cv2.distanceTransform(255 - plantilla, cv2.DIST_L2, 3)
-    dist_img = cv2.distanceTransform(255 - img_num, cv2.DIST_L2, 3)
+def calcular_distancia_chamfer(
+    img_num,
+    plantilla
+):
 
-   pts_img = img_num > 0
+    dist_plantilla = cv2.distanceTransform(
+        255 - plantilla,
+        cv2.DIST_L2,
+        3
+    )
+
+    dist_img = cv2.distanceTransform(
+        255 - img_num,
+        cv2.DIST_L2,
+        3
+    )
+
+    pts_img = img_num > 0
     pts_plantilla = plantilla > 0
 
-if not np.any(pts_img) or not np.any(pts_plantilla):
+    if not np.any(pts_img) or not np.any(pts_plantilla):
         return 999.0
 
-d1 = np.mean(dist_plantilla[pts_img])
-    d2 = np.mean(dist_img[pts_plantilla])
+    d1 = np.mean(
+        dist_plantilla[pts_img]
+    )
 
- return (d1 + d2) / 2.0
+    d2 = np.mean(
+        dist_img[pts_plantilla]
+    )
+
+    return (d1 + d2) / 2.0
+
 
 # ============================================================
 # CLASIFICACIÓN TOPOLÓGICA Y ESTRUCTURAL
 # ============================================================
 
 def reconocer_numero(binaria):
+
     norm, info = normalizar_numero(binaria)
+
     if norm is None:
         return None
 
-  # Contar agujeros internos con RETR_CCOMP
- contornos_comp, jerarquia = cv2.findContours(
-        norm, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE
+    # Contar agujeros internos con RETR_CCOMP
+
+    contornos_comp, jerarquia = cv2.findContours(
+        norm,
+        cv2.RETR_CCOMP,
+        cv2.CHAIN_APPROX_SIMPLE
     )
 
-   num_agujeros = 0
+    num_agujeros = 0
     agujeros_info = []
 
-if jerarquia is not None:
+    if jerarquia is not None:
+
         jer = jerarquia[0]
+
         for i in range(len(contornos_comp)):
-            # Si el contorno tiene padre (es un hueco interno)
-        if jer[i][3] != -1:
-                area_h = cv2.contourArea(contornos_comp[i])
-                if area_h > 25:  # Filtro de ruido
+
+            # Si el contorno tiene padre
+            # es un hueco interno
+
+            if jer[i][3] != -1:
+
+                area_h = cv2.contourArea(
+                    contornos_comp[i]
+                )
+
+                if area_h > 25:
+
                     num_agujeros += 1
-                    hx, hy, hw, hh = cv2.boundingRect(contornos_comp[i])
-                    agujeros_info.append((hy + hh / 2.0, area_h))
 
- aspect_ratio = info['aspect_ratio']
+                    hx, hy, hw, hh = cv2.boundingRect(
+                        contornos_comp[i]
+                    )
 
- # --------------------------------------------------------
- # CASO 1: 2 AGUJEROS -> Definitivamente es un 8
- # --------------------------------------------------------
- if num_agujeros >= 2:
+                    agujeros_info.append(
+                        (
+                            hy + hh / 2.0,
+                            area_h
+                        )
+                    )
+
+    aspect_ratio = info['aspect_ratio']
+
+    # --------------------------------------------------------
+    # CASO 1: 2 AGUJEROS
+    # Definitivamente es un 8
+    # --------------------------------------------------------
+
+    if num_agujeros >= 2:
         return 8
 
- # --------------------------------------------------------
- # CASO 2: 1 AGUJERO -> Candidatos: 0, 6, 9, 4 (cerrado)
-# --------------------------------------------------------
-if num_agujeros == 1:
-        y_agujero_rel = agujeros_info[0][0] / float(TAMANO)
+    # --------------------------------------------------------
+    # CASO 2: 1 AGUJERO
+    # Candidatos: 0, 6, 9, 4 cerrado
+    # --------------------------------------------------------
+
+    if num_agujeros == 1:
+
+        y_agujero_rel = (
+            agujeros_info[0][0]
+            / float(TAMANO)
+        )
+
         area_agujero = agujeros_info[0][1]
 
-  # Agujero en la parte superior -> 9
- if y_agujero_rel < 0.46:
+        # Agujero en la parte superior -> 9
+
+        if y_agujero_rel &lt; 0.46:
             return 9
- # Agujero en la parte inferior -> 6
- elif y_agujero_rel > 0.54:
+
+        # Agujero en la parte inferior -> 6
+
+        elif y_agujero_rel > 0.54:
             return 6
-      else:
+
+        else:
+
             # Agujero en el centro
+
             if area_agujero > 180:
                 return 0
             else:
                 return 4
 
-   # --------------------------------------------------------
- # CASO 3: 0 AGUJEROS -> Candidatos: 1, 2, 3, 5, 7, 4 (abierto)
- # --------------------------------------------------------
-  # Si la altura es más del doble del ancho -> Es un 1
-  if aspect_ratio > 2.0:
+    # --------------------------------------------------------
+    # CASO 3: 0 AGUJEROS
+    # Candidatos: 1, 2, 3, 5, 7, 4 abierto
+    # --------------------------------------------------------
+
+    # Si la altura es más del doble del ancho
+    # es un 1
+
+    if aspect_ratio > 2.0:
         return 1
 
-# Comparación por distancia Chamfer
- candidatos = [2, 3, 4, 5, 7]
+    # Comparación por distancia Chamfer
+
+    candidatos = [2, 3, 4, 5, 7]
+
     mejor_num = None
     menor_dist = float("inf")
 
-  for num in candidatos:
+    for num in candidatos:
+
         for plant in plantillas[num]:
-            dist_norm = calcular_distancia_chamfer(norm, plant)
-            if dist_norm < menor_dist:
+
+            dist_norm = calcular_distancia_chamfer(
+                norm,
+                plant
+            )
+
+            if dist_norm &lt; menor_dist:
+
                 menor_dist = dist_norm
                 mejor_num = num
 
- if menor_dist > 22.0:
+    if menor_dist > 22.0:
         return None
 
-   return mejor_num
+    return mejor_num
+
 
 # ============================================================
 # PROGRAMA PRINCIPAL
@@ -1032,68 +1253,166 @@ ultimo_numero = None
 ultimo_envio = 0
 
 while True:
+
     ret, frame = cap.read()
+
     if not ret:
         print("No se pudo leer la cámara.")
         break
 
-frame = cv2.flip(frame, 1)
+    frame = cv2.flip(frame, 1)
+
     alto, ancho = frame.shape[:2]
 
- # Cuadro de enfoque
- x1 = int(ancho * 0.30)
+    # Cuadro de enfoque
+
+    x1 = int(ancho * 0.30)
     y1 = int(alto * 0.20)
     x2 = int(ancho * 0.70)
     y2 = int(alto * 0.80)
 
- roi = frame[y1:y2, x1:x2]
-    gris = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
-    gris = cv2.GaussianBlur(gris, (5, 5), 0)
+    roi = frame[
+        y1:y2,
+        x1:x2
+    ]
 
-# Binarización adaptativa limpia contra sombras
- binaria = cv2.adaptiveThreshold(
-        gris, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-        cv2.THRESH_BINARY_INV, 35, 12
+    gris = cv2.cvtColor(
+        roi,
+        cv2.COLOR_BGR2GRAY
     )
 
- # Unir trazos rotos del marcador y eliminar ruido
- kernel_close = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
-    binaria = cv2.morphologyEx(binaria, cv2.MORPH_CLOSE, kernel_close)
+    gris = cv2.GaussianBlur(
+        gris,
+        (5, 5),
+        0
+    )
 
-   kernel_open = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
-    binaria = cv2.morphologyEx(binaria, cv2.MORPH_OPEN, kernel_open)
+    # Binarización adaptativa
+    # limpia contra sombras
 
-# Reconocimiento
- numero = reconocer_numero(binaria)
+    binaria = cv2.adaptiveThreshold(
+        gris,
+        255,
+        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        cv2.THRESH_BINARY_INV,
+        35,
+        12
+    )
 
- # Visualización
- if numero is not None:
+    # Unir trazos rotos del marcador
+    # y eliminar ruido
+
+    kernel_close = cv2.getStructuringElement(
+        cv2.MORPH_RECT,
+        (7, 7)
+    )
+
+    binaria = cv2.morphologyEx(
+        binaria,
+        cv2.MORPH_CLOSE,
+        kernel_close
+    )
+
+    kernel_open = cv2.getStructuringElement(
+        cv2.MORPH_RECT,
+        (3, 3)
+    )
+
+    binaria = cv2.morphologyEx(
+        binaria,
+        cv2.MORPH_OPEN,
+        kernel_open
+    )
+
+    # Reconocimiento
+
+    numero = reconocer_numero(binaria)
+
+    # Visualización
+
+    if numero is not None:
+
         texto = f"Detectado: {numero}"
-        cv2.putText(frame, texto, (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+
+        cv2.putText(
+            frame,
+            texto,
+            (20, 40),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.9,
+            (0, 255, 0),
+            2
+        )
+
     else:
-        cv2.putText(frame, "Detectando...", (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
 
-cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-    cv2.imshow("Reconocimiento de numeros", frame)
-    cv2.imshow("Procesamiento", binaria)
+        cv2.putText(
+            frame,
+            "Detectando...",
+            (20, 40),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.9,
+            (0, 0, 255),
+            2
+        )
 
-# Envío Serie
- if numero is not None:
+    cv2.rectangle(
+        frame,
+        (x1, y1),
+        (x2, y2),
+        (0, 255, 0),
+        2
+    )
+
+    cv2.imshow(
+        "Reconocimiento de numeros",
+        frame
+    )
+
+    cv2.imshow(
+        "Procesamiento",
+        binaria
+    )
+
+    # ========================================================
+    # ENVÍO SERIE
+    # ========================================================
+
+    if numero is not None:
+
         tiempo_actual = time.time()
-        if numero != ultimo_numero or (tiempo_actual - ultimo_envio > TIEMPO_ENTRE_ENVIOS):
- mensaje = f"{numero}\n"
-esp.write(mensaje.encode())
-print(f"Número enviado al ESP-A: {numero}")
-ultimo_numero = numero
- ultimo_envio = tiempo_actual
 
-tecla = cv2.waitKey(1) & 0xFF
-if tecla == ord("q"):
-break
+        if (
+            numero != ultimo_numero
+            or (
+                tiempo_actual - ultimo_envio
+                > TIEMPO_ENTRE_ENVIOS
+            )
+        ):
+
+            mensaje = f"{numero}\n"
+
+            esp.write(
+                mensaje.encode()
+            )
+
+            print(
+                f"Número enviado al ESP-A: {numero}"
+            )
+
+            ultimo_numero = numero
+            ultimo_envio = tiempo_actual
+
+    tecla = cv2.waitKey(1) & 0xFF
+
+    if tecla == ord("q"):
+        break
+
 
 cap.release()
 cv2.destroyAllWindows()
 esp.close()
+
 print("Programa terminado.")
 </code>
 </pre>
