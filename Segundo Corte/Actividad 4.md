@@ -1,38 +1,24 @@
+<p><strong>Integrantes:</strong></p>
+<ul>
+    <li>Jeicob David Pinilla Ruiz</li>
+    <li>Fabian Abril Casallas</li>
+</ul>
 <p align="center">
     <h1 align="center"><b>CONTROL DE LUCES CON GESTOS</b></h1>
 </p>
 
-<p align="center">
-    Control de LEDs mediante reconocimiento de gestos de la mano utilizando Python, MediaPipe y una ESP32.
-</p>
-
-<hr>
-
-<h2><b>Descripción del proyecto</b></h2>
-
 <p>
-Este proyecto permite controlar diferentes luces LED utilizando únicamente gestos realizados con la mano.
-Para reconocer los gestos se utiliza la cámara web de una computadora junto con Python y la biblioteca
-MediaPipe. Los comandos reconocidos se envían mediante comunicación serial a una tarjeta ESP32.
+Para reconocer los gestos se utiliza la camara del computador junto con Python y la biblioteca
+MediaPipe. Los comandos reconocidos se envían mediante comunicación serial a la ESP32.
 </p>
 
 <p>
-La ESP32 recibe los comandos y controla el brillo de los LEDs mediante PWM.
-De esta manera, diferentes posiciones de la mano permiten controlar el encendido de los LEDs
-y ejecutar secuencias especiales de iluminación.
+La ESP32 recibe los comandos y controla el brillo de los LEDS mediante PWM.
+De esta manera los diferentes gestos de la mano permiten controlar el encendido de los LEDS
+y ejecutar dos secuencias de enciendido diferentes.
 </p>
 
-<h2><b>Gestos reconocidos</b></h2>
-
-<ul>
-    <li>✊ <b>Puño cerrado:</b> Enciende el LED amarillo al 30% de brillo.</li>
-    <li>✌️ <b>Signo de paz:</b> Enciende el LED azul al 70% de brillo.</li>
-    <li>🖐️ <b>Mano abierta:</b> Enciende el LED rojo al 100% de brillo.</li>
-    <li>👎 <b>Pulgar abajo:</b> Ejecuta la secuencia de luces del Modo 1.</li>
-    <li>👍 <b>Pulgar arriba:</b> Ejecuta la secuencia de luces del Modo 2.</li>
-</ul>
-
-<h2><b>Diagrama del proyecto</b></h2>
+<h2><b>Diagrama bloques</b></h2>
 
 <p align="center">
     <img src="../Imagenes/bloque1.png"
@@ -42,11 +28,11 @@ y ejecutar secuencias especiales de iluminación.
 
 <hr>
 
-<h2><b>Demostración en video</b></h2>
+<h2><b>Funcionamiento</b></h2>
 
 <p>
-En el siguiente video se puede observar el funcionamiento del sistema, incluyendo el reconocimiento
-de los diferentes gestos y la respuesta de los LEDs.
+En el siguiente video se puede observar el funcionamiento incluyendo el reconocimiento
+de los diferentes gestos y la respuesta de los LEDS.
 </p>
 
 <p align="center">
@@ -58,10 +44,10 @@ de los diferentes gestos y la respuesta de los LEDs.
 
 <hr>
 
-<h2><b>1. Código Python para reconocimiento de gestos 🐍</b></h2>
+<h2><b>1. Código Python para reconocimiento de gestos</b></h2>
 
 <p>
-Este programa se ejecuta en la computadora. Utiliza OpenCV para obtener la imagen de la cámara
+Este programa se ejecuta en visual, utlizando OpenCV para obtener la imagen de la cámara
 y MediaPipe para detectar los puntos de referencia de la mano.
 Dependiendo del gesto reconocido, se envía un comando por el puerto serial hacia la ESP32.
 </p>
@@ -337,7 +323,7 @@ while cap.isOpened():
 
 
 # =========================================================
-# 6. FINALIZACIÓN
+# 6. FINALIZAR
 # =========================================================
 
 cap.release()
@@ -351,13 +337,11 @@ cv2.destroyAllWindows()
 
 <hr>
 
-<h2><b>2. Código MicroPython para la ESP32 💡</b></h2>
+<h2><b>2. Código MicroPython para la ESP32</b></h2>
 
 <p>
-Este programa se ejecuta directamente en la ESP32 utilizando MicroPython.
-La tarjeta recibe los comandos enviados desde el computador mediante el puerto USB serial.
-Dependiendo del comando recibido, controla el brillo de los LEDs mediante PWM o ejecuta
-una de las dos secuencias de iluminación.
+Este programa se ejecuta directamente en la ESP32 utilizando MicroPython, la ESP32 recibe los comandos enviados desde el computador mediante el puerto serial.
+Dependiendo del comando recibido, controla el encendido y brillo de los LEDS mediante PWM.
 </p>
 
 <pre>
@@ -500,7 +484,7 @@ def ejecutar_modo2():
 
 
 # =========================================================
-# ESCUCHAR PUERTO USB SERIAL
+# LEER PUERTO SERIAL
 # =========================================================
 
 poll_obj = uselect.poll()
@@ -591,61 +575,3 @@ while True:
 
 <hr>
 
-<h2><b>Funcionamiento del sistema</b></h2>
-
-<ol>
-    <li>La cámara captura la imagen de la mano.</li>
-    <li>MediaPipe identifica los puntos de referencia de la mano.</li>
-    <li>Python analiza la posición de los dedos.</li>
-    <li>El programa identifica el gesto realizado.</li>
-    <li>Se envía un comando numérico mediante comunicación serial.</li>
-    <li>La ESP32 recibe el comando.</li>
-    <li>La ESP32 controla los LEDs mediante PWM.</li>
-    <li>Los gestos de pulgar arriba y pulgar abajo ejecutan secuencias especiales.</li>
-</ol>
-
-<h2><b>Comandos utilizados</b></h2>
-
-<table>
-    <tr>
-        <th>Comando</th>
-        <th>Gesto</th>
-        <th>Acción</th>
-    </tr>
-    <tr>
-        <td>1</td>
-        <td>✊ Puño</td>
-        <td>LED amarillo al 30%</td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>✌️ Victoria</td>
-        <td>LED azul al 70%</td>
-    </tr>
-    <tr>
-        <td>3</td>
-        <td>🖐️ Palma abierta</td>
-        <td>LED rojo al 100%</td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td>👎 Pulgar abajo</td>
-        <td>Ejecuta Modo 1</td>
-    </tr>
-    <tr>
-        <td>5</td>
-        <td>👍 Pulgar arriba</td>
-        <td>Ejecuta Modo 2</td>
-    </tr>
-</table>
-
-<hr>
-
-<h2><b>Conclusión</b></h2>
-
-<p>
-Este proyecto demuestra cómo se puede integrar visión artificial, reconocimiento de gestos,
-comunicación serial y control de hardware para crear una interfaz de interacción natural.
-La computadora se encarga de reconocer los gestos mediante MediaPipe, mientras que la ESP32
-se encarga del control físico de los LEDs mediante PWM.
-</p>
