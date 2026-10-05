@@ -35,14 +35,14 @@ y ejecutar secuencias especiales de iluminación.
 <h2><b>Diagrama del proyecto</b></h2>
 
 <p align="center">
-    <img src="image_9112e7.jpg"
+    <img src="../Imagenes/bloque1.png"
          alt="Diagrama del proyecto de control de luces mediante gestos"
          width="800">
 </p>
 
 <hr>
 
-<h2><b>Demostración en video 🎥</b></h2>
+<h2><b>Demostración en video</b></h2>
 
 <p>
 En el siguiente video se puede observar el funcionamiento del sistema, incluyendo el reconocimiento
