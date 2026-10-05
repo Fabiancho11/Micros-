@@ -1441,8 +1441,8 @@ microcontrolador.
 
 <h3><b>Código 2: Maestro (ESP-A)</b></h3>
 
-<code>
 <pre>
+<code>
 import network
 import espnow
 import sys
@@ -1491,48 +1491,56 @@ buffer = ""
 
 while True:
 
-# Revisar si llegó información por USB
-dato = sys.stdin.read(1)
+    # Revisar si llegó información por USB
+    dato = sys.stdin.read(1)
 
-if dato:
+    if dato:
 
-# Detectar fin de mensaje
-if dato == "\n":
+        # Detectar fin de mensaje
+        if dato == "\n":
 
- numero = buffer.strip()
-    buffer = ""
+            numero = buffer.strip()
+            buffer = ""
 
-if numero:
+            if numero:
 
-print("Número recibido del PC:", numero)
+                print(
+                    "Número recibido del PC:",
+                    numero
+                )
 
-# ==================================
-# ENVIAR POR ESP-NOW
-# ==================================
+                # ==================================
+                # ENVIAR POR ESP-NOW
+                # ==================================
 
-try:
+                try:
 
-enviado = e.send(
+                    enviado = e.send(
                         MAC_ESP_B,
                         numero.encode(),
                         True
                     )
 
-if enviado:
-                        print("Enviado al ESP-B:", numero)
+                    if enviado:
+                        print(
+                            "Enviado al ESP-B:",
+                            numero
+                        )
                     else:
-                        print("Error enviando al ESP-B")
+                        print(
+                            "Error enviando al ESP-B"
+                        )
 
-except Exception as error:
+                except Exception as error:
 
-print("Error ESP-NOW:")
-print(error)
+                    print("Error ESP-NOW:")
+                    print(error)
 
-else:
+        else:
 
-buffer += dato
+            buffer += dato
 
-time.sleep_ms(10)
+    time.sleep_ms(10)
 </code>
 </pre>
 
@@ -1563,8 +1571,8 @@ de manera inalambrica el computador y la segunda ESP.
 
 <h3><b>Código 3: Esclavo (ESP32-S3)</b></h3>
 
-<code>
 <pre>
+<code>
 import network
 import espnow
 import time
@@ -1572,13 +1580,17 @@ from machine import Pin, I2C
 import neopixel
 import ssd1306
 
+
 # ==================================================
 # APAGAR LED RGB INTEGRADO
 # ==================================================
 
 RGB_PIN = 48
 
-rgb = neopixel.NeoPixel(Pin(RGB_PIN), 1)
+rgb = neopixel.NeoPixel(
+    Pin(RGB_PIN),
+    1
+)
 
 # Apagar RGB
 rgb[0] = (0, 0, 0)
@@ -1608,9 +1620,23 @@ oled = ssd1306.SSD1306_I2C(
 
 oled.fill(0)
 
-oled.text("ESP32-S3", 30, 5)
-oled.text("ESCLAVO", 35, 20)
-oled.text("ESPERANDO...", 15, 40)
+oled.text(
+    "ESP32-S3",
+    30,
+    5
+)
+
+oled.text(
+    "ESCLAVO",
+    35,
+    20
+)
+
+oled.text(
+    "ESPERANDO...",
+    15,
+    40
+)
 
 oled.show()
 
@@ -1619,7 +1645,10 @@ oled.show()
 # CONFIGURAR WIFI
 # ==================================================
 
-wifi = network.WLAN(network.STA_IF)
+wifi = network.WLAN(
+    network.STA_IF
+)
+
 wifi.active(True)
 
 # No conectarse a ningun router
@@ -1647,32 +1676,51 @@ print()
 
 while True:
 
-host, mensaje = e.recv()
+    host, mensaje = e.recv()
 
-if mensaje is not None:
-try:
- numero = mensaje.decode().strip()
+    if mensaje is not None:
 
-print("Numero recibido:", numero)
+        try:
 
-# ------------------------------------------
-# MOSTRAR EN OLED
-# ------------------------------------------
-oled.fill(0)
+            numero = mensaje.decode().strip()
 
-oled.text("NUMERO", 38, 5)
+            print(
+                "Numero recibido:",
+                numero
+            )
 
-# Mostrar el numero
-oled.text(numero, 55, 28)
+            # ------------------------------------------
+            # MOSTRAR EN OLED
+            # ------------------------------------------
 
-oled.show()
+            oled.fill(0)
 
-except Exception as error:
-print("Error:", error)
+            oled.text(
+                "NUMERO",
+                38,
+                5
+            )
 
-time.sleep_ms(10)
+            # Mostrar el numero
+            oled.text(
+                numero,
+                55,
+                28
+            )
+
+            oled.show()
+
+        except Exception as error:
+
+            print(
+                "Error:",
+                error
+            )
+
+    time.sleep_ms(10)
 </code>
 </pre>
+
 <hr>
 <p>
 Este programa se ejecuta en una <strong>ESP32-S3</strong> que funciona como
