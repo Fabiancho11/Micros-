@@ -703,7 +703,7 @@ laberinto.
 <p>
 La comunicación se realiza atravez de la red Wi-Fi por medio del protocolo UDP.
 Cada ESP32 contiene un identificador y por medio de formato json envian y reciben
-los datos para actualizar las coordenadas actuales.
+los datos para actualizar las coordenadas y posicion.
 </p>
 
 <p>
