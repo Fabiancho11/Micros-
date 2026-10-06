@@ -70,7 +70,7 @@ información de las feromonas compartidas.
 <p align="center">
     <!-- Reemplazar el enlace por el video real -->
     <a href="https://youtu.be/HMbSgn6qK1o" target="_blank">
-        <b>Video del funcionamiento en YouTube</b>
+        <b>Video de funcionamiento</b>
     </a>
 </p>
 
