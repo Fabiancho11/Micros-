@@ -701,9 +701,9 @@ laberinto.
 <h2><b>6. Comunicación entre ESP32 y computador</b></h2>
 
 <p>
-La comunicación se realiza mediante paquetes UDP enviados a través de la red
-Wi-Fi. Cada paquete enviado desde una ESP32 contiene el identificador del
-carrito y se envía en formato json para actualizar las coordenadas actuales.
+La comunicación se realiza atravez de la red Wi-Fi por medio del protocolo UDP.
+Cada ESP32 contiene un identificador y por medio de formato json envian y reciben
+los datos para actualizar las coordenadas actuales.
 </p>
 
 <p>
