@@ -60,7 +60,7 @@ En la simulacion cada ESP32 se representa por un carro(cubo) de diferente color:
 <p>
 La meta se encuentra en la coordenada <strong>(11, 2)</strong> del laberinto.
 Los tres carritos comienzan en diferentes posiciones y avanzan utilizando la
-información de las feromonas compartidas.
+informacion compartida.
 </p>
 
 <hr>
@@ -81,7 +81,7 @@ información de las feromonas compartidas.
 <p>
 Este programa se ejecuta en el computador y funciona como servidor central del
 sistema. Utiliza comunicación UDP para recibir las posiciones de las ESP32 y
-retransmitir la información de las feromonas.
+retransmitir la informacion recolectada.
 </p>
 
 <p>
@@ -241,7 +241,7 @@ if __name__ == "__main__":
 <h2><b>2. Codigo MicroPython - ESP32_1 Carro Amarillo</b></h2>
 
 <p>
-Este programa corresponde al primer carrito. La ESP32 se conecta a la red
+Este programa corresponde al primer carrito, la ESP32 se conecta a la red
 Wi-Fi, se comunica con el computador mediante UDP y utiliza el algoritmo de
 selección basado en feromonas para decidir su siguiente posición.
 </p>
@@ -390,15 +390,9 @@ while True:
 <h2><b>3. Codigo MicroPython - ESP32_2 Carro Azul</b></h2>
 
 <p>
-Este programa corresponde al segundo carrito. Su funcionamiento es igual
+Este programa corresponde al segundo carrito y su funcionamiento es igual
 al del primero, pero para identificarse se llama <strong>ESP32_2</strong> y comienza
-en una posición diferente del laberinto.
-</p>
-
-<p>
-El carro azul comienza en la coordenada <strong>(2, 19)</strong>. Recibe las
-feromonas enviadas por el computador y las utiliza para modificar las
-probabilidades de selección de sus siguientes movimientos.
+en la posición <strong>(2, 19)</strong>.
 </p>
 
 <pre>
@@ -530,15 +524,9 @@ while True:
 <h2><b>4. Codigo MicroPython - ESP32_3 Carro Verde</b></h2>
 
 <p>
-Este programa corresponde al tercer carrito del sistema. Utiliza la misma
-lógica de navegación y comunicación que las otras dos ESP32, pero tiene el
-se nombro como <strong>ESP32_3</strong> y una posición inicial diferente.
-</p>
-
-<p>
-El carro verde comienza en la coordenada <strong>(3, 19)</strong> y comparte
-la información de feromonas con los otros carritos mediante el computador
-central.
+Este programa corresponde al tercer carrito del sistema, utiliza la misma
+lógica de las otras dos ESP32, pero tiene el se nombro como <strong>ESP32_3</strong> 
+y comienza en la pocision <strong>(3, 19)</strong>.
 </p>
 
 <pre>
