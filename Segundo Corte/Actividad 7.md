@@ -5,31 +5,22 @@
 </ul>
 
 <p align="center">
-    <h1 align="center"><b>NAVEGACIÓN CON FEROMONAS POR RED</b></h1>
-</p>
-
-<p align="center">
-    <b>ESP32 + Wi-Fi + UDP + PyBullet</b>
+    <h1 align="center"><b>ENJAMBRE DE TRES CARRITOS</b></h1>
 </p>
 
 <p>
-En este proyecto se utilizan tres carritos controlados mediante ESP32 para simular
-el comportamiento de hormigas que buscan la salida de un laberinto.
-Cada carrito utiliza un algoritmo basado en feromonas para seleccionar su
-siguiente movimiento.
+El sistema se basa en el algoritmo de optimización por colonia de hormigas (ACO). El objetivo es que 
+tres ESP32 naveguen en un laberinto para encontrar la salida partiendo de un punto inicial. 
+Para lograrlo imitan el comportamiento biológico de las hormigas las cuales depositan feromonas 
+pero en este caso cada ESP32 indica la ruta más eficiente es decir las que tienen salida y no llevan a un callejon,
+lo que guía a las otras ESP hacia el camino más corto tal y como lo harían las hormigas.
 </p>
 
 <p>
-Mientras los carritos se desplazan por el laberinto, depositan feromonas en las
-posiciones visitadas. Estas feromonas son intercambiadas mediante una red Wi-Fi
-utilizando comunicación UDP.
-</p>
-
-<p>
-Un computador central recibe las coordenadas de los tres ESP32, actualiza sus
-posiciones y representa los carritos en tiempo real mediante PyBullet.
-Además, el computador retransmite las feromonas recibidas hacia los demás
-carritos para permitir el intercambio de información entre ellos.
+Cada ESP32 envia las coordenadas para que el computador actualice sus
+posiciones y represente su posición en tiempo real mediante PyBullet por medio de carros(cubos). 
+Ademas trasnsmite informacion entre cada una de las ESP32 para indicar las mejores rutas
+según lo que cada una explora por asi decirlo.
 </p>
 
 <h2><b>Diagrama de bloques</b></h2>
@@ -42,40 +33,22 @@ carritos para permitir el intercambio de información entre ellos.
 
 <hr>
 
-<h2><b>Funcionamiento</b></h2>
+<h2><b>Laberinto</b></h2>
 
 <p>
-El sistema está compuesto por tres ESP32 que representan los carritos
-autónomos y un computador que funciona como servidor central.
-</p>
-
-<p>
-Cada ESP32 conoce el mapa del laberinto y su posición inicial. En cada paso,
-analiza las posiciones vecinas disponibles y calcula una probabilidad de
-movimiento utilizando dos factores principales: la cantidad de feromona
-presente en cada posición y la distancia hasta la meta.
-</p>
-
-<p>
-Cuando un carrito se desplaza, deposita una cantidad de feromona en la nueva
-posición y envía al computador sus coordenadas mediante UDP.
-</p>
-
-<p>
-El computador recibe esta información y actualiza la representación del
-carrito correspondiente en PyBullet. Posteriormente, la feromona depositada
-se envía a los demás ESP32 para que puedan utilizarla durante su navegación.
+El laberinto se diseño en pyBullet ulizando una matriz la cual se definieron los muros como 1
+y los caminos como 0 de esta forma el programa interpreta la matriz y genera el laberinto. Ademas
+cada ESP32 tiene esa matriz del laberinto para poder definir sus coordenadas e identificar los muros.
 </p>
 
 <p align="center">
     <img src="../Imagenes/laberinto.png"
-         alt="Simulación del laberinto y los tres carritos en PyBullet"
+         alt="Simulacion del laberinto"
          width="800">
 </p>
 
 <p>
-En la simulación, cada carrito tiene un color diferente para facilitar su
-identificación:
+En la simulacion cada ESP32 se representa por un carro(cubo) de diferente color:
 </p>
 
 <ul>
@@ -85,7 +58,7 @@ identificación:
 </ul>
 
 <p>
-La meta se encuentra en la coordenada <strong>(7, 1)</strong> del laberinto.
+La meta se encuentra en la coordenada <strong>(11, 2)</strong> del laberinto.
 Los tres carritos comienzan en diferentes posiciones y avanzan utilizando la
 información de las feromonas compartidas.
 </p>
@@ -94,38 +67,31 @@ información de las feromonas compartidas.
 
 <h2><b>Video del funcionamiento</b></h2>
 
-<p>
-En el siguiente video se puede observar el funcionamiento del sistema,
-incluyendo el movimiento de los tres carritos, la comunicación mediante
-Wi-Fi y la visualización del gemelo digital en PyBullet.
-</p>
-
 <p align="center">
     <!-- Reemplazar el enlace por el video real -->
     <a href="https://youtu.be/HMbSgn6qK1o" target="_blank">
-        <b>Ver video del funcionamiento en YouTube</b>
+        <b>Video del funcionamiento en YouTube</b>
     </a>
 </p>
 
 <hr>
 
-<h2><b>1. Código del servidor PC - Python + PyBullet</b></h2>
+<h2><b>1. Codigo Python del centro de datos + PyBullet</b></h2>
 
 <p>
 Este programa se ejecuta en el computador y funciona como servidor central del
-sistema. Utiliza comunicación UDP para recibir las posiciones de los ESP32 y
+sistema. Utiliza comunicación UDP para recibir las posiciones de las ESP32 y
 retransmitir la información de las feromonas.
 </p>
 
 <p>
-También crea el gemelo digital del laberinto utilizando PyBullet y representa
-cada ESP32 mediante un cuerpo de diferente color.
+También crea el laberinto utilizando PyBullet y representa
+cada ESP32 mediante un carro(cubo) de diferente color.
 </p>
 
 <pre>
 <code>
 
-# PC - Gemelo Digital PyBullet e Intercambio de Feromonas con Control de Llegadas
 import socket
 import json
 import threading
@@ -272,7 +238,7 @@ if __name__ == "__main__":
 
 <hr>
 
-<h2><b>2. Código MicroPython - ESP32_1 - Carro Amarillo</b></h2>
+<h2><b>2. Codigo MicroPython - ESP32_1 Carro Amarillo</b></h2>
 
 <p>
 Este programa corresponde al primer carrito. La ESP32 se conecta a la red
@@ -281,8 +247,8 @@ selección basado en feromonas para decidir su siguiente posición.
 </p>
 
 <p>
-El carro amarillo comienza en la coordenada <strong>(1, 11)</strong> y tiene
-como objetivo llegar a la posición <strong>(7, 1)</strong>.
+El carro amarillo comienza en la coordenada <strong>(1, 19)</strong> y tiene
+como objetivo llegar a la posición <strong>(11, 2)</strong>.
 </p>
 
 <pre>
@@ -290,9 +256,9 @@ como objetivo llegar a la posición <strong>(7, 1)</strong>.
 
 import network, socket, time, json, random
 
-SSID = "TVC_FAMILIAABRIL"
-PASSWORD = "SeA1ft81oD"
-PC_IP = "192.168.1.2"
+SSID = "NOMBRE_DE_LA_RED"
+PASSWORD = "CLAVE"
+PC_IP = "DIRECCION_IP_DEL_PC"
 PC_PORT = 5005
 
 ROBOT_ID = "ESP32_1"
@@ -380,7 +346,7 @@ ultimo_movimiento = time.ticks_ms()
 ultima_evaporacion = time.ticks_ms()
 
 while True:
-    # Oler feromonas de otros
+    # feromonas de otros
     try:
         data, _ = sock.recvfrom(512)
         msg = json.loads(data.decode())
@@ -421,16 +387,16 @@ while True:
 
 <hr>
 
-<h2><b>3. Código MicroPython - ESP32_2 - Carro Azul</b></h2>
+<h2><b>3. Codigo MicroPython - ESP32_2 Carro Azul</b></h2>
 
 <p>
-Este programa corresponde al segundo carrito. Su funcionamiento es equivalente
-al del ESP32_1, pero utiliza el identificador <strong>ESP32_2</strong> y comienza
+Este programa corresponde al segundo carrito. Su funcionamiento es igual
+al del primero, pero para identificarse se llama <strong>ESP32_2</strong> y comienza
 en una posición diferente del laberinto.
 </p>
 
 <p>
-El carro azul comienza en la coordenada <strong>(5, 11)</strong>. Recibe las
+El carro azul comienza en la coordenada <strong>(2, 19)</strong>. Recibe las
 feromonas enviadas por el computador y las utiliza para modificar las
 probabilidades de selección de sus siguientes movimientos.
 </p>
@@ -440,9 +406,9 @@ probabilidades de selección de sus siguientes movimientos.
 
 import network, socket, time, json, random
 
-SSID = "TVC_FAMILIAABRIL"
-PASSWORD = "SeA1ft81oD"
-PC_IP = "192.168.1.2"
+SSID = "NOMBRE_DE_LA_RED"
+PASSWORD = "CLAVE"
+PC_IP = "DIRECCION_IP_DEL_PC"
 PC_PORT = 5005
 
 ROBOT_ID = "ESP32_2"
@@ -561,16 +527,16 @@ while True:
 
 <hr>
 
-<h2><b>4. Código MicroPython - ESP32_3 - Carro Verde</b></h2>
+<h2><b>4. Codigo MicroPython - ESP32_3 Carro Verde</b></h2>
 
 <p>
 Este programa corresponde al tercer carrito del sistema. Utiliza la misma
-lógica de navegación y comunicación que los otros dos ESP32, pero tiene el
-identificador <strong>ESP32_3</strong> y una posición inicial diferente.
+lógica de navegación y comunicación que las otras dos ESP32, pero tiene el
+se nombro como <strong>ESP32_3</strong> y una posición inicial diferente.
 </p>
 
 <p>
-El carro verde comienza en la coordenada <strong>(9, 11)</strong> y comparte
+El carro verde comienza en la coordenada <strong>(3, 19)</strong> y comparte
 la información de feromonas con los otros carritos mediante el computador
 central.
 </p>
@@ -580,9 +546,9 @@ central.
 
 import network, socket, time, json, random
 
-SSID = "TVC_FAMILIAABRIL"
-PASSWORD = "SeA1ft81oD"
-PC_IP = "192.168.1.2"
+SSID = "NOMBRE_DE_LA_RED"
+PASSWORD = "CLAVE"
+PC_IP = "DIRECCION_IP_DEL_PC"
 PC_PORT = 5005
 
 ROBOT_ID = "ESP32_3"
@@ -749,91 +715,10 @@ laberinto.
 <p>
 La comunicación se realiza mediante paquetes UDP enviados a través de la red
 Wi-Fi. Cada paquete enviado desde una ESP32 contiene el identificador del
-carrito, sus coordenadas actuales y la cantidad de feromona depositada.
-</p>
-
-<pre>
-<code>
-paquete = {
-    "id": ROBOT_ID,
-    "x": x,
-    "y": y,
-    "ph_dep": deposito
-}
-</code>
-</pre>
-
-<p>
-El computador recibe estos datos en el puerto <strong>5005</strong>. Después
-de recibir una feromona, genera un mensaje con el comando
-<strong>ph_update</strong> y lo envía a los demás ESP32 conectados.
-</p>
-
-<pre>
-<code>
-{
-    "cmd": "ph_update",
-    "x": x,
-    "y": y,
-    "v": ph_dep
-}
-</code>
-</pre>
-
-<hr>
-
-<h2><b>7. Gemelo digital en PyBullet</b></h2>
-
-<p>
-El computador funciona como un gemelo digital del sistema físico. Las
-coordenadas recibidas desde los ESP32 se utilizan para actualizar en tiempo
-real la posición de los tres carritos dentro del entorno virtual.
+carrito y se envía en formato json para actualizar las coordenadas actuales.
 </p>
 
 <p>
-El laberinto está construido a partir de una matriz de 13 &times; 13,
-donde el valor <strong>1</strong> representa una pared y el valor
-<strong>0</strong> representa una posición libre para el movimiento.
+Para crear el registro el computador recibe estos datos en el puerto <strong>5005</strong> 
+y no con el <strong>5000</strong>  ya que genero conflicto.
 </p>
-
-<p>
-Los tres carritos son representados mediante cuerpos 3D con diferentes
-colores, permitiendo observar simultáneamente el movimiento de los robots
-físicos y su representación virtual.
-</p>
-
-<hr>
-
-<h2><b>8. Distribución de los carritos</b></h2>
-
-<table border="1" cellpadding="8" cellspacing="0" align="center">
-    <tr>
-        <th>Robot</th>
-        <th>Color</th>
-        <th>Posición inicial</th>
-        <th>Meta</th>
-    </tr>
-
-    <tr>
-        <td>ESP32_1</td>
-        <td>Amarillo</td>
-        <td>(1, 11)</td>
-        <td>(7, 1)</td>
-    </tr>
-
-    <tr>
-        <td>ESP32_2</td>
-        <td>Azul</td>
-        <td>(5, 11)</td>
-        <td>(7, 1)</td>
-    </tr>
-
-    <tr>
-        <td>ESP32_3</td>
-        <td>Verde</td>
-        <td>(9, 11)</td>
-        <td>(7, 1)</td>
-    </tr>
-</table>
-
-<hr>
