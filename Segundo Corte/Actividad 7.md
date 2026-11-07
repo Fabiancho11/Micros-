@@ -68,7 +68,6 @@ informacion compartida.
 <h2><b>Video del funcionamiento</b></h2>
 
 <p align="center">
-    <!-- Reemplazar el enlace por el video real -->
     <a href="https://youtu.be/HMbSgn6qK1o" target="_blank">
         <b>Video de funcionamiento</b>
     </a>
