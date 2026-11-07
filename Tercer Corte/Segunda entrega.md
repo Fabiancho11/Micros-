@@ -4,35 +4,27 @@
     <li>Fabian Abril Casallas</li>
 </ul>
 <p align="center">
-    <h1 align="center"><b>Segundo Parcial</b></h1>
+    <h1 align="center"><b>Segundo entrega</b></h1>
+</p>
+
+
+<h2><b>1. Banda Transportadora</b></h2>
+
+<p>
+Para esta segunda entrega ya se construyo la banda trasportadora en carton piedra y para su funcionamiento se utiliza
+un motorreductor tal y como se muestra acontinuacion.
 </p>
 
 <p align="center">
-    Clasificación de monedas mediante visión artificial (YOLO), con ESP32 e interfaz de monitoreo en Python.
-</p>
-
-<h2><b>1. Banda Transportadora y Soporte de Cámara </b></h2>
-
-<p>
-La primera etapa consiste en una rampa de entrada por la cual se depositan las
-monedas hacia la banda transportadora. La banda es impulsada por un motoreductor
-acoplado a una etapa de potencia y controlado mediante la tarjeta ESP32.
-Sobre la estructura se integra un soporte para smartphone diseñado para mantener
-la cámara centrada sobre el flujo de monedas.
-</p>
-
-<p>
-Para la identificación de las monedas se está entrenando un modelo de detección
-de objetos con YOLO. Actualmente, el dataset cuenta con 30 imágenes por tipo de
-moneda. Sin embargo, debido a las variaciones de iluminación y sombras sobre la
-superficie de las monedas, se requiere continuar con la recolección de muestras
-para incrementar la precisión del modelo.
-</p>
-
-<p align="center">
-    <img src="../Imagenes/1_banda_transportadora.png"
-         alt="Banda transportadora con rampa y soporte para smartphone"
+    <img src="../Imagenes/Banda construida.jpg"
+         alt="Banda transportadora"
          width="800">
+</p>
+
+<p>
+Dado que el material utilizado para la base es cartón fue necesario ponerle peso para evitar que 
+se mueva por el movimiento y la fuerza del motor ya que no es un material rígido como el plastico
+o la madera.
 </p>
 
 <h2><b>2. Disco Selector de Vasos y Motor Paso a Paso </b></h2>
