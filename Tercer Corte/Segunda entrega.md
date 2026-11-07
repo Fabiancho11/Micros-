@@ -28,7 +28,7 @@ o la madera.
 </p>
 
 <p align="center">
-    <a href="https://youtu.be/HMbSgn6qK1o](https://youtu.be/Q1X_BEJc92w" target="_blank">
+    <a href="https://youtu.be/Q1X_BEJc92w" target="_blank">
         <b>Video de funcionamiento</b>
     </a>
 </p>
