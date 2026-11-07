@@ -49,7 +49,7 @@ acontinuacion.
 <p>
 Al colocar los vasos y comprobar la caida de las monedas se evidencio que el vaso se desplaza
 por lo cual será necesario usar imanes para la sujeción de los vasos ya que cuando no ahí monedas 
-o el peso de estas no es el suficiente el vaso se cae.
+o el peso de estas no es el suficiente el vaso se mueve.
 </p>
 
 <p align="center">
