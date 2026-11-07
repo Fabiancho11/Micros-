@@ -4,7 +4,7 @@
     <li>Fabian Abril Casallas</li>
 </ul>
 <p align="center">
-    <h1 align="center"><b>Segundo entrega</b></h1>
+    <h1 align="center"><b>Segunda entrega</b></h1>
 </p>
 
 
