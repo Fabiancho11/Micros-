@@ -18,7 +18,7 @@ un motorreductor tal y como se muestra acontinuacion.
 <p align="center">
     <img src="../Imagenes/Banda construida.jpg"
          alt="Banda transportadora"
-         width="800">
+         width="500">
 </p>
 
 <p>
@@ -27,7 +27,13 @@ se mueva por el movimiento y la fuerza del motor ya que no es un material rígid
 o la madera.
 </p>
 
-<h2><b>2. Disco Selector de Vasos y Motor Paso a Paso </b></h2>
+<p align="center">
+    <a href="https://youtu.be/HMbSgn6qK1o](https://youtu.be/Q1X_BEJc92w" target="_blank">
+        <b>Video de funcionamiento</b>
+    </a>
+</p>
+
+<h2><b>2. Disco Selector de Vasos</b></h2>
 
 <p>
 Una vez clasificada la moneda, esta cae dentro de uno de los recipientes
