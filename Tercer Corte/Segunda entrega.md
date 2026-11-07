@@ -37,7 +37,7 @@ o la madera.
 
 <p>
 Para el disco selector de vasos de construyo en cartón piedra tal y como se muestra
-aconstinuacion.
+acontinuacion.
 </p>
 
 <p align="center">
