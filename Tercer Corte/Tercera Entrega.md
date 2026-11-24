@@ -76,7 +76,9 @@ de PWM controlar el angulo de manera precisa.
 </p>
 
 <p>
-Originalmente el brazo se diseñó con 5 grados de libertad, sin embargo 2 servos se dañaron por lo cual se retiró un eslabón dejando 3 grados de libertad. Por lo cual ahora solo se puede girar la base, subir y bajar el eslabón del brazo, así como abrir y cerrar la garra para sujetar o soltar los vasos.
+Originalmente el brazo se diseñó con 5 grados de libertad, sin embargo 2 servos se dañaron por lo cual 
+se retiró un eslabón dejando 3 grados de libertad. Por lo cual ahora solo se puede girar la base, subir 
+y bajar el eslabón del brazo, así como abrir y cerrar la garra para sujetar o soltar los vasos.
 </p>
 
 <h2><b>4. Interfaz</b></h2>
@@ -428,6 +430,13 @@ while True:
 Este programa se encarga de generar la interfaz de control para lo cual utiliza 
 el serial COM para mandar las ordenes a la ESP y el micro se las manda a la otra ESP-32
 que controla el movimeinto de las diferentes partes del sistema.
+</p>
+
+<p align="center">
+    <a href="https://youtu.be/EVQpVJDZNBM" target="_blank">
+        <b>Video de funcionamiento</b>
+    </a>
+</p>
 
 <pre>
 <code>
@@ -664,12 +673,5 @@ if __name__ == "__main__":
 
 </code>
 </pre>
-
-
-<p align="center">
-    <a href="https://youtu.be/EVQpVJDZNBM" target="_blank">
-        <b>Video de funcionamiento</b>
-    </a>
-</p>
 
 
