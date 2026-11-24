@@ -18,13 +18,14 @@
 <p>
 Para esta segunda entrega ya se implemento el control de la banda transportadora 
 por medio de un modulo TB6612FNG que permite controlar encendido, apagado, dirección y velocidad 
-del motoreductor usado para el mobvimiento de la banda trasnportadora.
+del motorreductor usado para el movimiento de la banda transportadora. Además se para mejorar 
+la sujecion de los vasos se utlizaron 18 imanes N52 de 10x2 mm.
 </p>
 
 <p align="center">
     <img src="../Imagenes/controlador motorreductor.png"
          alt="PINOUT TB6612FNG"
-         width="300">
+         width="500">
 </p>
 
 <p>
@@ -39,7 +40,9 @@ El controlador se conecto a una fuente de 5V DC.
 </p>
 <p>
 Para el movimiento del disco selector de vasos se utlizo un motor NEMA 17 controlado por medio de
-un driver DRV8825 que permite no solo suministrar la potencia necesaria para controlar el motor y adema aumentar la resolución del ángulo por medio de los pasos logrando hasta 1/32 de paso lo que equivale a una precisión de 0.05625°.
+un driver DRV8825 que permite no solo suministrar la potencia necesaria para controlar el motor y 
+ademas aumentar la resolución del ángulo por medio de los pasos logrando hasta 1/32 de paso lo 
+que equivale a una precisión de 0.05625°.
 
 <p align="center">
     <img src="../Imagenes/DRV8825.png"
