@@ -24,7 +24,7 @@ del motoreductor usado para el mobvimiento de la banda trasnportadora.
 <p align="center">
     <img src="../Imagenes/controlador motorreductor.png"
          alt="PINOUT TB6612FNG"
-         width="500">
+         width="800">
 </p>
 
 <p>
