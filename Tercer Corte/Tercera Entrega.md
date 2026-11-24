@@ -76,6 +76,18 @@ de PWM controlar el angulo de manera precisa.
 Originalmente el brazo se diseñó con 5 grados de libertad, sin embargo 2 servos se dañaron por lo cual se retiró un eslabón dejando 3 grados de libertad. Por lo cual ahora solo se puede girar la base, subir y bajar el eslabón del brazo, así como abrir y cerrar la garra para sujetar o soltar los vasos.
 </p>
 
+<h2><b>4. Interfaz</b></h2>
+<p align="center">
+    <img src="../Imagenes/interfaz.png"
+         alt="Disco"
+         width="500">
+</p>
+<p>
+Por ahora se cuenta con una interfaz que permite controlar todo de manera manual
+esto con el fin de verificar el funcionamiento de todo el sistema para luego inplementar 
+un sistema autónomo que utilice el modelo de yole para la detección de las monedas y el control
+del sistema además del chat-bot y visualizar en tiempo real el conteo de las monedas.
+
 
 
 <p align="center">
@@ -83,3 +95,5 @@ Originalmente el brazo se diseñó con 5 grados de libertad, sin embargo 2 servo
         <b>Video de funcionamiento</b>
     </a>
 </p>
+
+
