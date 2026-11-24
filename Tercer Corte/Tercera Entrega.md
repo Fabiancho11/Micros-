@@ -664,7 +664,7 @@ if __name__ == "__main__":
 
 
 <p align="center">
-    <a href="https://youtu.be/Bdja7fUhHcs" target="_blank">
+    <a href="https://youtu.be/EVQpVJDZNBM" target="_blank">
         <b>Video de funcionamiento</b>
     </a>
 </p>
