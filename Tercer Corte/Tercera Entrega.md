@@ -61,7 +61,7 @@ El Driver se alimento a 12 V DC y se uso una resolucion de 1/16 de paso que r}eq
 Para mover y tapar los vasos se utiliza un brazo robótico el cual se diseño en solid works 
 y se imprimio en 3D en PLA y para las pinzas se utilizo TPU.
 <p align="center">
-    <img src="../Imagenes/MG996R"
+    <img src="../Imagenes/MG996R.jpg"
          alt="Servo MG996R"
          width="500">
 </p>
