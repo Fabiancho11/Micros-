@@ -95,6 +95,12 @@ del sistema además del chat-bot y visualizar en tiempo real el conteo de las mo
 
 <hr>
 
+<p align="center">
+    <a href="https://youtu.be/EVQpVJDZNBM" target="_blank">
+        <b>Video de funcionamiento</b>
+    </a>
+</p>
+
 <h2><b>1. Código ESP-32 de control</b></h2>
 
 <p>
@@ -424,18 +430,12 @@ while True:
 
 <hr>
 
-<h2><b>3. Interfaz</b></h2>
+<h2><b>3. Código Interfaz</b></h2>
 
 <p>
 Este programa se encarga de generar la interfaz de control para lo cual utiliza 
 el serial COM para mandar las ordenes a la ESP y el micro se las manda a la otra ESP-32
 que controla el movimeinto de las diferentes partes del sistema.
-</p>
-
-<p align="center">
-    <a href="https://youtu.be/EVQpVJDZNBM" target="_blank">
-        <b>Video de funcionamiento</b>
-    </a>
 </p>
 
 <pre>
