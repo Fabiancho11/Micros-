@@ -1,116 +1,266 @@
-<p><strong>Integrantes:</strong></p>
-<ul>
-    <li>Jeicob David Pinilla Ruiz</li>
-    <li>Fabian Abril Casallas</li>
-</ul>
+# Proyecto Micros
+
+**Integrantes:**
+- Jeicob David Pinilla Ruiz
+- Fabian Abril Casallas
+
+## ¿De qué trata el proyecto?
+
+Es un sistema que clasifica monedas colombianas. Las monedas se ponen en una banda transportadora y una cámara detecta de qué moneda se trata. Según la moneda detectada, un motor paso a paso gira el disco hasta el vaso correspondiente (son **9 vasos**, uno por cada tipo de moneda).
+
+Cuando un vaso se llena, el disco lo gira 180° para dejarlo al otro lado y un brazo robótico lo agarra, lo tapa y pone un vaso nuevo.
+
+El reconocimiento de monedas se hizo con **YOLOv8**, entrenado con 300 imágenes por moneda.
+
+## Estado actual
+
+| Parte | Estado |
+|---|---|
+| Banda transportadora | Funciona bien |
+| Disco selector de vasos | Funciona bien |
+| Brazo robótico | Funciona con 3 grados de libertad (se dañaron 2 servos) |
+| Interfaz de control manual | Funciona bien |
+| Reconocimiento con YOLOv8 | Solo reconoce 3 monedas: **$500 antigua, $100 antigua y $50 antigua** |
+| Sistema autónomo (cámara + mecánica) | Pendiente |
+
+Las otras 6 monedas no se pudieron reconocer. Se movieron los parámetros de confianza en Python y no sirvió.
+
+---
+
+## Diagrama de bloques
+
 <p align="center">
-    <h1 align="center"><b>Tercera entrega</b></h1>
+    <img src="Imagenes/Diagrama_bloques.png"
+         alt="Diagrama de bloques"
+         width="800">
 </p>
 
+---
 
-<h2><b>1. Banda Transportadora</b></h2>
+## 1. Banda transportadora
+
 <p align="center">
-    <img src="../Imagenes/BANDA_TRASNPORTADORA.jpg"
+    <img src="Imagenes/Banda construida.jpg"
+         alt="Banda transportadora construida"
+         width="500">
+</p>
+
+La banda se construyó en cartón piedra y se mueve con un motorreductor. Como el cartón no es rígido como el plástico o la madera, hubo que ponerle peso para que no se moviera por la fuerza del motor.
+
+<p align="center">
+    <img src="Imagenes/BANDA_TRASNPORTADORA.jpg"
          alt="Banda transportadora"
          width="500">
 </p>
 
-<p>
-Para esta segunda entrega ya se implemento el control de la banda transportadora 
-por medio de un modulo TB6612FNG que permite controlar encendido, apagado, dirección y velocidad 
-del motorreductor usado para el movimiento de la banda transportadora. Además se para mejorar 
-la sujecion de los vasos se utlizaron 18 imanes N52 de 10x2 mm.
-</p>
+En la tercera entrega se agregó el control con un módulo **TB6612FNG**, que permite encender, apagar, cambiar la dirección y la velocidad del motorreductor. Se alimentó con una fuente de 5 V DC.
 
 <p align="center">
-    <img src="../Imagenes/controlador motorreductor.png"
-         alt="PINOUT TB6612FNG"
+    <img src="Imagenes/controlador motorreductor.png"
+         alt="Pinout TB6612FNG"
          width="500">
 </p>
 
-<p>
-El controlador se conecto a una fuente de 5V DC.
+<p align="center">
+    <a href="https://youtu.be/Q1X_BEJc92w" target="_blank">
+        <b>Video de funcionamiento de la banda</b>
+    </a>
 </p>
 
-<h2><b>2. Disco Selector de Vasos</b></h2>
+## 2. Disco selector de vasos
+
 <p align="center">
-    <img src="../Imagenes/DISCO_CLASIFICACION.jpg"
+    <img src="Imagenes/Disco.jpg"
          alt="Disco"
          width="500">
 </p>
-<p>
-Para el movimiento del disco selector de vasos se utlizo un motor NEMA 17 controlado por medio de
-un driver DRV8825 que permite no solo suministrar la potencia necesaria para controlar el motor y 
-ademas aumentar la resolución del ángulo por medio de los pasos logrando hasta 1/32 de paso lo 
-que equivale a una precisión de 0.05625°.
+
+El disco también se hizo en cartón piedra. Al probarlo con vasos vimos que se movían cuando no tenían monedas o tenían poco peso. Para solucionarlo se pusieron **18 imanes N52 de 10x2 mm** para sujetarlos.
 
 <p align="center">
-    <img src="../Imagenes/DRV8825.png"
-         alt="Driver DRV8825 conexiones"
+    <img src="Imagenes/Disco con vasos.jpg"
+         alt="Disco con vasos"
          width="500">
 </p>
 
-<p>
-El Driver se alimento a 12 V DC y se uso una resolucion de 1/16 de paso que r}equivale a 0.1125° lo cual es una presicion muy buena para esta aplicacion ya que los saltos son de 40°.
-</p>
-
-<h2><b>3. Brazo Robotico</b></h2>
 <p align="center">
-    <img src="../Imagenes/BRAZO_ROBOTICO.jpg"
-         alt="Disco"
+    <img src="Imagenes/DISCO_CLASIFICACION.jpg"
+         alt="Disco de clasificación"
          width="500">
 </p>
-<p>
-Para mover y tapar los vasos se utiliza un brazo robótico el cual se diseño en solid works 
-y se imprimio en 3D en PLA y para las pinzas se utilizo TPU.
+
+El disco se mueve con un motor **NEMA 17** controlado con un driver **DRV8825**. Este driver da la potencia necesaria y permite dividir los pasos hasta 1/32 (0.05625° de precisión).
+
+Se alimentó a 12 V DC y se usó 1/16 de paso (0.1125°), que es más que suficiente porque los saltos entre vasos son de 40°.
+
 <p align="center">
-    <img src="../Imagenes/MG996R.jpg"
+    <img src="Imagenes/DRV8825.png"
+         alt="Conexiones del driver DRV8825"
+         width="500">
+</p>
+
+## 3. Brazo robótico
+
+<p align="center">
+    <img src="Imagenes/BRAZO_ROBOTICO.jpg"
+         alt="Brazo robótico"
+         width="500">
+</p>
+
+El brazo se diseñó en SolidWorks y se imprimió en 3D en PLA. Las pinzas se imprimieron en TPU. Se usan servos **MG996R** de 180°, porque tienen más fuerza que los servos pequeños y, al tener tope, se controla el ángulo con PWM de forma precisa.
+
+<p align="center">
+    <img src="Imagenes/MG996R.jpg"
          alt="Servo MG996R"
          width="500">
 </p>
 
-<p>
-Para el movimiento y control del brazo robotica se utlizan servos MG996R de 180° ya que cuentan con 
-una fuerza mayor a los servos pequeños y además al ser de 180° tienen un tope que permite por medio
-de PWM controlar el angulo de manera precisa.
-</p>
+Originalmente el brazo tenía 5 grados de libertad, pero 2 servos se dañaron. Se quitó un eslabón y quedó con 3: girar la base, subir y bajar el eslabón, y abrir y cerrar la garra.
 
-<p>
-Originalmente el brazo se diseñó con 5 grados de libertad, sin embargo 2 servos se dañaron por lo cual 
-se retiró un eslabón dejando 3 grados de libertad. Por lo cual ahora solo se puede girar la base, subir 
-y bajar el eslabón del brazo, así como abrir y cerrar la garra para sujetar o soltar los vasos.
-</p>
+## 4. Interfaz
 
-<h2><b>4. Interfaz</b></h2>
 <p align="center">
-    <img src="../Imagenes/interfaz.png"
-         alt="Disco"
+    <img src="Imagenes/interfaz.png"
+         alt="Interfaz de control"
          width="500">
 </p>
-<p>
-Por ahora se cuenta con una interfaz que permite controlar todo de manera manual
-esto con el fin de verificar el funcionamiento de todo el sistema para luego inplementar 
-un sistema autónomo que utilice el modelo de yole para la detección de las monedas y el control
-del sistema además del chat-bot y visualizar en tiempo real el conteo de las monedas.
 
-<hr>
+Por ahora la interfaz controla todo de forma manual, para comprobar que todo el sistema funciona. Después se quiere hacer un sistema autónomo que use el modelo YOLO para detectar las monedas, con un chat-bot y el conteo de monedas en tiempo real.
 
 <p align="center">
     <a href="https://youtu.be/EVQpVJDZNBM" target="_blank">
-        <b>Video de funcionamiento</b>
+        <b>Video de funcionamiento del sistema</b>
     </a>
 </p>
 
-<h2><b>1. Código ESP-32 de control</b></h2>
+---
 
-<p>
-Este programa se encarga de controlar la banda trasportadora, el disco de clasificacion y el 
-brazo robotico.
-</p>
+## 5. Reconocimiento de monedas (YOLOv8)
 
-<pre>
-<code>
+El modelo entrenado es el archivo `best.pt`, que está en la carpeta de la primera entrega.
 
+Este programa abre la cámara, detecta las monedas y suma el total en pesos. Cada clase tiene su propio umbral de confianza para descartar detecciones falsas. Se cierra con la tecla `q`.
+
+Archivo: `camara.py`
+
+```python
+import re
+
+import cv2
+from ultralytics import YOLO
+
+# Ruta exacta de tu modelo entrenado
+RUTA_MODELO = r"C:\Users\fabia\OneDrive\Documents\Mecatronica\6 Semestre\Micros\proyecto\best.pt"
+
+# 0 = webcam integrada; prueba 1 o 2 si usas una cámara USB externa
+INDICE_CAMARA = 0
+
+# Confianza mínima por clase (0.0 a 1.0).
+# Sube el valor de una clase que aparece de más (falsos positivos).
+# Bájalo en una clase que casi nunca detecta.
+CONFIANZA_POR_CLASE = {
+    "1000":        0.5,
+    "100_antigua": 0.45,
+    "100_nueva":   0.95,
+    "200_antigua": 0.45,
+    "200_nueva":   0.10,
+    "500_antigua": 0.45,
+    "500_nueva":   0.45,
+    "50_antigua":  0.45,
+    "50_nueva":    0.45,
+}
+# True = imprime en la terminal cada detección con su confianza
+DEPURAR = True
+
+modelo = YOLO(RUTA_MODELO)
+print("Clases del modelo:", modelo.names)
+
+# El modelo se ejecuta con el umbral más bajo, y luego se filtra por clase
+UMBRAL_MINIMO = min(CONFIANZA_POR_CLASE.values())
+
+cap = cv2.VideoCapture(INDICE_CAMARA, cv2.CAP_DSHOW)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+
+if not cap.isOpened():
+    raise SystemExit(
+        "No se pudo abrir la cámara. Prueba otro INDICE_CAMARA (0, 1, 2) "
+        "y cierra otras apps que la estén usando."
+    )
+
+while True:
+    exito, frame = cap.read()
+    if not exito:
+        print("Se perdió la señal de video.")
+        break
+
+    # agnostic_nms=True evita que una misma moneda cuente con dos clases distintas
+    resultados = modelo(frame, conf=UMBRAL_MINIMO, imgsz=640, agnostic_nms=True, verbose=False)
+    total_dinero = 0
+    frame_anotado = frame.copy()
+
+    for deteccion in resultados[0].boxes:
+        clase_id = int(deteccion.cls[0])
+        nombre_clase = modelo.names[clase_id]  # ej: '100_nueva'
+        confianza = float(deteccion.conf[0])
+
+        # Filtro por clase: se descarta si no alcanza su umbral
+        umbral = CONFIANZA_POR_CLASE[nombre_clase]
+        if confianza < umbral:
+            if DEPURAR:
+                print(f"(descartada) {nombre_clase}: {confianza:.2f} < {umbral:.2f}")
+            continue
+
+        if DEPURAR:
+            print(f"{nombre_clase}: {confianza:.2f}")
+
+        numeros = re.findall(r"\d+", nombre_clase)
+        if numeros:
+            total_dinero += int(numeros[0])
+
+        # Dibujar solo las detecciones aceptadas
+        x1, y1, x2, y2 = map(int, deteccion.xyxy[0])
+        cv2.rectangle(frame_anotado, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        cv2.putText(frame_anotado, f"{nombre_clase} {confianza:.2f}",
+                    (x1, max(20, y1 - 8)), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.6, (0, 255, 0), 2)
+
+    cv2.putText(
+        frame_anotado,
+        f"Total: ${total_dinero} COP",
+        (20, 60),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        1.5,
+        (0, 255, 0),
+        3,
+    )
+
+    cv2.imshow("Conteo de Monedas", frame_anotado)
+
+    # Presiona 'q' con la ventana activa para salir
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
+```
+
+---
+
+## 6. Código de control
+
+El sistema usa 2 ESP32 que se hablan por **ESP-NOW** (un protocolo inalámbrico que va en las dos direcciones):
+
+1. **ESP32 de control:** mueve la banda, el disco y el brazo.
+2. **ESP32 puente:** recibe las órdenes del PC por USB y se las manda a la ESP32 de control.
+
+El PC corre la interfaz, que manda los comandos por el puerto serial.
+
+### 6.1 ESP32 de control
+
+Controla la banda transportadora, el disco de clasificación y el brazo robótico.
+
+```python
 from machine import Pin, PWM
 import network
 import espnow
@@ -120,7 +270,7 @@ import json
 # ==========================================
 # CONFIGURACIÓN ESP-NOW
 # ==========================================
-PEER_PC = b'\x68\xee\x8f\x4d\xcf\xac'  MAC de la ESP32 conectada al PC
+PEER_PC = b'\x68\xee\x8f\x4d\xcf\xac'  # MAC de la ESP32 conectada al PC
 
 sta = network.WLAN(network.STA_IF)
 sta.active(True)
@@ -369,23 +519,13 @@ while True:
                 enviar_estado(f"Error: {ex}")
 
     time.sleep_ms(5)
-    
-</code>
-</pre>
+```
 
-<hr>
+### 6.2 ESP32 puente (receptora y transmisora de órdenes)
 
-<h2><b>2. Código ESP-32 receptora y transmisora de ordenes</b></h2>
+Manda las órdenes de la interfaz a la ESP32 de control, y devuelve al PC lo que ella responde.
 
-<p>
-Este programa se encarga de mandar las ordenes de la interfaz a la
-ESP-32 de control. Cabe recalcar que se utiliza el protocolo de comunicacion
-ESP NOW que es bidireccional.
-</p>
-
-<pre>
-<code>
-
+```python
 import network
 import espnow
 import sys
@@ -424,23 +564,13 @@ while True:
             print(msg.decode())
 
     time.sleep_ms(5)
-    
-</code>
-</pre>
+```
 
-<hr>
+### 6.3 Interfaz (PC)
 
-<h2><b>3. Código Interfaz</b></h2>
+Genera la interfaz de control. Manda las órdenes por el puerto serial (COM) a la ESP32 puente, y esta se las pasa a la ESP32 que mueve todo el sistema.
 
-<p>
-Este programa se encarga de generar la interfaz de control para lo cual utiliza 
-el serial COM para mandar las ordenes a la ESP y el micro se las manda a la otra ESP-32
-que controla el movimeinto de las diferentes partes del sistema.
-</p>
-
-<pre>
-<code>
-
+```python
 import tkinter as tk
 from tkinter import ttk, scrolledtext
 import serial
@@ -669,9 +799,7 @@ class ControlESP32App:
 if __name__ == "__main__":
     root = tk.Tk()
     app = ControlESP32App(root)
-    root.mainloop()    
-
-</code>
-</pre>
+    root.mainloop()
+```
 
 
