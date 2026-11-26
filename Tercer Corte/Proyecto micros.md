@@ -1,64 +1,86 @@
-# Proyecto Micros
-
-**Integrantes:**
-- Jeicob David Pinilla Ruiz
-- Fabian Abril Casallas
-
-## ¿De qué trata el proyecto?
-
-Es un sistema que clasifica monedas colombianas. Las monedas se ponen en una banda transportadora y una cámara detecta de qué moneda se trata. Según la moneda detectada, un motor paso a paso gira el disco hasta el vaso correspondiente (son **9 vasos**, uno por cada tipo de moneda).
-
-Cuando un vaso se llena, el disco lo gira 180° para dejarlo al otro lado y un brazo robótico lo agarra, lo tapa y pone un vaso nuevo.
-
-El reconocimiento de monedas se hizo con **YOLOv8**, entrenado con 300 imágenes por moneda.
-
-## Estado actual
-
-| Parte | Estado |
-|---|---|
-| Banda transportadora | Funciona bien |
-| Disco selector de vasos | Funciona bien |
-| Brazo robótico | Funciona con 3 grados de libertad (se dañaron 2 servos) |
-| Interfaz de control manual | Funciona bien |
-| Reconocimiento con YOLOv8 | Solo reconoce 3 monedas: **$500 antigua, $100 antigua y $50 antigua** |
-| Sistema autónomo (cámara + mecánica) | Pendiente |
-
-Las otras 6 monedas no se pudieron reconocer. Se movieron los parámetros de confianza en Python y no sirvió.
-
----
-
-## Diagrama de bloques
-
+<p><strong>Integrantes:</strong></p>
+<ul>
+    <li>Jeicob David Pinilla Ruiz</li>
+    <li>Fabian Abril Casallas</li>
+</ul>
 <p align="center">
-    <img src="Imagenes/Diagrama_bloques.png"
+    <h1 align="center"><b>Proyecto Micros</b></h1>
+</p>
+
+<h2><b>Descripción del proyecto</b></h2>
+
+<p>
+Es un sistema que clasifica monedas colombianas. Las monedas se ponen en una banda transportadora
+y una cámara detecta de qué moneda se trata. Según la moneda detectada, un motor paso a paso gira
+el disco hasta el vaso correspondiente (son 9 vasos, uno por cada tipo de moneda).
+</p>
+
+<p>
+Cuando un vaso se llena, el sistema lo gira 180° para dejarlo al otro lado y un brazo robótico lo
+agarra, lo tapa y pone un vaso nuevo.
+</p>
+
+<p>
+El reconocimiento de monedas se hizo con YOLOv8 y se entrenó con 300 imágenes por moneda.
+</p>
+
+<h2><b>Estado actual</b></h2>
+
+<ul>
+    <li><b>Banda transportadora:</b> funciona bien.</li>
+    <li><b>Disco selector de vasos:</b> funciona bien.</li>
+    <li><b>Brazo robótico:</b> funciona con 3 grados de libertad (se dañaron 2 servos).</li>
+    <li><b>Interfaz de control manual:</b> funciona bien.</li>
+    <li><b>Reconocimiento con YOLOv8:</b> solo se lograron reconocer 3 monedas: $500 antigua, $100 antigua y $50 antigua.</li>
+    <li><b>Sistema autónomo:</b> pendiente.</li>
+</ul>
+
+<p>
+Las otras 6 monedas no se pudieron reconocer. Se movieron los parámetros de confianza en Python
+y no sirvió.
+</p>
+
+<h2><b>Diagrama de bloques</b></h2>
+<p align="center">
+    <img src="../Imagenes/Diagrama_bloques.png"
          alt="Diagrama de bloques"
-         width="800">
+         width="700">
 </p>
 
----
+<hr>
 
-## 1. Banda transportadora
-
+<h2><b>1. Banda Transportadora</b></h2>
 <p align="center">
-    <img src="Imagenes/Banda construida.jpg"
-         alt="Banda transportadora construida"
-         width="500">
-</p>
-
-La banda se construyó en cartón piedra y se mueve con un motorreductor. Como el cartón no es rígido como el plástico o la madera, hubo que ponerle peso para que no se moviera por la fuerza del motor.
-
-<p align="center">
-    <img src="Imagenes/BANDA_TRASNPORTADORA.jpg"
+    <img src="../Imagenes/Banda construida.jpg"
          alt="Banda transportadora"
          width="500">
 </p>
 
-En la tercera entrega se agregó el control con un módulo **TB6612FNG**, que permite encender, apagar, cambiar la dirección y la velocidad del motorreductor. Se alimentó con una fuente de 5 V DC.
+<p>
+La banda se construyó en cartón piedra y se mueve con un motorreductor. Como el cartón no es un
+material rígido como el plástico o la madera, fue necesario ponerle peso para evitar que se mueva
+por la fuerza del motor.
+</p>
 
 <p align="center">
-    <img src="Imagenes/controlador motorreductor.png"
-         alt="Pinout TB6612FNG"
+    <img src="../Imagenes/BANDA_TRASNPORTADORA.jpg"
+         alt="Banda transportadora"
          width="500">
+</p>
+
+<p>
+El motorreductor se controla con un módulo TB6612FNG que permite controlar encendido, apagado,
+dirección y velocidad.
+</p>
+
+<p align="center">
+    <img src="../Imagenes/controlador motorreductor.png"
+         alt="PINOUT TB6612FNG"
+         width="500">
+</p>
+
+<p>
+El controlador se conectó a una fuente de 5V DC.
 </p>
 
 <p align="center">
@@ -67,65 +89,91 @@ En la tercera entrega se agregó el control con un módulo **TB6612FNG**, que pe
     </a>
 </p>
 
-## 2. Disco selector de vasos
-
+<h2><b>2. Disco Selector de Vasos</b></h2>
 <p align="center">
-    <img src="Imagenes/Disco.jpg"
+    <img src="../Imagenes/Disco.jpg"
          alt="Disco"
          width="500">
 </p>
 
-El disco también se hizo en cartón piedra. Al probarlo con vasos vimos que se movían cuando no tenían monedas o tenían poco peso. Para solucionarlo se pusieron **18 imanes N52 de 10x2 mm** para sujetarlos.
+<p>
+El disco selector se construyó en cartón piedra. Al colocar los vasos y comprobar la caída de las
+monedas se evidenció que el vaso se desplaza cuando no hay monedas o el peso no es suficiente.
+Para solucionarlo se utilizaron 18 imanes N52 de 10x2 mm para sujetar los vasos.
+</p>
 
 <p align="center">
-    <img src="Imagenes/Disco con vasos.jpg"
+    <img src="../Imagenes/Disco con vasos.jpg"
          alt="Disco con vasos"
          width="500">
 </p>
 
 <p align="center">
-    <img src="Imagenes/DISCO_CLASIFICACION.jpg"
+    <img src="../Imagenes/DISCO_CLASIFICACION.jpg"
          alt="Disco de clasificación"
          width="500">
 </p>
 
-El disco se mueve con un motor **NEMA 17** controlado con un driver **DRV8825**. Este driver da la potencia necesaria y permite dividir los pasos hasta 1/32 (0.05625° de precisión).
-
-Se alimentó a 12 V DC y se usó 1/16 de paso (0.1125°), que es más que suficiente porque los saltos entre vasos son de 40°.
+<p>
+Para mover el disco se usa un motor NEMA 17 controlado por un driver DRV8825, que suministra la
+potencia necesaria y además aumenta la resolución del ángulo por medio de los micropasos, llegando
+hasta 1/32 de paso, lo que equivale a una precisión de 0.05625°.
+</p>
 
 <p align="center">
-    <img src="Imagenes/DRV8825.png"
-         alt="Conexiones del driver DRV8825"
+    <img src="../Imagenes/DRV8825.png"
+         alt="Driver DRV8825 conexiones"
          width="500">
 </p>
 
-## 3. Brazo robótico
+<p>
+El driver se alimentó a 12 V DC y se usó una resolución de 1/16 de paso, que equivale a 0.1125°.
+Es una precisión muy buena para esta aplicación ya que los saltos son de 40°.
+</p>
 
+<h2><b>3. Brazo Robótico</b></h2>
 <p align="center">
-    <img src="Imagenes/BRAZO_ROBOTICO.jpg"
+    <img src="../Imagenes/BRAZO_ROBOTICO.jpg"
          alt="Brazo robótico"
          width="500">
 </p>
 
-El brazo se diseñó en SolidWorks y se imprimió en 3D en PLA. Las pinzas se imprimieron en TPU. Se usan servos **MG996R** de 180°, porque tienen más fuerza que los servos pequeños y, al tener tope, se controla el ángulo con PWM de forma precisa.
+<p>
+Para mover y tapar los vasos se usa un brazo robótico que se diseñó en SolidWorks y se imprimió
+en 3D en PLA. Para las pinzas se utilizó TPU.
+</p>
 
 <p align="center">
-    <img src="Imagenes/MG996R.jpg"
+    <img src="../Imagenes/MG996R.jpg"
          alt="Servo MG996R"
          width="500">
 </p>
 
-Originalmente el brazo tenía 5 grados de libertad, pero 2 servos se dañaron. Se quitó un eslabón y quedó con 3: girar la base, subir y bajar el eslabón, y abrir y cerrar la garra.
+<p>
+Para el movimiento del brazo se utilizan servos MG996R de 180°, ya que tienen más fuerza que los
+servos pequeños y, al ser de 180°, tienen un tope que permite controlar el ángulo de manera
+precisa por medio de PWM.
+</p>
 
-## 4. Interfaz
+<p>
+Originalmente el brazo se diseñó con 5 grados de libertad, sin embargo 2 servos se dañaron, por lo
+cual se retiró un eslabón y quedaron 3 grados de libertad. Ahora solo se puede girar la base,
+subir y bajar el eslabón, y abrir y cerrar la garra para sujetar o soltar los vasos.
+</p>
 
+<h2><b>4. Interfaz</b></h2>
 <p align="center">
-    <img src="Imagenes/interfaz.png"
-         alt="Interfaz de control"
+    <img src="../Imagenes/interfaz.png"
+         alt="Interfaz"
          width="500">
 </p>
 
-Por ahora la interfaz controla todo de forma manual, para comprobar que todo el sistema funciona. Después se quiere hacer un sistema autónomo que use el modelo YOLO para detectar las monedas, con un chat-bot y el conteo de monedas en tiempo real.
+<p>
+Por ahora se cuenta con una interfaz que permite controlar todo de manera manual, esto con el fin
+de verificar el funcionamiento de todo el sistema. Luego se quiere implementar un sistema autónomo
+que utilice el modelo de YOLO para la detección de las monedas y el control del sistema, además de
+un chat-bot y la visualización en tiempo real del conteo de las monedas.
+</p>
 
 <p align="center">
     <a href="https://youtu.be/EVQpVJDZNBM" target="_blank">
@@ -133,17 +181,19 @@ Por ahora la interfaz controla todo de forma manual, para comprobar que todo el 
     </a>
 </p>
 
----
+<hr>
 
-## 5. Reconocimiento de monedas (YOLOv8)
+<h2><b>1. Código de detección de monedas (YOLOv8)</b></h2>
 
-El modelo entrenado es el archivo `best.pt`, que está en la carpeta de la primera entrega.
+<p>
+Este programa abre la cámara, detecta las monedas con el modelo entrenado (best.pt) y suma el
+total en pesos. Cada clase tiene su propio umbral de confianza para descartar detecciones falsas.
+Se cierra presionando la tecla q.
+</p>
 
-Este programa abre la cámara, detecta las monedas y suma el total en pesos. Cada clase tiene su propio umbral de confianza para descartar detecciones falsas. Se cierra con la tecla `q`.
+<pre>
+<code>
 
-Archivo: `camara.py`
-
-```python
 import re
 
 import cv2
@@ -206,9 +256,9 @@ while True:
 
         # Filtro por clase: se descarta si no alcanza su umbral
         umbral = CONFIANZA_POR_CLASE[nombre_clase]
-        if confianza < umbral:
+        if confianza &lt; umbral:
             if DEPURAR:
-                print(f"(descartada) {nombre_clase}: {confianza:.2f} < {umbral:.2f}")
+                print(f"(descartada) {nombre_clase}: {confianza:.2f} &lt; {umbral:.2f}")
             continue
 
         if DEPURAR:
@@ -238,29 +288,27 @@ while True:
     cv2.imshow("Conteo de Monedas", frame_anotado)
 
     # Presiona 'q' con la ventana activa para salir
-    if cv2.waitKey(1) & 0xFF == ord("q"):
+    if cv2.waitKey(1) &amp; 0xFF == ord("q"):
         break
 
 cap.release()
 cv2.destroyAllWindows()
-```
 
----
+</code>
+</pre>
 
-## 6. Código de control
+<hr>
 
-El sistema usa 2 ESP32 que se hablan por **ESP-NOW** (un protocolo inalámbrico que va en las dos direcciones):
+<h2><b>2. Código ESP-32 de control</b></h2>
 
-1. **ESP32 de control:** mueve la banda, el disco y el brazo.
-2. **ESP32 puente:** recibe las órdenes del PC por USB y se las manda a la ESP32 de control.
+<p>
+Este programa se encarga de controlar la banda transportadora, el disco de clasificación y el
+brazo robótico.
+</p>
 
-El PC corre la interfaz, que manda los comandos por el puerto serial.
+<pre>
+<code>
 
-### 6.1 ESP32 de control
-
-Controla la banda transportadora, el disco de clasificación y el brazo robótico.
-
-```python
 from machine import Pin, PWM
 import network
 import espnow
@@ -308,7 +356,7 @@ pos_disco_actual = 1
 def mover_pasos(pasos):
     if pasos == 0:
         return
-    if pasos > 0:
+    if pasos &gt; 0:
         dir_pin.value(1)
     else:
         dir_pin.value(0)
@@ -318,9 +366,9 @@ def mover_pasos(pasos):
     pasos_aceleracion = int(pasos * 0.25)
 
     for i in range(pasos):
-        if i < pasos_aceleracion and retardo_actual > retardo_minimo:
+        if i &lt; pasos_aceleracion and retardo_actual &gt; retardo_minimo:
             retardo_actual -= 4
-        elif i > (pasos - pasos_aceleracion) and retardo_actual < retardo_inicio:
+        elif i &gt; (pasos - pasos_aceleracion) and retardo_actual &lt; retardo_inicio:
             retardo_actual += 4
 
         step_pin.value(1)
@@ -334,9 +382,9 @@ def ir_a_posicion(num_pos):
     pasos_objetivo = round((grados_objetivo * pasos_por_vuelta) / 360.0)
     diferencia = pasos_objetivo - pasos_actuales
 
-    if diferencia > pasos_por_vuelta // 2:
+    if diferencia &gt; pasos_por_vuelta // 2:
         diferencia -= pasos_por_vuelta
-    elif diferencia < -(pasos_por_vuelta // 2):
+    elif diferencia &lt; -(pasos_por_vuelta // 2):
         diferencia += pasos_por_vuelta
 
     mover_pasos(diferencia)
@@ -371,11 +419,11 @@ def mover_servo(servo, angulo):
 def mover_suave(servo, ang_actual, ang_objetivo, pausa_ms):
     if ang_actual == ang_objetivo:
         return ang_objetivo
-    if pausa_ms <= 0:
+    if pausa_ms &lt;= 0:
         mover_servo(servo, ang_objetivo)
         return ang_objetivo
 
-    paso = 1 if ang_objetivo > ang_actual else -1
+    paso = 1 if ang_objetivo &gt; ang_actual else -1
     for ang in range(ang_actual, ang_objetivo + paso, paso):
         mover_servo(servo, ang)
         time.sleep_ms(pausa_ms)
@@ -494,9 +542,9 @@ while True:
                             elif eje == "g":
                                 ang_garra = mover_suave(garra, ang_garra, ang, VEL_GARRA_MS)
                             guardar_estado(ang_base, ang_eslabon, ang_garra)
-                            enviar_estado(f"Brazo {eje.upper()} -> {ang}°")
+                            enviar_estado(f"Brazo {eje.upper()} -&gt; {ang}°")
 
-                elif tipo == "DC" and len(partes) >= 2:
+                elif tipo == "DC" and len(partes) &gt;= 2:
                     accion = partes[1].upper()
                     if accion == "A":
                         sentido = 1
@@ -519,13 +567,23 @@ while True:
                 enviar_estado(f"Error: {ex}")
 
     time.sleep_ms(5)
-```
 
-### 6.2 ESP32 puente (receptora y transmisora de órdenes)
+</code>
+</pre>
 
-Manda las órdenes de la interfaz a la ESP32 de control, y devuelve al PC lo que ella responde.
+<hr>
 
-```python
+<h2><b>3. Código ESP-32 receptora y transmisora de órdenes</b></h2>
+
+<p>
+Este programa se encarga de mandar las órdenes de la interfaz a la
+ESP-32 de control. Cabe recalcar que se utiliza el protocolo de comunicación
+ESP NOW que es bidireccional.
+</p>
+
+<pre>
+<code>
+
 import network
 import espnow
 import sys
@@ -564,13 +622,23 @@ while True:
             print(msg.decode())
 
     time.sleep_ms(5)
-```
 
-### 6.3 Interfaz (PC)
+</code>
+</pre>
 
-Genera la interfaz de control. Manda las órdenes por el puerto serial (COM) a la ESP32 puente, y esta se las pasa a la ESP32 que mueve todo el sistema.
+<hr>
 
-```python
+<h2><b>4. Código Interfaz</b></h2>
+
+<p>
+Este programa se encarga de generar la interfaz de control, para lo cual utiliza
+el serial COM para mandar las órdenes a la ESP y el micro se las manda a la otra ESP-32
+que controla el movimiento de las diferentes partes del sistema.
+</p>
+
+<pre>
+<code>
+
 import tkinter as tk
 from tkinter import ttk, scrolledtext
 import serial
@@ -654,7 +722,7 @@ class ControlESP32App:
         self.sl_base = tk.Scale(lf_brazo, from_=10, to=180, orient="horizontal", command=lambda v: self.lbl_base.config(text=f"Base: {v}°"))
         self.sl_base.set(90)
         self.sl_base.pack(fill="x", pady=(0, 10))
-        self.sl_base.bind("<ButtonRelease-1>", lambda e: self.enviar(f"BRAZO:b:{self.sl_base.get()}"))
+        self.sl_base.bind("&lt;ButtonRelease-1&gt;", lambda e: self.enviar(f"BRAZO:b:{self.sl_base.get()}"))
 
         # Eslabón (10 - 180)
         self.lbl_eslabon = ttk.Label(lf_brazo, text="Eslabón: 90°", font=("Segoe UI", 10, "bold"))
@@ -662,7 +730,7 @@ class ControlESP32App:
         self.sl_eslabon = tk.Scale(lf_brazo, from_=10, to=180, orient="horizontal", command=lambda v: self.lbl_eslabon.config(text=f"Eslabón: {v}°"))
         self.sl_eslabon.set(90)
         self.sl_eslabon.pack(fill="x", pady=(0, 10))
-        self.sl_eslabon.bind("<ButtonRelease-1>", lambda e: self.enviar(f"BRAZO:e:{self.sl_eslabon.get()}"))
+        self.sl_eslabon.bind("&lt;ButtonRelease-1&gt;", lambda e: self.enviar(f"BRAZO:e:{self.sl_eslabon.get()}"))
 
         # Garra (0 - 80)
         self.lbl_garra = ttk.Label(lf_brazo, text="Garra: 10°", font=("Segoe UI", 10, "bold"))
@@ -670,7 +738,7 @@ class ControlESP32App:
         self.sl_garra = tk.Scale(lf_brazo, from_=0, to=80, orient="horizontal", command=lambda v: self.lbl_garra.config(text=f"Garra: {v}°"))
         self.sl_garra.set(10)
         self.sl_garra.pack(fill="x", pady=(0, 15))
-        self.sl_garra.bind("<ButtonRelease-1>", lambda e: self.enviar(f"BRAZO:g:{self.sl_garra.get()}"))
+        self.sl_garra.bind("&lt;ButtonRelease-1&gt;", lambda e: self.enviar(f"BRAZO:g:{self.sl_garra.get()}"))
 
         ttk.Button(lf_brazo, text="Regresar a HOME", command=lambda: self.enviar("BRAZO:HOME")).pack(fill="x", pady=10)
 
@@ -695,7 +763,7 @@ class ControlESP32App:
         self.sl_vel = tk.Scale(lf_dc, from_=0, to=100, orient="horizontal", command=lambda v: self.lbl_dc_vel.config(text=f"Velocidad: {v}%"))
         self.sl_vel.set(50)
         self.sl_vel.pack(fill="x", pady=(0, 10))
-        self.sl_vel.bind("<ButtonRelease-1>", lambda e: self.enviar(f"DC:V:{self.sl_vel.get()}"))
+        self.sl_vel.bind("&lt;ButtonRelease-1&gt;", lambda e: self.enviar(f"DC:V:{self.sl_vel.get()}"))
 
         frame_vel_btn = ttk.Frame(lf_dc)
         frame_vel_btn.pack(fill="x", pady=5)
@@ -749,7 +817,7 @@ class ControlESP32App:
         if self.conectado and self.ser:
             try:
                 self.ser.write((comando + "\n").encode())
-                self._log(f">>> Enviado: {comando}")
+                self._log(f"&gt;&gt;&gt; Enviado: {comando}")
             except Exception as e:
                 self._log(f"Error enviando: {e}")
         else:
@@ -766,7 +834,7 @@ class ControlESP32App:
                 break
 
     def _procesar_respuesta(self, linea):
-        self._log(f"<<< Recibido: {linea}")
+        self._log(f"&lt;&lt;&lt; Recibido: {linea}")
         try:
             d = json.loads(linea)
             if "disco" in d:
@@ -800,6 +868,6 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = ControlESP32App(root)
     root.mainloop()
-```
 
-
+</code>
+</pre>
